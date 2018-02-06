@@ -9,13 +9,8 @@
     cd backup-mgmt
     python manage.py runserver 
     
-##### Behold!
+##### Behold!uy
 Go to http://localhost:8000/
-
-##### Contributors
-@locvx1234
-@
-@
 
 ##### Tempale
 
