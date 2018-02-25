@@ -7,7 +7,141 @@
 {% endblock stylesheets %}
 
 {% block content %}
-
+<div class="right_col" role="main">
+  <div class="col-xs-6">
+    <h3>BACKUP AGENTS</h3>
+  </div>
+  <div class="col-xs-6">
+    <button id="set-pagination"> HIDE PAGINATION CONTROL</button>
+    <button> ADD A NEW AGENTS</button>
+  </div>
+  <div class="col-xs-12 pagination-control">
+    <label>SORT BY</label>
+    <select>
+      <option>HOSTNAME</option>
+    </select>
+    <label>ORDER</label>
+    <a href="#/sort-amount-desc"><i class="fa fa-sort-amount-desc"></i></a>
+    <select>
+      <option>HOSTNAME</option>
+    </select>
+  </div>
+  <br />
+  <div class="col-xs-12 agent-row">
+    <span>CUDYN02 </span ><span>CUDYN02.CUAHS1.ORG</span>
+    <hr />
+    <div class="col-xs-2 control-link">
+      <a href="">Manage Recovery Point</a>
+      <a href="">Configure Agent Settings</a>
+      <a href="">Remove Agent</a>
+      <a href="">Show Backup Logs</a>
+    </div>
+    <div class="col-xs-4">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>LAST SUCCESSFUL BACKUP </td>
+            <td>8:01pm Jan 26th EST</td>
+          </tr>
+          <tr>
+            <td>CURRENT INTERVAL</td>
+            <td>Every 60 minutes</td>
+          </tr>
+          <tr>
+            <td> </td>
+            <td>No screenshot avalable</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-2">
+      <button>START BACKUP</button>
+    </div>
+    <div class="col-xs-4">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>PROTECT STORAGE</td>
+            <td>87.65 GB</td>
+          </tr>
+          <tr>
+            <td>PROTECT VOLUMNS</td>
+            <td>D:\ E:\</td>
+          </tr>
+          <tr>
+            <td>LOCAL USED</td>
+            <td>90.08 GB</td>
+          </tr>
+          <tr>
+            <td>OS VERSION</td>
+            <td>Window server 2012</td>
+          </tr>
+          <tr>
+            <td>AGENT VERSION</td>
+            <td>5.5.5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-12 agent-row">
+    <span>CUDYN02 </span ><span>CUDYN02.CUAHS1.ORG</span>
+    <hr />
+    <div class="col-xs-2 control-link">
+      <a href="">Manage Recovery Point</a>
+      <a href="">Configure Agent Settings</a>
+      <a href="">Remove Agent</a>
+      <a href="">Show Backup Logs</a>
+    </div>
+    <div class="col-xs-4">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>LAST SUCCESSFUL BACKUP </td>
+            <td>8:01pm Jan 26th EST</td>
+          </tr>
+          <tr>
+            <td>CURRENT INTERVAL</td>
+            <td>Every 60 minutes</td>
+          </tr>
+          <tr>
+            <td> </td>
+            <td>No screenshot avalable</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-2">
+      <button>START BACKUP</button>
+    </div>
+    <div class="col-xs-4">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>PROTECT STORAGE</td>
+            <td>87.65 GB</td>
+          </tr>
+          <tr>
+            <td>PROTECT VOLUMNS</td>
+            <td>D:\ E:\</td>
+          </tr>
+          <tr>
+            <td>LOCAL USED</td>
+            <td>90.08 GB</td>
+          </tr>
+          <tr>
+            <td>OS VERSION</td>
+            <td>Window server 2012</td>
+          </tr>
+          <tr>
+            <td>AGENT VERSION</td>
+            <td>5.5.5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock content %}
 
 {% block javascripts %}
