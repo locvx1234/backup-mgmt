@@ -1,0 +1,22 @@
+.right_col {
+	font-family: 'Open Sans', sans-serif;
+}
+.right_col > .info-row ~ .info-row {
+	border-top: none;
+}
+.info-row {
+	height: 30px;
+	border:1px solid #ddd ;
+	padding: 7px;	
+}
+.info-row span{
+	float:right;
+}
+.local-storage-useage , .replication-status {
+	height: 200px;
+	margin: 10px 0;
+}
+.local-storage-useage .scrollable{
+	overflow-y: scroll;
+	height: 120px;
+}
