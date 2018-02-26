@@ -7,7 +7,168 @@
 {% endblock stylesheets %}
 
 {% block content %}
+<div class="right_col" role="main">
+  <h3>OVERVIEW</h3>
+  <div class="info-row">
+      <div class="col-xs-4">
+        <label>DEVICE SERIAL</label>
+        <span>1231237124</span>
+      </div>
+      <div class="col-xs-4">
+        <label>VERSION IDevice/SpeedSyncl</label>
+        <span>3.69.9/3.0.2</span>
+      </div>
+      <div class="col-xs-4">
+        <label>OFFSITE SYNC SPEED</label>
+        <span>1843 KB/s</span>
+      </div>
+  </div>
 
+  <div class="info-row">
+      <div class="col-md-4">
+        <label>DEVICE IP ADDRESS</label>
+        <span>10.20.0.11</span>
+      </div>
+      <div class="col-md-4">
+        <label>LAST CHECKIN[Click to Force ]</label>
+        <span> 7 Minutes Ago</span>
+      </div>
+      <div class="col-md-4">
+        <label>LAN LINK SPEED </label>
+        <span>1000 Base T</span>
+      </div>
+  </div>
+
+  <div class="info-row">
+      <div class="col-md-4">
+        <label>TOTAL PROTECT DATA </label>
+        <span>856.60 GB</span>
+      </div>
+      <div class="col-md-4">
+        <label>OFFSITE SERVER </label>
+        <span>198.49.95.50</span>
+      </div>
+      <div class="col-md-4">
+        <div class="col-xs-6">
+          <label>AGENTS</label>
+          <span>7</span>
+        </div>
+        <div class="col-xs-6">
+          <label>SHARES </label>
+          <span>1</span>
+        </div>
+      </div>
+  </div>
+  <div class="col-xs-6 local-storage-useage">
+    <h3>LOCAL STORAGE USAGE</h3>
+      <div class="col-md-5 col-sm-5 col-xs-5">
+          <div class="x_panel">
+            <div class="x_content" style="display: block;"><iframe class="chartjs-hidden-iframe" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></iframe>
+              <canvas id="canvasDoughnut" width="484" height="242" style="width: 484px; height: 242px;"></canvas>
+            </div>
+          </div>
+      </div>
+    <div class="col-xs-7 scrollable">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>LOCAL FREE</td>
+            <td>133.05 GB</td>
+          </tr>
+          <tr>
+            <td>OFFSITE TRANSFER FILE</td>
+            <td>133.05 GB</td>
+          </tr>
+          <tr>
+            <td>CUVH01</td>
+            <td>133.05 GB</td>
+          </tr>
+          <tr>
+            <td>CUVH02</td>
+            <td>133.05 GB</td>
+          </tr>
+          <tr>
+            <td>CUVH02</td>
+            <td>133.05 GB</td>
+          </tr>
+          <tr>
+            <td>CUVH02</td>
+            <td>133.05 GB</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-6 replication-status">
+    <h3>REPLICATION STATUS</h3>
+    <table class="table">
+        <tbody>
+          <tr>
+            <td>LOCAL FREE</td>
+            <td>Last synced 1:00pm Friday 1/26/18 1:00pm</td>
+          </tr>
+          <tr>
+            <td>OFFSITE TRANSFER FILE</td>
+            <td>Last synced 1:00pm Friday 1/26/18 1:00pm</td>
+          </tr>
+          <tr>
+            <td>CUVH01</td>
+            <td>Last synced 1:00pm Friday 1/26/18 1:00pm</td>
+          </tr>
+          <tr>
+            <td>CUVH02</td>
+            <td>Last synced 1:00pm Friday 1/26/18 1:00pm</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  <div>
+    <h3>LOCAL AGENT INFOMATION</h3>
+    <table class="table">
+      <thead>
+        <th>HOSTNAME</th>
+        <th>NETWORD ADDR</th>
+        <th>LASTEST BACKUP</th>
+        <th>OS VERSION</th>
+        <th>CPUS/RAM </th>
+        <th>AGENT VERSION</th>
+        <th>DRIVER VERSION</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h3>LOCAL SHARE INFOMATION</h3>
+    <table class="table">
+      <thead>
+        <th>SHARENAME</th>
+        <th>LASTED SNAPSHOT</th>
+        <th>SNAPSHOT STORAGE</th>
+        <th>NAS STORAGE</th>
+        <th>TOTAL STORAGE</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+          <td>DEMO</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock content %}
 
 {% block javascripts %}

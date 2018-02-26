@@ -1,0 +1,23 @@
+.right_col {
+	font-family: 'Open Sans', sans-serif;
+}
+.control-link a{
+	display: block;
+	height: 30px;
+}
+.pagination-control  {
+	margin-bottom: 20px;
+}
+.control-tab select{
+	margin: 0 20px;
+}
+table td:nth-child(2){
+	font-weight: bold;
+}
+.right_col a {
+	font-weight: bold;
+}
+button#set-pagination:hover ~ .pagination-control {
+	display: none !important;
+	visibility: hidden;
+}
