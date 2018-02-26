@@ -7,11 +7,155 @@
 {% endblock stylesheets %}
 
 {% block content %}
+<div class="right_col" role="main">
+  <div class="">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>START A RESTORE</h2>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
 
+              <!-- Smart Wizard -->
+              <p>This is description.</p>
+              <div id="wizard" class="form_wizard wizard_horizontal">
+                <ul class="wizard_steps">
+                  <li>
+                    <a href="#step-1">
+                      <span class="step_no">1</span>
+                      <span class="step_descr">
+                                        Step 1<br />
+                                        <small>Choose a system</small>
+                                    </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#step-2">
+                      <span class="step_no">2</span>
+                      <span class="step_descr">
+                                        Step 2<br />
+                                        <small>Choose a recovery type</small>
+                                    </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#step-3">
+                      <span class="step_no">3</span>
+                      <span class="step_descr">
+                                        Step 3<br />
+                                        <small>Choose a recovery point</small>
+                                    </span>
+                    </a>
+                  </li>
+                </ul>
+                <div id="step-1">
+                  <form class="form-horizontal form-label-center form-group">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4">
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Host 1 <span class="ip-address">10.10.10.10</span>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Host 2 <span class="ip-address">10.10.10.100</span>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Host 3 <span class="ip-address">10.10.110.10</span>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Host 4 <span class="ip-address">10.120.10.10</span>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Host 5 <span class="ip-address">10.130.10.10</span>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Host 6 <span class="ip-address">10.160.10.10</span>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Host 7 <span class="ip-address">10.10.104.10</span>
+                        </label>
+                      </div>
+                    </div>
+                  </form>
+
+                </div>
+                <div id="step-2">
+                  <form class="form-horizontal form-label-center form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> File restore <br>
+                          <small>Description</small>
+                          <br>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Local virtualization <br>
+                          <small>Description</small>
+                          <br>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Cloud virtualization <br>
+                          <small>Description</small>
+                          <br>
+                        </label>
+                      </div>
+                      <div class="radio col-centered">
+                        <label>
+                          <input type="radio" class="flat" name="system"> Bare metal Restore <br>
+                          <small>Description</small>
+                          <br>
+                        </label>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div id="step-3">
+                  <form class="form-horizontal form-label-center form-group">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3">
+                      <select>
+                        <option>14:00 14/01/2018</option>
+                        <option>14:00 15/01/2018</option>
+                        <option>19:00 16/01/2018</option>
+                      </select>
+
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+              <!-- End SmartWizard Content -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
 {% endblock content %}
 
 {% block javascripts %}
   {{ block.super}}
+  <script src="/static/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
   <!-- Chart.js -->
   <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
   <!-- gauge.js -->
