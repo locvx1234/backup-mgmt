@@ -5,7 +5,8 @@
 	border-top: none;
 }
 .info-row {
-	height: 30px;
+	height: auto;
+	min-height: 30px;
 	border:1px solid #ddd ;
 	padding: 7px;	
 }
@@ -13,10 +14,29 @@
 	float:right;
 }
 .local-storage-useage , .replication-status {
-	height: 200px;
+	height: auto;
 	margin: 10px 0;
+	display: block;
 }
 .local-storage-useage .scrollable{
 	overflow-y: scroll;
-	height: 120px;
+	height: auto;
+}
+@media only screen and (max-width: 1300px) {
+    /* For mobile phones: */
+    .info-row [class*="col-"] {
+        width: 50%;
+    }
+    .info-row {
+    	border:none;
+    }
+}
+@media only screen and (max-width: 700px) {
+    /* For mobile phones: */
+    .info-row [class*="col-"] {
+        width: 100%;
+    }
+    .info-row {
+    	border:none;
+    }
 }
