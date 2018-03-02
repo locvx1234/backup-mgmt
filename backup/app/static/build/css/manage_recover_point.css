@@ -1,0 +1,14 @@
+li {
+	list-style: none;
+}
+.section .pick {
+	width: 50%;
+	margin: auto;
+}
+.section .confirm-options {
+	width: 60%;
+	margin: auto;
+}
+.section .flat:checked {
+	background-color: blue;
+}

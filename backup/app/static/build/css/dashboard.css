@@ -23,6 +23,9 @@
 	display: block;
 	height: auto;
 }
+.x_content {
+    padding-top: 50px;
+}
 @media only screen and (max-width: 1300px) {
     .info-row [class*="col-"] {
         width: 50%;
