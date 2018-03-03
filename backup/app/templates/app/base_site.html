@@ -15,6 +15,8 @@
       {% block stylesheets %}
         <!-- Bootstrap -->
         <link href="/static/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!--Bootstrap datetime picker-->
+        <link href="/static/vendors/bootstrap-datetimepicker/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
         <!-- Font Awesome -->
         <link href="/static/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <!-- NProgress -->
@@ -34,6 +36,7 @@
       <link rel="stylesheet" type="text/css" href="/static/build/css/dashboard.css">
       <link rel="stylesheet" type="text/css" href="/static/build/css/agent.css">
       <link rel="stylesheet" type="text/css" href="/static/build/css/restore.css">
+      <link rel="stylesheet" type="text/css" href="/static/build/css/device_setting.css">
     {% endblock head %}
   </head>
 
@@ -81,6 +84,9 @@
         <script src="/static/vendors/iCheck/icheck.min.js"></script>
         <!-- bootstrap-daterangepicker -->
         <script src="/static/vendors/moment/min/moment.min.js"></script>
+
+        <script src="/static/vendors/bootstrap-datetimepicker/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
         <script src="/static/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
         <!-- bootstrap-wysiwyg -->
         <script src="/static/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>

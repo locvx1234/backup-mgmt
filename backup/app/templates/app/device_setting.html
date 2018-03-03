@@ -1,0 +1,224 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} R {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+  <div class="">
+    <div class="row">
+        <div class="col-md-3 col-xs-6">
+            <div class="x_panel">
+                <div class="x_content">
+                  <br />
+                    <ul class="device-setting">
+                        <li><a href="#reboot">Reboot</a></li>
+                        <li><a href="#schedule-reboot">Schedule Reboot</a></li>
+                        <li><a href="#https">HTTPS</a></li>
+                        <li><a href="#auto-refresh">Auto-refresh</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-xs-12">
+          <div id="reboot" class="x_panel">
+            <div class="x_title">
+              <h2>Reboot</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings 1</a>
+                    </li>
+                    <li><a href="#">Settings 2</a>
+                    </li>
+                  </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et hic minus nesciunt vero voluptatem.
+                    Adipisci iusto maxime ratione reiciendis voluptas?</p>
+                <div class="col-md-offset-4">
+                    <button type="button" class="btn btn-primary">Reboot</button>
+                </div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur blanditiis delectus impedit
+                    molestias nemo quaerat quia rem sequi tenetur? Dolor fuga iure maiores pariatur qui?</p>
+            </div>
+          </div>
+          <div id="schedule-reboot" class="x_panel">
+            <div class="x_title">
+              <h2>Schedule Reboot</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings 1</a>
+                    </li>
+                    <li><a href="#">Settings 2</a>
+                    </li>
+                  </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et hic minus nesciunt vero voluptatem.
+                    Adipisci iusto maxime ratione reiciendis voluptas?</p>
+                <form class="form-horizontal form-label-left input_mask">
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Reboot on
+                      </label>
+                      <div class="col-md-3 col-sm-3 col-xs-6">
+                        <div class='input-group date' id='datetimepicker1'>
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                      <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                        <button type="button" class="btn btn-primary disabled">Cancel</button>
+                        <button type="submit" class="btn btn-success">Schedule a reboot</button>
+                      </div>
+                    </div>
+                </form>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur blanditiis delectus impedit
+                    molestias nemo quaerat quia rem sequi tenetur? Dolor fuga iure maiores pariatur qui?</p>
+            </div>
+          </div>
+          <div id="https" class="x_panel">
+            <div class="x_title">
+              <h2>HTTPS</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings 1</a>
+                    </li>
+                    <li><a href="#">Settings 2</a>
+                    </li>
+                  </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et hic minus nesciunt vero voluptatem.
+                    Adipisci iusto maxime ratione reiciendis voluptas?</p>
+                <div class="col-md-offset-4">
+                    <button type="button" class="btn btn-primary">Enable HTTPS</button>
+                </div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquam asperiores at autem commodi
+                    consequuntur debitis doloremque, eum ex expedita fuga iure laudantium magni maxime mollitia nostrum
+                    placeat porro, praesentium qui quidem quo reiciendis rerum similique suscipit tenetur unde, vel
+                    veniam voluptatem voluptates voluptatum. A accusantium alias aliquam asperiores assumenda
+                    consequatur, cum cumque debitis delectus deleniti dicta dignissimos dolore doloribus eos error eum
+                    eveniet exercitationem fugit illo iste, laborum libero magni maiores obcaecati odit quae quia quidem
+                    reprehenderit sunt tempore totam vero voluptas voluptatem! Assumenda at consequuntur, delectus dicta
+                    eos, inventore iure labore laborum quaerat sapiente sint temporibus ullam voluptate.</p>
+            </div>
+          </div>
+          <div id="auto-refresh" class="x_panel">
+            <div class="x_title">
+              <h2>Auto-refresh</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings 1</a>
+                    </li>
+                    <li><a href="#">Settings 2</a>
+                    </li>
+                  </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et hic minus nesciunt vero voluptatem.
+                    Adipisci iusto maxime ratione reiciendis voluptas?
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aliquam amet, blanditiis
+                    deserunt, ducimus earum error eum itaque iure, maxime minima minus mollitia nam nesciunt nisi pariatur quis ullam veniam?
+                </p>
+                <form class="form-horizontal form-label-left input_mask">
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Auto refresh web every
+                      </label>
+                      <div class="col-md-3 col-sm-3 col-xs-6">
+                            <select class="form-control">
+                              <option>None</option>
+                              <option>5 sec</option>
+                              <option>10 sec</option>
+                              <option>30 sec</option>
+                              <option>1 min</option>
+                              <option>10 min</option>
+                            </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                      </div>
+                    </div>
+                </form>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <script src="/static/build/js/device_setting.js"></script>
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+{% endblock javascripts %}
