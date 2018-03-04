@@ -1,3 +1,24 @@
+.right_col table#example *:not(button) {
+    background: transparent;
+}
+
+span.agent-name {
+	margin-bottom: 10px;
+}
+.right_col .hidden{
+	display: none;
+}
+.pagination {
+	width: 300px;
+}
+.pagination li{
+	display: inline-block;
+	width: 20px;
+	margin: 0;
+}
+.pagination li a{
+
+}
 .right_col {
 	font-family: 'Open Sans', sans-serif;
 }
@@ -7,6 +28,9 @@
 }
 .pagination-control  {
 	margin-bottom: 20px;
+}
+.pagination-control select,a {
+	margin-right: 10%;
 }
 .control-tab select{
 	margin: 0 20px;
