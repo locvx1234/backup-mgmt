@@ -43,7 +43,7 @@ class Volume(models.Model):
     serial_number = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.id_volumeshow 
+        return self.id_volume
 
 
 class Schedule(models.Model):
