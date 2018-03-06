@@ -1,12 +1,18 @@
 .right_col table#example *:not(button) {
     background: transparent;
 }
-
+.right_col .rotate180{
+	transform: rotate(180deg);
+}
 span.agent-name {
 	margin-bottom: 10px;
 }
 .right_col .hidden{
 	display: none;
+}
+.right_col .sort-control-item {
+	display: inline-block;
+	margin: 10px 10px 10px 0;
 }
 .pagination {
 	width: 300px;
@@ -16,8 +22,8 @@ span.agent-name {
 	width: 20px;
 	margin: 0;
 }
-.pagination li a{
-
+.right_col .pagination li {
+	margin: 0;
 }
 .right_col {
 	font-family: 'Open Sans', sans-serif;
@@ -26,22 +32,26 @@ span.agent-name {
 	display: block;
 	height: 30px;
 }
-.pagination-control  {
+.sort-control  {
 	margin-bottom: 20px;
 }
-.pagination-control select,a {
-	margin-right: 10%;
+#order-icon {
+	margin-right: 20px;
 }
-.control-tab select{
+.control-tab #sortby-select{
 	margin: 0 20px;
+	text-transform: uppercase;
 }
-table td:nth-child(2){
+.sort-control-item #sortby-select option {
+	text-transform: uppercase;
+}
+.right_col table td:nth-child(2){
 	font-weight: bold;
 }
 .right_col a {
 	font-weight: bold;
 }
-button#set-pagination:hover ~ .pagination-control {
+.right_col button#set-pagination:hover ~ .sort-control {
 	display: none !important;
 	visibility: hidden;
 }
