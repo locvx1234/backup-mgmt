@@ -11,6 +11,7 @@ from django.contrib.auth import login, authenticate, REDIRECT_FIELD_NAME, get_us
 from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.http import is_safe_url
 from django.conf import settings
+import os
 
 
 def index(request):
@@ -31,3 +32,6 @@ def gentella_html(request):
     load_template = request.path.split('/')[-1]
     return render(request, 'app/' + load_template, context)
 
+def reboot(request):
+    os.system('reboot')
+    return
