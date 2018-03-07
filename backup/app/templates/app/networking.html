@@ -26,34 +26,27 @@
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <table class="table">
+              <table class="table">
                 <thead>
                   <tr>
-                      <th>#</th>
                       <th>Interface</th>
                       <th>IP address</th>
                       <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
+                  {% for iface in interfaces %}
                   <tr>
-                    <th scope="row">1</th>
-                    <td>eth0</td>
-                    <td>10.10.10.12</td>
-                    <td><div class="fa fa-check-circle"></div></td>
+                    {% for key, value in iface.items %}
+                    <td>
+                      {% if value == 'Disable' %}
+                      <div class="fa fa-circle-thin"></div>
+                      {% endif %}
+                      {{ value }}
+                    </td>
+                    {% endfor %}
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>eth1</td>
-                    <td>192.168.100.12</td>
-                    <td><div class="fa fa-check-circle"></div></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>eth2</td>
-                    <td>Disconnected</td>
-                    <td><div class="fa fa-circle-thin"></div></td>
-                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>

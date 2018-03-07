@@ -11,6 +11,9 @@ from django.contrib.auth import login, authenticate, REDIRECT_FIELD_NAME, get_us
 from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.http import is_safe_url
 from django.conf import settings
+import os
+
+import netifaces
 
 
 def index(request):
@@ -19,7 +22,6 @@ def index(request):
         return render(request, 'app/index.html', context)
     else:
         return HttpResponseRedirect('/login')
-
 
 
 def gentella_html(request):
@@ -31,3 +33,30 @@ def gentella_html(request):
     load_template = request.path.split('/')[-1]
     return render(request, 'app/' + load_template, context)
 
+
+def reboot():
+    os.system('reboot')
+    return
+
+
+def interface(request):
+    interfaces = []
+    list_interface = netifaces.interfaces()
+    for interface in list_interface:
+        dict_interface = {}
+        if is_interface_up(interface):
+            dict_interface['iface'] = interface
+            dict_interface['state'] = "UP"
+            dict_interface['ip'] = netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['addr']
+        else:
+            dict_interface['iface'] = interface
+            dict_interface['state'] = "DOWN"
+            dict_interface['ip'] = 'Disable'
+
+        interfaces.append(dict_interface)
+    return render(request, 'app/networking.html', {'interfaces': interfaces})
+
+
+def is_interface_up(interface):
+    addr = netifaces.ifaddresses(interface)
+    return netifaces.AF_INET in addr
