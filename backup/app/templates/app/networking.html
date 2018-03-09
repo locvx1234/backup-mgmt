@@ -31,20 +31,21 @@
                   <tr>
                       <th>Interface</th>
                       <th>IP address</th>
-                      <th>Status</th>
+                      <th>State</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for iface in interfaces %}
+                  {% for interface in interfaces %}
                   <tr>
-                    {% for key, value in iface.items %}
+                    <td>{{ interface.iface }}</td>
+                    <td>{{ interface.ip }}</td>
                     <td>
-                      {% if value == 'Disable' %}
+                      {% if interface.state == 'DOWN' %}
                       <div class="fa fa-circle-thin"></div>
-                      {% endif %}
-                      {{ value }}
+                      {% elif interface.state == 'UP' %}
+                      <div class="fa fa-check-circle"></div>
+                      {% endif %} {{ interface.state }}
                     </td>
-                    {% endfor %}
                   </tr>
                   {% endfor %}
                 </tbody>

@@ -97,25 +97,21 @@
                     <tr>
                         <th>User</th>
                         <th>Email</th>
-                        <th>Status</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Last Login</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {% for user in object_list %}
                     <tr>
-                      <td><div class="fa fa-user"></div> admin</td>
-                      <td>admin@contact.com</td>
-                      <td><div class="fa fa-circle"></div> Online</td>
+                      <td><div class="fa fa-user"></div> {{ user.username }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.first_name }}</td>
+                      <td>{{ user.last_name }}</td>
+                      <td>{{ user.last_login }}</td>
                     </tr>
-                    <tr>
-                      <td>user1</td>
-                      <td>user1@contact.com</td>
-                      <td><div class="fa fa-circle-o"></div> Offline</td>
-                    </tr>
-                    <tr>
-                      <td>user2</td>
-                      <td>user2@contact.com</td>
-                      <td><div class="fa fa-circle"></div> Online</td>
-                    </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
             </div>

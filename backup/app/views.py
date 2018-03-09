@@ -12,6 +12,8 @@ from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.http import is_safe_url
 from django.conf import settings
 import os
+from django.contrib.auth.models import User
+from django.views.generic import TemplateView
 
 import netifaces
 
@@ -60,3 +62,13 @@ def interface(request):
 def is_interface_up(interface):
     addr = netifaces.ifaddresses(interface)
     return netifaces.AF_INET in addr
+
+class UsersView(TemplateView):
+    template_name = 'app/contact.html'
+
+    def get_context_data(self,**kwargs):
+        context = super(UsersView,self).get_context_data(**kwargs)
+        context['object_list'] = User.objects.all()
+        return context
+
+
