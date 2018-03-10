@@ -43,7 +43,68 @@
             </tr>
         </thead>
         <tbody>
-             <tr>
+            {% for agent in agents.choice_set.all %}
+              <tr>
+                <td>{{ agent.name }}</td>
+                <td>
+                    <div class="col-xs-12 agent-row">
+                      <div class="control-link col-xs-3">
+                        <a href="">Manage Recovery Point</a>
+                        <a href="">Configure Agent Settings</a>
+                        <a href="">Remove Agent</a>
+                        <a href="">Show Backup Logs</a>
+                        <button class="btn btn-primary btn-sm">START BACKUP</button>
+                      </div>
+                      
+                      <div class="col-xs-5">
+                        <table class="table">
+                          <tbody>
+                            <tr>
+                              <td>LAST SUCCESSFUL BACKUP </td>
+                              <td>8:01pm Jan 26th EST</td>
+                            </tr>
+                            <tr>
+                              <td>CURRENT INTERVAL</td>
+                              <td>Every 60 minutes</td>
+                            </tr>
+                            <tr>
+                              <td>Screenshot</td>
+                              <td>No screenshot avalable</td>
+                            </tr>
+                            <tr>
+                              <td>PROTECT STORAGE</td>
+                              <td>86.33 GB</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="col-xs-4">
+                        <table class="table">
+                          <tbody>
+                            <tr>
+                              <td>PROTECT VOLUMNS</td>
+                              <td>D:\ E:\</td>
+                            </tr>
+                            <tr>
+                              <td>LOCAL USED</td>
+                              <td>90.08 GB</td>
+                            </tr>
+                            <tr>
+                              <td>OS VERSION</td>
+                              <td> {{ agent.os }}</td>
+                            </tr>
+                            <tr>
+                              <td>AGENT VERSION</td>
+                              <td>5.5.5</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
                 <td>AWWW</td>
                 <td>
                     <div class="col-xs-12 agent-row">
