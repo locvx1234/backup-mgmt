@@ -71,4 +71,6 @@ class UsersView(TemplateView):
         context['object_list'] = User.objects.all()
         return context
 
-
+def agent(request):
+    agents = get_object_or_404(Computer)
+    return render(request, 'app/agent.html', {'agents': agents})
