@@ -238,38 +238,38 @@
         <h4 class="modal-title">Add New Agent</h4>
       </div>
       <div class="modal-body">
-        <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
+	  <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" action="{% url 'agent' %}" method="post">
+		{% csrf_token %}
                 <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name"> Serial Number <span class="required">*</span>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12"  for="first-name"> Serial Number <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" name="" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
+                    <input type="text" name="agent-serial" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Name <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                    <input type="text" name="agent-name" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">OS</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input id="middle-name" name="agent-os" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">IP Address</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input id="middle-name" name="agent-ip" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">RAM</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input id="middle-name" name="agent-ram" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
                   </div>
                 </div>
                 <div class="ln_solid"></div>

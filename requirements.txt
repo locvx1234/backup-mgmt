@@ -1,2 +1,4 @@
 Django==2.0.2
 netifaces==0.10.6
+pytz==2018.3
+virtualenv==15.1.0

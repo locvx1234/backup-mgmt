@@ -75,7 +75,7 @@ class UsersView(TemplateView):
 
 
 def agent(request):
-    agents = get_object_or_404(Computer)
+    agents = Computer.objects.all()
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
@@ -84,11 +84,11 @@ def agent(request):
         ip = request.POST.get('agent-ip','')
         serial = request.POST.get('agent-serial','')
         ram = request.POST.get('agent-ram','')
-        agent = Agent(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
+        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
         agent.save()
     return render(request, 'app/agent.html', {'agents': agents})    
 
-def magage_agent(request):
+def manage_agent(request):
     context = {}
     return render(request, 'app/manage_recover_point.html', context)
 
@@ -97,5 +97,5 @@ class Agent(generic.ListView):
     context_object_name = 'agents'
     def get_queryset(self):
         return Computer.objects.all()
-
+    
 
