@@ -25,7 +25,7 @@ SECRET_KEY = '8*md2t)o**67@*yhc(d=f@j95kl(dnf^rmm4s00$-mh_vurb2b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.158.238']
 
 
 # Application definition
@@ -78,8 +78,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '/etc/mysql/my.cnf',
+        
+	    #  'read_default_file': '/etc/mysql/my.cnf',
         },
+	'NAME': 'backup_sys',
+	'USER': 'root',
+	'PASSWORD': 'root',
+	'HOST': 'localhost',
+	'PORT': ''
     }
 }
 
