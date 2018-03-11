@@ -15,6 +15,7 @@ import os
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 
+import yaml
 import netifaces
 ##########################
 from .models import Computer
@@ -65,17 +66,50 @@ def is_interface_up(interface):
     addr = netifaces.ifaddresses(interface)
     return netifaces.AF_INET in addr
 
+
 class UsersView(TemplateView):
     template_name = 'app/contact.html'
 
-    def get_context_data(self,**kwargs):
-        context = super(UsersView,self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super(UsersView, self).get_context_data(**kwargs)
         context['object_list'] = User.objects.all()
         return context
+
 
 class Agent(generic.ListView):
     template_name = 'app/agent.html'
     context_object_name = 'agents'
+
     def get_queryset(self):
         return Computer.objects.all()
 
+
+def support(request):
+    print('RECEIVED REQUEST: ' + request.method)
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        organization = request.POST.get('organization')
+        data_contact = dict(
+            first_name = first_name,
+            last_name = last_name,
+            email = email,
+            phone = phone,
+            organization = organization,
+        )
+        with open(os.path.join(settings.MEDIA_ROOT, 'support_contact.yml'), 'w') as outfile:
+            yaml.dump(data_contact, outfile, default_flow_style=False)
+
+        with open(os.path.join(settings.MEDIA_ROOT, 'support_contact.yml'), 'r') as stream:
+            data_loaded = yaml.load(stream)
+
+        print(data_loaded)
+
+        return render(request, 'app/contact.html', {'data_contact': data_loaded} )
+    else: #GET
+        print('hi')
+        return render(request, 'app/contact.html')
+
+# class ContactView(UsersView, )
