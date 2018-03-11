@@ -66,11 +66,25 @@ def is_interface_up(interface):
 class UsersView(TemplateView):
     template_name = 'app/contact.html'
 
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         context = super(UsersView,self).get_context_data(**kwargs)
         context['object_list'] = User.objects.all()
         return context
 
 def agent(request):
     agents = get_object_or_404(Computer)
-    return render(request, 'app/agent.html', {'agents': agents})
+    return render(request, 'app/agent.html', {'agents': agents})    
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        name = request.POST.get('agent-name','')
+        os = request.POST.get('agent-os','')
+        ip = request.POST.get('agent-ip','')
+        serial = request.POST.get('agent-serial','')
+        ram = request.POST.get('agent-ram','')
+        agent = Agent(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
+        agent.save()
+
+def magage_agent(request):
+    context = {}
+    return render(request, 'app/manage_recover_point.html', context)

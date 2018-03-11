@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, {'next_page' : 'login'}, name='logout'),
     url(r'^reboot/$', views.reboot, name='reboot'),
     url(r'^agent/$', views.agent, name='agent'),
+    url(r'^manage-agent/$', views.manage_agent, name='manage-agent'),
 ]
