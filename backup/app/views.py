@@ -76,7 +76,6 @@ class UsersView(TemplateView):
 
 def agent(request):
     agents = get_object_or_404(Computer)
-    return render(request, 'app/agent.html', {'agents': agents})    
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
@@ -87,6 +86,7 @@ def agent(request):
         ram = request.POST.get('agent-ram','')
         agent = Agent(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
         agent.save()
+    return render(request, 'app/agent.html', {'agents': agents})    
 
 def magage_agent(request):
     context = {}
