@@ -16,7 +16,9 @@ from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 
 import netifaces
-
+##########################
+from .models import Computer
+from django.views import generic 
 
 def index(request):
     if request.user.is_authenticated:
@@ -71,6 +73,7 @@ class UsersView(TemplateView):
         context['object_list'] = User.objects.all()
         return context
 
+
 def agent(request):
     agents = get_object_or_404(Computer)
     return render(request, 'app/agent.html', {'agents': agents})    
@@ -88,3 +91,11 @@ def agent(request):
 def magage_agent(request):
     context = {}
     return render(request, 'app/manage_recover_point.html', context)
+
+class Agent(generic.ListView):
+    template_name = 'app/agent.html'
+    context_object_name = 'agents'
+    def get_queryset(self):
+        return Computer.objects.all()
+
+
