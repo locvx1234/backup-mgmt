@@ -54,11 +54,13 @@
                   <form class="form-horizontal form-label-center form-group">
                     <div class="col-md-1"></div>
                     <div class="col-md-4">
+                      {% for agent in agents %}
                       <div class="radio col-centered">
                         <label>
-                          <input type="radio" class="flat" name="system"> Host 1 <span class="ip-address">10.10.10.10</span>
+                          <input type="radio" class="flat" name="system"> {{ agent.name }} <span class="ip-address"> {{ agent.ip_address }} </span>
                         </label>
                       </div>
+                      {% endfor %}
                       <div class="radio col-centered">
                         <label>
                           <input type="radio" class="flat" name="system"> Host 2 <span class="ip-address">10.10.10.100</span>
@@ -67,26 +69,6 @@
                       <div class="radio col-centered">
                         <label>
                           <input type="radio" class="flat" name="system"> Host 3 <span class="ip-address">10.10.110.10</span>
-                        </label>
-                      </div>
-                      <div class="radio col-centered">
-                        <label>
-                          <input type="radio" class="flat" name="system"> Host 4 <span class="ip-address">10.120.10.10</span>
-                        </label>
-                      </div>
-                      <div class="radio col-centered">
-                        <label>
-                          <input type="radio" class="flat" name="system"> Host 5 <span class="ip-address">10.130.10.10</span>
-                        </label>
-                      </div>
-                      <div class="radio col-centered">
-                        <label>
-                          <input type="radio" class="flat" name="system"> Host 6 <span class="ip-address">10.160.10.10</span>
-                        </label>
-                      </div>
-                      <div class="radio col-centered">
-                        <label>
-                          <input type="radio" class="flat" name="system"> Host 7 <span class="ip-address">10.10.104.10</span>
                         </label>
                       </div>
                     </div>

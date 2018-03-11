@@ -10,11 +10,12 @@ urlpatterns = [
 
     # The home page
     url(r'^$', views.index, name='index'),
-    url(r'^contact/$', views.UsersView.as_view(), name='contact'),
-    url(r'^support/$', views.support, name='support'),
+    url(r'^contact/$', views.contact, name='contact'),
     url(r'^networking/$', views.interface, name='networking'),
     url(r'^login/$', auth_views.login, {'template_name': 'app/login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page' : 'login'}, name='logout'),
     url(r'^reboot/$', views.reboot, name='reboot'),
-    url(r'^agent/$', views.Agent.as_view(), name='agent'),
+    url(r'^manage-agent/$', views.manage_agent, name='manage-agent'),
+    url(r'^agent/$', views.agent, name='agent'),
+    url(r'^restore/$', views.restore, name='restore'),
 ]

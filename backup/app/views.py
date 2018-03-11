@@ -76,15 +76,48 @@ class UsersView(TemplateView):
         return context
 
 
+def agent(request):
+    agents = Computer.objects.all()
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        name = request.POST.get('agent-name','')
+        os = request.POST.get('agent-os','')
+        ip = request.POST.get('agent-ip','')
+        serial = request.POST.get('agent-serial','')
+        ram = request.POST.get('agent-ram','')
+        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
+        agent.save()
+    return render(request, 'app/agent.html', {'agents': agents})    
+
+def restore(request):
+    agents = Computer.objects.all()
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        name = request.POST.get('agent-name','')
+        os = request.POST.get('agent-os','')
+        ip = request.POST.get('agent-ip','')
+        serial = request.POST.get('agent-serial','')
+        ram = request.POST.get('agent-ram','')
+        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
+        agent.save()
+    return render(request, 'app/restore.html', {'agents': agents})
+
+def manage_agent(request):
+    context = {}
+    return render(request, 'app/manage_recover_point.html', context)
+
+
 class Agent(generic.ListView):
     template_name = 'app/agent.html'
     context_object_name = 'agents'
 
     def get_queryset(self):
         return Computer.objects.all()
+    
 
-
-def support(request):
+def contact(request):
     print('RECEIVED REQUEST: ' + request.method)
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
@@ -102,14 +135,10 @@ def support(request):
         with open(os.path.join(settings.MEDIA_ROOT, 'support_contact.yml'), 'w') as outfile:
             yaml.dump(data_contact, outfile, default_flow_style=False)
 
-        with open(os.path.join(settings.MEDIA_ROOT, 'support_contact.yml'), 'r') as stream:
-            data_loaded = yaml.load(stream)
+    with open(os.path.join(settings.MEDIA_ROOT, 'support_contact.yml'), 'r') as stream:
+        data_loaded = yaml.load(stream)
 
-        print(data_loaded)
-
-        return render(request, 'app/contact.html', {'data_contact': data_loaded} )
-    else: #GET
-        print('hi')
-        return render(request, 'app/contact.html')
-
-# class ContactView(UsersView, )
+    print(data_loaded)
+    user_list = User.objects.all()
+    print(user_list)
+    return render(request, 'app/contact.html', {'data_contact': data_loaded, 'user_list':user_list} )
