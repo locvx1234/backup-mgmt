@@ -1,3 +1,7 @@
+import sys
+import os
+import fileinput
+
 from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponseRedirect, HttpResponse
@@ -11,12 +15,12 @@ from django.contrib.auth import login, authenticate, REDIRECT_FIELD_NAME, get_us
 from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.http import is_safe_url
 from django.conf import settings
-import os
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 
 import yaml
 import netifaces
+import pytz
 ##########################
 from .models import Computer
 from django.views import generic 
@@ -42,6 +46,19 @@ def gentella_html(request):
 def reboot():
     os.system('reboot')
     return
+
+
+def device_setting(request):
+    timezone = settings.TIME_ZONE
+    list_timezone = pytz.all_timezones
+    if request.method == 'POST':
+        timezone = request.POST.get('timezone-select')
+        # change TIME_ZONE in settings.py
+        for line in fileinput.input(settings.BASE_DIR + '/backup/settings.py', inplace=True):
+            if line.strip().startswith('TIME_ZONE = '):
+                line = 'TIME_ZONE = ' + "'" + timezone + "'\n"
+            sys.stdout.write(line)
+    return render(request, 'app/device_setting.html', {'timezone': timezone, 'list_tz': list_timezone})
 
 
 def interface(request):

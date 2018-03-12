@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^contact/$', views.contact, name='contact'),
     url(r'^networking/$', views.interface, name='networking'),
+    url(r'^device_setting/$', views.device_setting, name='device_setting'),
     url(r'^login/$', auth_views.login, {'template_name': 'app/login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page' : 'login'}, name='logout'),
     url(r'^reboot/$', views.reboot, name='reboot'),
