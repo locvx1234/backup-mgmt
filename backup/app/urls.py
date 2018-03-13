@@ -1,6 +1,9 @@
 from django.conf.urls import url
 from . import views
 from django.contrib.auth import views as auth_views
+from django.conf.urls import (
+	handler400, handler403, handler404, handler500
+	)
 
 urlpatterns = [
     # Matches any html file - to be used for gentella

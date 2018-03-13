@@ -2,8 +2,8 @@ import sys
 import os
 import fileinput
 
-from django.shortcuts import render
-from django.template import loader
+from django.shortcuts import render, render_to_response
+from django.template import loader, RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -159,3 +159,4 @@ def contact(request):
     user_list = User.objects.all()
     print(user_list)
     return render(request, 'app/contact.html', {'data_contact': data_loaded, 'user_list':user_list} )
+
