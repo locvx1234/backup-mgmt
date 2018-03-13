@@ -160,5 +160,3 @@ def contact(request):
     print(user_list)
     return render(request, 'app/contact.html', {'data_contact': data_loaded, 'user_list':user_list} )
 
-#  def handler404(request, exception):
-#      return render(request, 'app/404.html', locals())

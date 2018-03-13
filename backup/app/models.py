@@ -28,14 +28,9 @@ class Computer(models.Model):
     name = models.CharField(max_length=45)
     os = models.CharField(max_length=45)
     ip_address = models.GenericIPAddressField()
-<<<<<<< HEAD
-    ram = models.FloatField()
-    cpus = models.IntegerField(default=0)
-    agent_version = VersionField(default='0.0.0')
-=======
-    ram = models.IntegerField(help_text="unit MB")
-    cpu = models.IntegerField(help_text="the number of cores")
->>>>>>> 50fe28a5a5095002f573da74568e77972940ea0c
+    agent_version = VersionField(default='0.0')
+    ram = models.IntegerField(help_text="Unit MB")
+    cpu = models.IntegerField(help_text="The number of CPU cores")
 
     def __str__(self):
         return self.name + " " + str(self.ip_address)

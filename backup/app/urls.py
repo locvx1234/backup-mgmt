@@ -23,4 +23,3 @@ urlpatterns = [
     url(r'^agent/$', views.agent, name='agent'),
     url(r'^restore/$', views.restore, name='restore'),
 ]
-#  handler404 = 'app.views.handler404',
