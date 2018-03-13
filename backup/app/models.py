@@ -24,7 +24,7 @@ class Notification(models.Model):
 
 
 class Computer(models.Model):
-    serial_number = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    serial_number = models.CharField(max_length=50)
     name = models.CharField(max_length=45)
     os = models.CharField(max_length=45)
     ip_address = models.GenericIPAddressField()
