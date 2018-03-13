@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+from versionfield import VersionField
 from django.db import models
 import uuid
 
@@ -29,6 +29,8 @@ class Computer(models.Model):
     os = models.CharField(max_length=45)
     ip_address = models.GenericIPAddressField()
     ram = models.FloatField()
+    cpus = models.IntegerField(default=0)
+    agent_version = VersionField(default='0.0.0')
 
     def __str__(self):
         return self.name
