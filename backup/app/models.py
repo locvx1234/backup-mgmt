@@ -28,29 +28,38 @@ class Computer(models.Model):
     name = models.CharField(max_length=45)
     os = models.CharField(max_length=45)
     ip_address = models.GenericIPAddressField()
+<<<<<<< HEAD
     ram = models.FloatField()
     cpus = models.IntegerField(default=0)
     agent_version = VersionField(default='0.0.0')
+=======
+    ram = models.IntegerField(help_text="unit MB")
+    cpu = models.IntegerField(help_text="the number of cores")
+>>>>>>> 50fe28a5a5095002f573da74568e77972940ea0c
 
     def __str__(self):
-        return self.name
+        return self.name + " " + str(self.ip_address)
 
     class Meta:
         ordering = ('name',)
 
 
 class Volume(models.Model):
-    id_volume = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for volume")
-    capacite = models.FloatField()
-    serial_number = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
-
+    type = models.CharField(max_length=10, help_text="HDD or SSD")
+    capacity = models.IntegerField(help_text="unit GB")
+    vendor = models.CharField(max_length=200)
+    speed = models.IntegerField(help_text="unit rpm")
+    computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
     def __str__(self):
-        return self.id_volume
+        return self.type + " " + self.vendor + " " + str(self.capacity) + "GB " + str(self.speed) + "rpm"
 
 
 class Schedule(models.Model):
     timestamp = models.DateTimeField()
-    serial_number = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
+    computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return str(self.timestamp) + " " + str(self.computer)
 
     class Meta:
         ordering = ('timestamp',)
@@ -58,8 +67,12 @@ class Schedule(models.Model):
 
 class Sync(models.Model):
     sync_time = models.DateTimeField()
-    volume_used = models.FloatField()
-    id_volume = models.ForeignKey('Volume', on_delete=models.SET_NULL, null=True)
+    capacity_used = models.FloatField()
+    volume = models.ForeignKey('Volume', on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return str(self.sync_time) + " " + str(self.volume)
 
     class Meta:
         ordering = ('sync_time',)
+
