@@ -138,14 +138,15 @@
         <th>DRIVER VERSION</th>
       </thead>
       <tbody>
+        {% for agent in agents %}
         <tr>
-          <td>DEMO</td>
-          <td>DEMO</td>
-          <td>DEMO</td>
-          <td>DEMO</td>
-          <td>DEMO</td>
-          <td>DEMO</td>
-          <td>DEMO</td>
+          <td>{{ agent.name }}</td>
+          <td>{{ agent.ip_address }}</td>
+          <td>non</td>
+          <td>{{ agent.agent_version }}</td>
+          <td>{{ agent.cpu }}</td>
+          <td>non</td>
+        {% endfor %}
         </tr>
       </tbody>
     </table>

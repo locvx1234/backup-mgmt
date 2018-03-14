@@ -1,5 +1,5 @@
 $("#set-pagination").on("click", function(){
-    $(".pagination-control").toggle();
+    $(".sort-control").toggle();
     
 });
 $('.rotate180').on('click', function() {

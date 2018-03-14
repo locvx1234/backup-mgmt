@@ -26,9 +26,10 @@ from .models import Computer
 from django.views import generic 
 
 def index(request):
+    context = {}
     if request.user.is_authenticated:
-        context = {}
-        return render(request, 'app/index.html', context)
+        computers = Computer.objects.all()
+        return render(request, 'app/index.html', {'agents': computers})
     else:
         return HttpResponseRedirect('/login')
 
@@ -103,7 +104,9 @@ def agent(request):
         ip = request.POST.get('agent-ip','')
         serial = request.POST.get('agent-serial','')
         ram = request.POST.get('agent-ram','')
-        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
+        cpu = request.POST.get('agent-cpu','')
+        version =request.POST.get('agent-version','')
+        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu, agent_version = version )
         agent.save()
     return render(request, 'app/agent.html', {'agents': agents})    
 
