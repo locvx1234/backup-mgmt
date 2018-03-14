@@ -160,3 +160,8 @@ def contact(request):
     print(user_list)
     return render(request, 'app/contact.html', {'data_contact': data_loaded, 'user_list':user_list} )
 
+# def error_404(request):
+#         return render(request,'app/page_404.html', status=404)
+#
+# def error_500(request):
+#         return render(request,'app/page_500.html', status=500)
