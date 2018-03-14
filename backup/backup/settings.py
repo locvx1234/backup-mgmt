@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8*md2t)o**67@*yhc(d=f@j95kl(dnf^rmm4s00$-mh_vurb2b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['127.0.0.1', '192.168.158.238']
 
@@ -77,14 +77,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-
-	    'read_default_file': '/etc/mysql/my.cnf',
+	    # 'read_default_file': '/etc/mysql/my.cnf',
         },
-	# 'NAME': 'backup_sys',
-	# 'USER': 'root',
-	# 'PASSWORD': 'root',
-	# 'HOST': 'localhost',
-	# 'PORT': ''
+	'NAME': 'backup_sys',
+	'USER': 'root',
+	'PASSWORD': 'root',
+	'HOST': 'localhost',
+	'PORT': ''
     }
 }
 
