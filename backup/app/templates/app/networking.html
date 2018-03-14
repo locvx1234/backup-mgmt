@@ -67,8 +67,10 @@
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
+              {% for interface in interfaces %}
+                {% if interface.iface != 'lo' %}
                 <div class="interface">
-                    <h4>eth0</h4>
+                    <h4>{{ interface.iface }}</h4>
                     <form class="form-horizontal form-label-left input_mask">
                       <div class="form-group">
                           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-mode-eth0">IP mode
@@ -124,62 +126,8 @@
                     </form>
                 </div>
                 <div class="ln_solid"></div>
-                <div class="interface">
-                    <h4>eth1</h4>
-                    <form class="form-horizontal form-label-left input_mask">
-                      <div class="form-group">
-                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-mode-eth1">IP mode
-                          </label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="form-control" id="ip-mode-eth1" name="ip-mode-eth1">
-                              <option>DHCP</option>
-                              <option>Manual</option>
-                              <option>Static</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-address-eth1">IP address
-                          </label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="ip-address-eth1" name="ip-address" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="net-mask-eth1">Netmask
-                          </label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="net-mask-eth1" name="net-mask" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="gateway-eth1">Gateway
-                          </label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="gateway-eth1" name="gateway-eth1" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <div class="btn-group" data-toggle="buttons">
-                              <label class="btn btn-default" data-toggle-class="btn btn-primary" data-toggle-passive-class="btn btn-default">
-                                <input type="radio" name="status" value="enable"> Enable
-                              </label>
-                              <label class="btn btn-default" data-toggle-class="btn btn-default" data-toggle-passive-class="btn btn-default">
-                                <input type="radio" name="status" value="disable"> Disable
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <br>
-                        <div class="form-group">
-                          <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button type="submit" class="btn btn-success">Apply</button>
-                          </div>
-                        </div>
-                    </form>
-                </div>
+                {% endif %}
+              {% endfor %}
             </div>
           </div>
           <div class="x_panel">
