@@ -1,8 +1,11 @@
 .right_col {
 	font-family: 'Open Sans', sans-serif;
 }
-li {
+.right_col li {
 	list-style: none;
+}
+.side3 ul li {
+	height: 30px;
 }
 .section .pick {
 	width: 50%;
@@ -14,4 +17,15 @@ li {
 }
 .section .flat:checked {
 	background-color: blue;
+}
+.right_col {
+      position: relative;
+}
+#myScrollspy {
+	}
+ul.nav-pills {
+  top: 20px;
+  position: fixed;
+  overflow-y: scroll;
+	height: 100%;
 }

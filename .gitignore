@@ -2,3 +2,4 @@
 __pycache__/
 .idea/*
 .DS_Store
+/backup/app/__pycache__
