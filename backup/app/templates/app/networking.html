@@ -68,7 +68,7 @@
             </div>
             <div class="x_content">
               {% for interface in interfaces %}
-                {% if interface.iface != 'lo' %}
+                {% if interface.iface != 'lo' and interface.state == "UP"  %}
                 <div class="interface">
                     <h4>{{ interface.iface }}</h4>
                     <form class="form-horizontal form-label-left input_mask">
@@ -146,33 +146,38 @@
             </div>
             <div class="x_content">
               <br />
-              <form class="form-horizontal form-label-left input_mask">
+              <form class="form-horizontal form-label-left input_mask" method="post">
+              {% csrf_token %}
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns1">DNS 1
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                      <input type="text" id="dns1" name="dns1" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                      <input type="text" id="dns1" name="dns1" class="form-control col-md-7 col-xs-12"
+                             data-inputmask="'mask': '9[99].9[99].9[99].9[99]'" value="{{ dns.resolver.0 }}">
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns2">DNS 2
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                      <input type="text" id="dns2" name="dns2" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                      <input type="text" id="dns2" name="dns2" class="form-control col-md-7 col-xs-12"
+                             data-inputmask="'mask': '9[99].9[99].9[99].9[99]'" value="{{ dns.resolver.1 }}">
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns3">DNS 3
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                      <input type="text" id="dns3" name="dns3" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                      <input type="text" id="dns3" name="dns3" class="form-control col-md-7 col-xs-12"
+                             data-inputmask="'mask': '9[99].9[99].9[99].9[99]'" value="{{ dns.resolver.2 }}">
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns3">DNS search domain
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                      <input type="text" id="dns-search" name="dns-search" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                      <input type="text" id="dns-search" name="dns-search" class="form-control col-md-7 col-xs-12"
+                             value="{{ dns.search }}">
                     </div>
                   </div>
                   <br>

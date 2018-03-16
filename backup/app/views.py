@@ -62,7 +62,7 @@ def device_setting(request):
     return render(request, 'app/device_setting.html', {'timezone': timezone, 'list_tz': list_timezone})
 
 
-def interface(request):
+def networking(request):
     interfaces = []
     list_interface = netifaces.interfaces()
     for interface in list_interface:
@@ -77,7 +77,42 @@ def interface(request):
             dict_interface['ip'] = 'Disable'
 
         interfaces.append(dict_interface)
-    return render(request, 'app/networking.html', {'interfaces': interfaces})
+    dns = []
+    if request.method == 'POST':
+
+        dns1 = request.POST.get('dns1')
+        dns2 = request.POST.get('dns2')
+        dns3 = request.POST.get('dns3')
+        search_domain = request.POST.get('dns-search')
+        for i in range(1,4):
+            if eval('dns' + str(i)):
+                cmd = "sed -i '"+ str(i) + "s/.*/nameserver " + eval('dns' + str(i)) + "/' /etc/resolv.conf"
+                os.system(cmd)
+
+        if search_domain:
+            cmd = "sed -i 's/search .*/search " + search_domain + "/' /etc/resolv.conf"
+            os.system(cmd)
+    dns = get_resolvers()
+    print(dns)
+    return render(request, 'app/networking.html', {'interfaces': interfaces, 'dns': dns})
+
+
+def get_resolvers():
+    resolvers = []
+    dns = {}
+    try:
+        with open( '/etc/resolv.conf', 'r' ) as resolvconf:
+            for line in resolvconf.readlines():
+                line = line.split( '#', 1 )[ 0 ]
+                line = line.rstrip()
+                if 'nameserver' in line:
+                    resolvers.append( line.split()[ 1 ] )
+                if 'search' in line:
+                    dns['search'] = line.split()[ 1 ]
+            dns['resolver'] = resolvers
+        return dns
+    except IOError as error:
+        return error.strerror
 
 
 def is_interface_up(interface):
@@ -106,7 +141,8 @@ def agent(request):
         ram = request.POST.get('agent-ram','')
         cpu = request.POST.get('agent-cpu','')
         version =request.POST.get('agent-version','')
-        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu, agent_version = version )
+        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu,
+                         agent_version = version )
         agent.save()
     return render(request, 'app/agent.html', {'agents': agents})    
 
