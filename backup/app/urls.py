@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name': 'app/login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page' : 'login'}, name='logout'),
     url(r'^reboot/$', views.reboot, name='reboot'),
-    url(r'^manage-agent/$', views.manage_agent, name='manage-agent'),
+    url(r'^config-agent/$', views.config_agent, name='config-agent'),
     url(r'^agent/$', views.agent, name='agent'),
     url(r'^restore/$', views.restore, name='restore'),
 ]

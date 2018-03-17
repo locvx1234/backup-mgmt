@@ -1,8 +1,12 @@
 .right_col {
 	font-family: 'Open Sans', sans-serif;
+	background-color: #fff !important;
 }
 .right_col li {
 	list-style: none;
+}
+.right_col {
+	padding-bottom: 500px;
 }
 .side3 {
 
@@ -12,6 +16,7 @@
 }
 .section {
 	padding-top: 30px;
+	min-height: 300px;
 }
 .section .pick {
 	width: 50%;

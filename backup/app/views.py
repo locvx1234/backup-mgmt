@@ -24,14 +24,61 @@ import pytz
 ##########################
 from .models import Computer
 from django.views import generic 
+from netaddr import *
+
+def get_all_interface():
+    interfaces = []
+    list_interface = netifaces.interfaces()
+    for interface in list_interface:
+        dict_interface = {}
+        if is_interface_up(interface):
+            dict_interface['iface'] = interface
+            dict_interface['state'] = "UP"
+            dict_interface['ip'] = netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['addr']
+        else:
+            dict_interface['iface'] = interface
+            dict_interface['state'] = "DOWN"
+            dict_interface['ip'] = 'Disable'
+        interfaces.append(dict_interface)
+    return interfaces
 
 def index(request):
-    context = {}
     if request.user.is_authenticated:
-        computers = Computer.objects.all()
-        return render(request, 'app/index.html', {'agents': computers})
+        pass
     else:
         return HttpResponseRedirect('/login')
+
+    context = {}
+    ### find a public IP, if cant get a private instead
+    interfaces = [x for x in get_all_interface() if x['ip'] != 'Disable']
+    private_ip = None
+    public_ip = None
+    for interface in interfaces:
+        if not IPAddress(interface['ip']).is_private() and not IPAddress(interface['ip']).is_loopback():
+            public_ip = interface['ip']
+        elif not private_ip:
+            private_ip = interface['ip']
+    if not public_ip:
+        context['ip'] = private_ip
+        context['ip_type'] = 'private'
+    else:
+        context['ip'] = public_ip
+        context['ip_type'] = 'public'
+    ### get all computer and disk used with each computer
+    all_computer = Computer.objects.all()
+    context['agents'] = all_computer
+    disk_used_obs = []
+    for computer in all_computer:
+        disk_used = {}
+        volumes = computer.volume_set.all()
+        for volume in volumes:
+            # print(volume.__str__())
+            # last_sync = volume.sync_set().all()[0]
+            # print(last_sync.__str__())
+            pass
+    context['agents_count'] = len(context['agents'])
+    return render(request, 'app/index.html', context)
+    
 
 
 def gentella_html(request):
@@ -160,9 +207,9 @@ def restore(request):
         agent.save()
     return render(request, 'app/restore.html', {'agents': agents})
 
-def manage_agent(request):
+def config_agent(request):
     context = {}
-    return render(request, 'app/manage_recover_point.html', context)
+    return render(request, 'app/config_agent.html', context)
 
 
 class Agent(generic.ListView):
