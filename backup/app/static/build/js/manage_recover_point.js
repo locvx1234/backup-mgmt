@@ -1,0 +1,1 @@
+$(".nav > li.active").removeClass(".active");

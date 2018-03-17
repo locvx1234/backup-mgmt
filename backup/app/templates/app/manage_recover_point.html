@@ -4,6 +4,10 @@
 
 {% block stylesheets %}
   <link rel="stylesheet" type="text/css" href="/static/build/css/manage_recover_point.css">
+  <meta http-equiv="cache-control" content="max-age=0" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="expires" content="Tue, 01 Jan 1990 12:00:00 GMT" />
   {{ block.super }}
 {% endblock stylesheets %}
 
@@ -81,6 +85,28 @@
             <button class="btn btn-primary btn-xs">Apply to all</button>
           </div>
         </div>
+
+        <div class="section" id="lb_rb">
+          <h3 class="title">Local Backup and Retention Policy </h3>
+          <p class="description"></p>
+          <b>Set the interval and Schedule for Local Backups</b>
+          <div class="pick">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" class="flat blue"> Enable
+              </label>
+            </div>
+             <div class="checkbox">
+              <label>
+                <input type="checkbox" class="flat"> Pause
+              </label>
+            </div>
+          </div>
+          <div class="confirm-options">
+            <button class="btn btn-primary btn-xs">Apply</button>
+            <button class="btn btn-primary btn-xs">Apply to all</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -111,4 +137,5 @@
   <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
   <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
   <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+  <script src="/static/build/js/manage_recover_point.js"></script>
 {% endblock javascripts %}

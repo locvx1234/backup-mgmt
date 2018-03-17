@@ -140,7 +140,7 @@ def agent(request):
         serial = request.POST.get('agent-serial','')
         ram = request.POST.get('agent-ram','')
         cpu = request.POST.get('agent-cpu','')
-        version =request.POST.get('agent-version','')
+        version = request.POST.get('agent-version','')
         agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu,
                          agent_version = version )
         agent.save()
