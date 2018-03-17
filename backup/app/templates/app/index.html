@@ -73,30 +73,12 @@
     <div class="col-md-7 col-sm-12 col-xs-12 scrollable">
       <table class="table">
         <tbody>
+          {% for disk in disk_used %}
           <tr>
-            <td>LOCAL FREE</td>
-            <td>133.05 GB</td>
+            <td>{{ disk.name }}</td>
+            <td>{{ disk.total_disk }}</td>
           </tr>
-          <tr>
-            <td>OFFSITE TRANSFER FILE</td>
-            <td>133.05 GB</td>
-          </tr>
-          <tr>
-            <td>CUVH01</td>
-            <td>133.05 GB</td>
-          </tr>
-          <tr>
-            <td>CUVH02</td>
-            <td>133.05 GB</td>
-          </tr>
-          <tr>
-            <td>CUVH02</td>
-            <td>133.05 GB</td>
-          </tr>
-          <tr>
-            <td>CUVH02</td>
-            <td>133.05 GB</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
