@@ -70,16 +70,14 @@ def index(request):
     disk_used_obs = []
 
     for computer in all_computer:
-        total_disk = 0
         disk_used = {}
         volumes = computer.volume_set.all()
         for volume in volumes:
             print(volume.__str__())
-            all_sync = volume.sync_set.all()
-            for sync in all_sync:
-                print(sync.capacity_used)
-                total_disk += sync.capacity_used
-        disk_used_obs.append({'name': computer.name, 'total_disk': total_disk})
+            last_sync = volume.sync_set.all()[0]
+            print(last_sync.capacity_used)
+            used_disk = last_sync.capacity_used
+        disk_used_obs.append({'name': computer.name, 'used_disk': used_disk})
     context['agents_count'] = len(context['agents'])
     context['disk_used'] = disk_used_obs
     return render(request, 'app/index.html', context)
