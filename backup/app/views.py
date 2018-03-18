@@ -22,9 +22,10 @@ import yaml
 import netifaces
 import pytz
 ##########################
-from .models import Computer
+from .models import Computer, Sync
 from django.views import generic 
 from netaddr import *
+
 
 def get_all_interface():
     interfaces = []
@@ -42,6 +43,7 @@ def get_all_interface():
         interfaces.append(dict_interface)
     return interfaces
 
+
 def index(request):
     if request.user.is_authenticated:
         pass
@@ -49,7 +51,7 @@ def index(request):
         return HttpResponseRedirect('/login')
 
     context = {}
-    ### find a public IP, if cant get a private instead
+    # find a public IP, if cant get a private instead
     interfaces = [x for x in get_all_interface() if x['ip'] != 'Disable']
     private_ip = None
     public_ip = None
@@ -64,7 +66,7 @@ def index(request):
     else:
         context['ip'] = public_ip
         context['ip_type'] = 'public'
-    ### get all computer and disk used with each computer
+    # get all computer and disk used with each computer
     all_computer = Computer.objects.all()
     context['agents'] = all_computer
     disk_used_obs = []
@@ -82,7 +84,6 @@ def index(request):
     context['disk_used'] = disk_used_obs
     return render(request, 'app/index.html', context)
     
-
 
 def gentella_html(request):
     context = {}
@@ -196,6 +197,7 @@ def agent(request):
         agent.save()
     return render(request, 'app/agent.html', {'agents': agents})    
 
+
 def restore(request):
     agents = Computer.objects.all()
     if request.method == 'GET':
@@ -209,6 +211,7 @@ def restore(request):
         agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
         agent.save()
     return render(request, 'app/restore.html', {'agents': agents})
+
 
 def config_agent(request):
     context = {}
@@ -254,3 +257,12 @@ def contact(request):
 #
 # def error_500(request):
 #         return render(request,'app/page_500.html', status=500)
+
+
+def off_site_sync(request):
+    context = {}
+
+    tasks = Sync.objects.all()
+    all_computer = Computer.objects.all()
+
+    return render(request, 'app/offsite-sync.html', {'context': context})

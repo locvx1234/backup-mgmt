@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^config-agent/$', views.config_agent, name='config-agent'),
     url(r'^agent/$', views.agent, name='agent'),
     url(r'^restore/$', views.restore, name='restore'),
+    url(r'^off-site/$', views.off_site_sync, name='off_site'),
 ]

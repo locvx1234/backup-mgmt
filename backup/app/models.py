@@ -31,22 +31,13 @@ class Computer(models.Model):
     agent_version = VersionField(default='0.0')
     ram = models.IntegerField(help_text="Unit MB")
     cpu = models.IntegerField(help_text="The number of CPU cores")
+    capacity_used = models.FloatField()
 
     def __str__(self):
         return self.name + " " + str(self.ip_address)
 
     class Meta:
         ordering = ('name',)
-
-
-class Volume(models.Model):
-    type = models.CharField(max_length=10, help_text="HDD or SSD")
-    capacity = models.IntegerField(help_text="unit GB")
-    vendor = models.CharField(max_length=200)
-    speed = models.IntegerField(help_text="unit rpm")
-    computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
-    def __str__(self):
-        return self.type + " " + self.vendor + " " + str(self.capacity) + "GB " + str(self.speed) + "rpm"
 
 
 class Schedule(models.Model):
@@ -57,17 +48,17 @@ class Schedule(models.Model):
         return str(self.timestamp) + " " + str(self.computer)
 
     class Meta:
-        ordering = ('timestamp',)
+        ordering = ('-timestamp',)
 
 
 class Sync(models.Model):
     sync_time = models.DateTimeField()
-    capacity_used = models.FloatField()
-    volume = models.ForeignKey('Volume', on_delete=models.SET_NULL, null=True)
+    amount_data_change = models.FloatField()
+    computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return str(self.sync_time) + " " + str(self.volume)
 
     class Meta:
-        ordering = ('sync_time',)
+        ordering = ('-sync_time',)
 
