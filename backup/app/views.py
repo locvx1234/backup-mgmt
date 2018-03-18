@@ -1,6 +1,7 @@
 import sys
 import os
 import fileinput
+import datetime
 
 from django.shortcuts import render, render_to_response
 from django.template import loader, RequestContext
@@ -70,16 +71,17 @@ def index(request):
     all_computer = Computer.objects.all()
     context['agents'] = all_computer
     disk_used_obs = []
-
+    #
     for computer in all_computer:
-        disk_used = {}
-        volumes = computer.volume_set.all()
-        for volume in volumes:
-            print(volume.__str__())
-            last_sync = volume.sync_set.all()[0]
-            print(last_sync.capacity_used)
-            used_disk = last_sync.capacity_used
+        # disk_used_obs = []
+        print(computer)
+        syncs_of_computer = computer.sync_set.all()
+        used_disk = 0
+        for sync in syncs_of_computer:
+            used_disk += sync.amount_data_change
+        print(used_disk)
         disk_used_obs.append({'name': computer.name, 'used_disk': used_disk})
+
     context['agents_count'] = len(context['agents'])
     context['disk_used'] = disk_used_obs
     return render(request, 'app/index.html', context)
@@ -154,12 +156,12 @@ def get_resolvers():
     try:
         with open( '/etc/resolv.conf', 'r' ) as resolvconf:
             for line in resolvconf.readlines():
-                line = line.split( '#', 1 )[ 0 ]
+                line = line.split('#', 1)[0]
                 line = line.rstrip()
                 if 'nameserver' in line:
-                    resolvers.append( line.split()[ 1 ] )
+                    resolvers.append(line.split()[1])
                 if 'search' in line:
-                    dns['search'] = line.split()[ 1 ]
+                    dns['search'] = line.split()[1]
             dns['resolver'] = resolvers
         return dns
     except IOError as error:
@@ -260,9 +262,27 @@ def contact(request):
 
 
 def off_site_sync(request):
-    context = {}
-
-    tasks = Sync.objects.all()
+    now = datetime.datetime.now()
+    date_now = now.date()
+    week_now = date_now.isocalendar()[1]
+    data_change = []
     all_computer = Computer.objects.all()
 
-    return render(request, 'app/offsite-sync.html', {'context': context})
+    for computer in all_computer:
+        rate_change = {}
+        rate_change['computer'] = computer.name
+        syncs_of_computer = computer.sync_set.all()
+        daily_change = 0
+        weekly_change = 0
+        for sync in syncs_of_computer:
+            date_sync = sync.sync_time.date()
+            week_sync = date_sync.isocalendar()[1]
+            if date_sync == date_now:
+                daily_change += sync.amount_data_change
+            if week_sync == week_now:
+                weekly_change += sync.amount_data_change
+        print(daily_change)
+        rate_change['daily'] = daily_change
+        rate_change['weekly'] = weekly_change
+        data_change.append(rate_change)
+    return render(request, 'app/offsite-sync.html', {'data_change': data_change})
