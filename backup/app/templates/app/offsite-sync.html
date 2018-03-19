@@ -86,11 +86,13 @@
                     </tr>
                 </tfoot>
                 <tbody>
+                {% for item in data_change %}
                   <tr>
-                    <td>Host 1</td>
-                    <td>10 GB</td>
-                    <td>30 GB</td>
+                    <td>{{ item.computer }}</td>
+                    <td>{{ item.daily }} GB</td>
+                    <td>{{ item.weekly }} GB</td>
                   </tr>
+                {% endfor %}
                   <tr>
                     <td>Host 2</td>
                     <td>5.2 GB</td>
