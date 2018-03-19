@@ -22,6 +22,8 @@ from django.views.generic import TemplateView
 import yaml
 import netifaces
 import pytz
+from bs4 import BeautifulSoup
+
 ##########################
 from .models import Computer, Sync
 from django.views import generic 
@@ -103,16 +105,33 @@ def reboot():
 
 
 def device_setting(request):
+    # get timezone
     timezone = settings.TIME_ZONE
     list_timezone = pytz.all_timezones
+
+    # get time to refresh page
+    with open("app/templates/app/base_site.html") as fp:
+        soup = BeautifulSoup(fp, 'html.parser')
+    meta_refresh = soup.findAll(attrs={"http-equiv": "refresh"})
+    time_refresh = str(meta_refresh[0]['content'])
+
     if request.method == 'POST':
-        timezone = request.POST.get('timezone-select')
+
         # change TIME_ZONE in settings.py
-        for line in fileinput.input(settings.BASE_DIR + '/backup/settings.py', inplace=True):
-            if line.strip().startswith('TIME_ZONE = '):
-                line = 'TIME_ZONE = ' + "'" + timezone + "'\n"
-            sys.stdout.write(line)
-    return render(request, 'app/device_setting.html', {'timezone': timezone, 'list_tz': list_timezone})
+        if request.POST.get('timezone-select'):
+            timezone = request.POST.get('timezone-select')
+            for line in fileinput.input(settings.BASE_DIR + '/backup/settings.py', inplace=True):
+                if line.strip().startswith('TIME_ZONE = '):
+                    line = 'TIME_ZONE = ' + "'" + timezone + "'\n"
+                sys.stdout.write(line)
+
+        if request.POST.get('refresh-select'):
+            time_refresh = request.POST.get('refresh-select')
+            meta_refresh[0]['content'] = time_refresh
+            with open("app/templates/app/base_site.html", "w") as outf:
+                outf.write(str(soup))
+
+    return render(request, 'app/device_setting.html', {'timezone': timezone, 'list_tz': list_timezone, 'time_refresh': time_refresh})
 
 
 def networking(request):
