@@ -60,7 +60,7 @@
             <div class="info-row">
           <div class="col-md-4 col-sm-6 col-xs-12">
             <label>TOTAL PROTECT DATA </label>
-            <span>856.60 GB</span>
+            <span>{{ total_protect_data }} GB</span>
           </div>
           <div class="col-md-4 col-sm-6 col-xs-12">
             <label>OFFSITE SERVER </label>
@@ -151,14 +151,12 @@
                 <td>OFFSITE TRANSFER FILE</td>
                 <td>Last synced 1:00pm Friday 1/26/18 1:00pm</td>
               </tr>
+              {% for sync in last_syncs %}
               <tr>
-                <td>CUVH01</td>
-                <td>Last synced 1:00pm Friday 1/26/18 1:00pm</td>
+                <td>{{ sync.name }}</td>
+                <td>Last synced {{ sync.last_sync_time }}</td>
               </tr>
-              <tr>
-                <td>CUVH02</td>
-                <td>Last synced 1:00pm Friday 1/26/18 1:00pm</td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
             </div>

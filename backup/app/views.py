@@ -24,8 +24,8 @@ import netifaces
 import pytz
 ##########################
 from .models import Computer, Sync
-from django.views import generic 
-from netaddr import *
+from django.views import generic
+from ipaddress import ip_address
 
 
 def get_all_interface():
@@ -57,9 +57,9 @@ def index(request):
     private_ip = None
     public_ip = None
     for interface in interfaces:
-        if not IPAddress(interface['ip']).is_private() and not IPAddress(interface['ip']).is_loopback():
+        if ip_address(interface['ip']).is_global:
             public_ip = interface['ip']
-        elif not private_ip:
+        elif not private_ip and not ip_address(interface['ip']).is_loopback:
             private_ip = interface['ip']
     if not public_ip:
         context['ip'] = private_ip
@@ -71,20 +71,26 @@ def index(request):
     all_computer = Computer.objects.all()
     context['agents'] = all_computer
     disk_used_obs = []
-    #
+    last_sync_obs = []
+    total_protect_data = 0
     for computer in all_computer:
         used_disk = 0
-        # disk_used_obs = []
-        print(computer)
         syncs_of_computer = computer.sync_set.all()
+        last_sync = syncs_of_computer[0]
+        print(last_sync.sync_time)
         used_disk = 0
         for sync in syncs_of_computer:
             used_disk += sync.amount_data_change
-        print(used_disk)
         disk_used_obs.append({'name': computer.name, 'used_disk': used_disk})
-
+        last_sync_obs.append({'name': computer.name, 'last_sync_time': last_sync.sync_time})
+    ###
     context['agents_count'] = len(context['agents'])
     context['disk_used'] = disk_used_obs
+    context['last_syncs'] = last_sync_obs
+    for disk_used_ob in disk_used_obs:
+        total_protect_data += disk_used_ob['used_disk']
+
+    context['total_protect_data'] = total_protect_data
     return render(request, 'app/index.html', context)
     
 
