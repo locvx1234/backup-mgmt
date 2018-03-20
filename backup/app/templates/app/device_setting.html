@@ -205,20 +205,23 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et hic minus nesciunt vero voluptatem.
                     Adipisci iusto maxime ratione reiciendis voluptas?
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aliquam amet, blanditiis
-                    deserunt, ducimus earum error eum itaque iure, maxime minima minus mollitia nam nesciunt nisi pariatur quis ullam veniam?
+                    deserunt, ducimus earum error eum itaque iure, maxime minima minus mollitia nam nesciunt nisi
+                    pariatur quis ullam veniam?
                 </p>
-                <form class="form-horizontal form-label-left input_mask">
+                <form class="form-horizontal form-label-left input_mask" method="post">
+                    {% csrf_token %}
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Auto refresh web every
                       </label>
                       <div class="col-md-3 col-sm-3 col-xs-6">
-                            <select class="form-control">
-                              <option>None</option>
-                              <option>5 sec</option>
-                              <option>10 sec</option>
-                              <option>30 sec</option>
-                              <option>1 min</option>
-                              <option>10 min</option>
+                            <select class="form-control" name="refresh-select">
+                              <option value='none' {% if time_refresh == 'none' %} selected="selected" {% endif %}>None</option>
+                              <option value='10' {% if time_refresh == '10' %} selected="selected" {% endif %}>10 sec</option>
+                              <option value='30' {% if time_refresh == '30' %} selected="selected" {% endif %}>30 sec</option>
+                              <option value='60' {% if time_refresh == '60' %} selected="selected" {% endif %}>1 min</option>
+                              <option value='300' {% if time_refresh == '300' %} selected="selected" {% endif %}>5 min</option>
+                              <option value='600' {% if time_refresh == '600' %} selected="selected" {% endif %}>10 min</option>
+                              <option value='1800' {% if time_refresh == '1800' %} selected="selected" {% endif %}>30 min</option>
                             </select>
                       </div>
                     </div>
