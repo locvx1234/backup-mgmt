@@ -43,9 +43,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for agent in agents %}
+            {% for item in agents %}
               <tr>
-                <td>{{ agent.name }}</td>
+                <td>{{ item.agent.name }}</td>
                 <td>
                     <div class="col-xs-12 agent-row">
                       <div class="control-link col-xs-3">
@@ -61,7 +61,7 @@
                           <tbody>
                             <tr>
                               <td>LAST SUCCESSFUL BACKUP </td>
-                              <td>8:01pm Jan 26th EST</td>
+                              <td>{{ item.last_sync_time }}</td>
                             </tr>
                             <tr>
                               <td>CURRENT INTERVAL</td>
@@ -73,7 +73,7 @@
                             </tr>
                             <tr>
                               <td>PROTECT STORAGE</td>
-                              <td>86.33 GB</td>
+                              <td>{{ item.data_used }}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -87,15 +87,15 @@
                             </tr>
                             <tr>
                               <td>LOCAL USED</td>
-                              <td>90.08 GB</td>
+                              <td>{{ item.agent.capacity_used }} GB</td>
                             </tr>
                             <tr>
                               <td>OS VERSION</td>
-                              <td> {{ agent.os }}</td>
+                              <td> {{ item.agent.os }}</td>
                             </tr>
                             <tr>
                               <td>AGENT VERSION</td>
-                              <td>5.5.5</td>
+                              <td>{{ item.agent.agent_version }}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -104,124 +104,6 @@
                 </td>
             </tr>
             {% endfor %}
-            <tr>
-                <td>ZAWWW</td>
-                <td>
-                    <div class="col-xs-12 agent-row">
-                      <div class="control-link col-xs-3">
-                        <a href="">Manage Recovery Point</a>
-                        <a href="">Configure Agent Settings</a>
-                        <a href="">Remove Agent</a>
-                        <a href="">Show Backup Logs</a>
-                        <button class="btn btn-primary btn-sm">START BACKUP</button>
-                      </div>
-                      
-                      <div class="col-xs-5">
-                        <table class="table">
-                          <tbody>
-                            <tr>
-                              <td>LAST SUCCESSFUL BACKUP </td>
-                              <td>8:01pm Jan 26th EST</td>
-                            </tr>
-                            <tr>
-                              <td>CURRENT INTERVAL</td>
-                              <td>Every 60 minutes</td>
-                            </tr>
-                            <tr>
-                              <td>Screenshot</td>
-                              <td>No screenshot avalable</td>
-                            </tr>
-                            <tr>
-                              <td>PROTECT STORAGE</td>
-                              <td>86.33 GB</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div class="col-xs-4">
-                        <table class="table">
-                          <tbody>
-                            <tr>
-                              <td>PROTECT VOLUMNS</td>
-                              <td>D:\ E:\</td>
-                            </tr>
-                            <tr>
-                              <td>LOCAL USED</td>
-                              <td>90.08 GB</td>
-                            </tr>
-                            <tr>
-                              <td>OS VERSION</td>
-                              <td>Window server 2012</td>
-                            </tr>
-                            <tr>
-                              <td>AGENT VERSION</td>
-                              <td>5.5.5</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                </td>
-            </tr>
-             <tr>
-                <td>BWWWW</td>
-                <td>
-                    <div class="col-xs-12 agent-row">
-                      <div class="control-link col-xs-3">
-                        <a href="">Manage Recovery Point</a>
-                        <a href="">Configure Agent Settings</a>
-                        <a href="">Remove Agent</a>
-                        <a href="">Show Backup Logs</a>
-                        <button class="btn btn-primary btn-sm">START BACKUP</button>
-                      </div>
-                      
-                      <div class="col-xs-5">
-                        <table class="table">
-                          <tbody>
-                            <tr>
-                              <td>LAST SUCCESSFUL BACKUP </td>
-                              <td>8:01pm Jan 26th EST</td>
-                            </tr>
-                            <tr>
-                              <td>CURRENT INTERVAL</td>
-                              <td>Every 60 minutes</td>
-                            </tr>
-                            <tr>
-                              <td>Screenshot</td>
-                              <td>No screenshot avalable</td>
-                            </tr>
-                            <tr>
-                              <td>PROTECT STORAGE</td>
-                              <td>87.65 GB</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div class="col-xs-4">
-                        <table class="table">
-                          <tbody>
-                            <tr>
-                              <td>PROTECT VOLUMNS</td>
-                              <td>D:\ E:\</td>
-                            </tr>
-                            <tr>
-                              <td>LOCAL USED</td>
-                              <td>90.08 GB</td>
-                            </tr>
-                            <tr>
-                              <td>OS VERSION</td>
-                              <td>Window server 2012</td>
-                            </tr>
-                            <tr>
-                              <td>AGENT VERSION</td>
-                              <td>5.5.5</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                </td>
-            </tr>
           </tbody>
         </table>
 
@@ -241,47 +123,47 @@
 	  <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" action="{% url 'agent' %}" method="post">
 		{% csrf_token %}
                 <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12"  for="first-name"> Serial Number <span class="required">*</span>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12"> Serial Number <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" name="agent-serial" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
+                    <input type="text" name="agent-serial"  required="required" class="form-control col-md-7 col-xs-12">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Name <span class="required">*</span>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Agent Name <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" name="agent-name" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                    <input type="text" name="agent-name"  required="required" class="form-control col-md-7 col-xs-12">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">OS</label>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">OS</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" name="agent-os" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input name="agent-os" class="form-control col-md-7 col-xs-12" type="text">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">IP Address</label>
+                  <label  class="control-label col-md-3 col-sm-3 col-xs-12">IP Address</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" name="agent-ip" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input  name="agent-ip" class="form-control col-md-7 col-xs-12" type="text" >
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">RAM</label>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">RAM</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" name="agent-ram" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input  name="agent-ram" class="form-control col-md-7 col-xs-12" type="text" >
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">CPUs</label>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">CPUs</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" name="agent-cpu" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input  name="agent-cpu" class="form-control col-md-7 col-xs-12" type="text">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Version</label>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Version</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input id="middle-name" name="agent-version" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                    <input name="agent-version" class="form-control col-md-7 col-xs-12" type="text">
                   </div>
                 </div>
                 <div class="ln_solid"></div>

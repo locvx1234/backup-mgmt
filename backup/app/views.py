@@ -44,6 +44,8 @@ def get_all_interface():
         interfaces.append(dict_interface)
     return interfaces
 
+def agent_used_data():
+    pass
 
 def index(request):
     if request.user.is_authenticated:
@@ -190,7 +192,15 @@ class UsersView(TemplateView):
 
 
 def agent(request):
+    agents_info = []
     agents = Computer.objects.all()
+    data_used = 0
+    for agent in agents:
+        agent_syncs = agent.sync_set.all()
+        last_sync = agent_syncs[0]
+        for sync in agent_syncs:
+            data_used+=sync.amount_data_change
+        agents_info.append({'agent':agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time })
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
@@ -204,7 +214,7 @@ def agent(request):
         agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu,
                          agent_version = version )
         agent.save()
-    return render(request, 'app/agent.html', {'agents': agents})    
+    return render(request, 'app/agent.html', {'agents': agents_info})
 
 
 def restore(request):
