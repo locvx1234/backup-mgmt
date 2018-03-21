@@ -81,15 +81,16 @@ def index(request):
     last_sync_obs = []
     total_protect_data = 0
     for computer in all_computer:
-        used_disk = 0
         syncs_of_computer = computer.sync_set.all()
-        last_sync = syncs_of_computer[0]
-        print(last_sync.sync_time)
+        if syncs_of_computer:
+            last_sync = syncs_of_computer[0]
+        else:
+            last_sync = None
         used_disk = 0
         for sync in syncs_of_computer:
             used_disk += sync.amount_data_change
         disk_used_obs.append({'name': computer.name, 'used_disk': used_disk})
-        last_sync_obs.append({'name': computer.name, 'last_sync_time': last_sync.sync_time})
+        last_sync_obs.append({'name': computer.name, 'last_sync_time': last_sync.sync_time if last_sync.sync_time else None})
     ###
     context['agents_count'] = len(context['agents'])
     context['disk_used'] = disk_used_obs

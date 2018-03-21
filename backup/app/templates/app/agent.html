@@ -51,7 +51,7 @@
                       <div class="control-link col-xs-3">
                         <a href="">Manage Recovery Point</a>
                         <a href="{% url 'config-agent' %}">Configure Agent Settings</a>
-                        <a href="{% url 'agent_delete' item.agent.id %}">Remove Agent</a>
+                        <a onclick="confirm('Are you sure ??')" href="{% url 'agent_delete' item.agent.id %}">Remove Agent</a>
                         <a href="">Show Backup Logs</a>
                         <button class="btn btn-primary btn-sm">START BACKUP</button>
                       </div>
