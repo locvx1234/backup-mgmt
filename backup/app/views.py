@@ -18,6 +18,7 @@ from django.utils.http import is_safe_url
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
+from django.views.generic.edit import DeleteView
 
 import yaml
 import netifaces
@@ -28,6 +29,8 @@ from bs4 import BeautifulSoup
 from .models import Computer, Sync
 from django.views import generic
 from ipaddress import ip_address
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 
 
 def get_all_interface():
@@ -219,10 +222,13 @@ def agent(request):
     data_used = 0
     for agent in agents:
         agent_syncs = agent.sync_set.all()
-        last_sync = agent_syncs[0]
+        if agent_syncs :
+            last_sync = agent_syncs[0]
+        else:
+            last_sync = None
         for sync in agent_syncs:
             data_used+=sync.amount_data_change
-        agents_info.append({'agent':agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time })
+        agents_info.append({'agent':agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time if last_sync else None })
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
@@ -233,11 +239,16 @@ def agent(request):
         ram = request.POST.get('agent-ram','')
         cpu = request.POST.get('agent-cpu','')
         version = request.POST.get('agent-version','')
-        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu,
-                         agent_version = version )
+        capacity_used = request.POST.get('agent-capacity-used')
+        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu, capacity_used = capacity_used, agent_version = version )
         agent.save()
     return render(request, 'app/agent.html', {'agents': agents_info})
 
+
+def delete_agent(request, agent_id):
+    agent = Computer.objects.filter(id = agent_id)
+    agent.delete()
+    return HttpResponseRedirect('/agent')
 
 def restore(request):
     agents = Computer.objects.all()
