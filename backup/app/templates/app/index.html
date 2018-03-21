@@ -181,23 +181,24 @@
           <div class="x_content">
             <table class="table">
           <thead>
+            <th>SERIAL</th>
             <th>HOSTNAME</th>
             <th>NETWORK ADDR</th>
-            <th>LASTEST BACKUP</th>
-            <th>OS VERSION</th>
-            <th>CPUS/RAM </th>
+            <th>OS</th>
+            <th>CPUS</th>
+            <th>RAM</th>
             <th>AGENT VERSION</th>
-            <th>DRIVER VERSION</th>
           </thead>
           <tbody>
             {% for agent in agents %}
             <tr>
+              <td>{{ agent.serial_number }}</td>
               <td>{{ agent.name }}</td>
               <td>{{ agent.ip_address }}</td>
-              <td>non</td>
-              <td>{{ agent.agent_version }}</td>
+              <td>{{ agent.os }}</td>
               <td>{{ agent.cpu }}</td>
-              <td>non</td>
+              <td>{{ agent.ram }} MB</td>
+              <td>{{ agent.agent_version }}</td>
             {% endfor %}
             </tr>
           </tbody>
