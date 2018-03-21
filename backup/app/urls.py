@@ -4,7 +4,6 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls import (
     handler400, handler403, handler404, handler500
 )
-
 urlpatterns = [
     # Matches any html file - to be used for gentella
     # Avoid using your .html in your resources.
@@ -23,4 +22,5 @@ urlpatterns = [
     url(r'^agent/$', views.agent, name='agent'),
     url(r'^restore/$', views.restore, name='restore'),
     url(r'^off-site/$', views.off_site_sync, name='off_site'),
+    url(r'^delete-agent/(?P<agent_id>\d+)/$', views.delete_agent, name='agent_delete'),
 ]

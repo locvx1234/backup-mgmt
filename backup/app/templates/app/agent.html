@@ -51,7 +51,7 @@
                       <div class="control-link col-xs-3">
                         <a href="">Manage Recovery Point</a>
                         <a href="{% url 'config-agent' %}">Configure Agent Settings</a>
-                        <a href="">Remove Agent</a>
+                        <a href="{% url 'agent_delete' item.agent.id %}">Remove Agent</a>
                         <a href="">Show Backup Logs</a>
                         <button class="btn btn-primary btn-sm">START BACKUP</button>
                       </div>
@@ -158,6 +158,12 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">CPUs</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input  name="agent-cpu" class="form-control col-md-7 col-xs-12" type="text">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Capacity Used</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input  name="agent-capacity-used" class="form-control col-md-7 col-xs-12" type="text">
                   </div>
                 </div>
                 <div class="form-group">
