@@ -71,7 +71,7 @@
                 {% if interface.iface != 'lo' and interface.state == "UP"  %}
                 <div class="interface">
                     <h4>{{ interface.iface }}</h4>
-                    <form class="form-horizontal form-label-left input_mask">
+                    <form class="form-horizontal form-label-left input_mask" method="post">
                       <div class="form-group">
                           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-mode-eth0">IP mode
                           </label>
@@ -87,7 +87,8 @@
                           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-address-eth0">IP address
                           </label>
                           <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="ip-address-eth0" name="ip-address" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                            <input type="text" id="ip-address-eth0" name="ip-address"
+                                   class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
                           </div>
                         </div>
                         <div class="form-group">

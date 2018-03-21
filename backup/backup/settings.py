@@ -128,3 +128,7 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'index'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+OFFSITE_SERVER = '192.168.1.1'
+
+OFFSITE_LIMIT_SPEED = '1452'

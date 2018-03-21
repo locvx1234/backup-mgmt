@@ -95,6 +95,9 @@ def index(request):
         total_protect_data += disk_used_ob['used_disk']
 
     context['total_protect_data'] = total_protect_data
+
+    context['ip_offsite'] = settings.OFFSITE_SERVER
+    context['speed_limit'] = settings.OFFSITE_LIMIT_SPEED
     return render(request, 'app/index.html', context)
     
 
@@ -288,7 +291,7 @@ def contact(request):
     print(data_loaded)
     user_list = User.objects.all()
     print(user_list)
-    return render(request, 'app/contact.html', {'data_contact': data_loaded, 'user_list':user_list} )
+    return render(request, 'app/contact.html', {'data_contact': data_loaded, 'user_list': user_list})
 
 # def error_404(request):
 #         return render(request,'app/page_404.html', status=404)
@@ -303,6 +306,8 @@ def off_site_sync(request):
     week_now = date_now.isocalendar()[1]
     data_change = []
     all_computer = Computer.objects.all()
+    ip_offsite = settings.OFFSITE_SERVER
+    speed_limit = settings.OFFSITE_LIMIT_SPEED
 
     for computer in all_computer:
         rate_change = {}
@@ -321,4 +326,21 @@ def off_site_sync(request):
         rate_change['daily'] = daily_change
         rate_change['weekly'] = weekly_change
         data_change.append(rate_change)
-    return render(request, 'app/offsite-sync.html', {'data_change': data_change})
+
+    if request.method == 'POST':
+        if request.POST.get('ip_offsite'):
+            ip_offsite = request.POST.get('ip_offsite')
+            for line in fileinput.input(settings.BASE_DIR + '/backup/settings.py', inplace=True):
+                if line.strip().startswith('OFFSITE_SERVER = '):
+                    line = 'OFFSITE_SERVER = ' + "'" + ip_offsite + "'\n"
+                sys.stdout.write(line)
+
+        if request.POST.get('speed_limit'):
+            speed_limit = request.POST.get('speed_limit')
+            for line in fileinput.input(settings.BASE_DIR + '/backup/settings.py', inplace=True):
+                if line.strip().startswith('OFFSITE_LIMIT_SPEED = '):
+                    line = 'OFFSITE_LIMIT_SPEED = ' + "'" + speed_limit + "'\n"
+                sys.stdout.write(line)
+
+    return render(request, 'app/offsite-sync.html',
+                  {'data_change': data_change, 'ip_offsite': ip_offsite, 'speed_limit': speed_limit})
