@@ -239,7 +239,7 @@ def agent(request):
         ram = request.POST.get('agent-ram','')
         cpu = request.POST.get('agent-cpu','')
         version = request.POST.get('agent-version','')
-        capacity_used = request.POST.get('agent-capacity-used')
+        capacity_used = 0
         agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu, capacity_used = capacity_used, agent_version = version )
         agent.save()
     return render(request, 'app/agent.html', {'agents': agents_info})
