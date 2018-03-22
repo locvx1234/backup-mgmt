@@ -19,6 +19,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.views.generic.edit import DeleteView
+from django.urls import reverse
 
 import yaml
 import netifaces
@@ -49,8 +50,10 @@ def get_all_interface():
         interfaces.append(dict_interface)
     return interfaces
 
+
 def agent_used_data():
     pass
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -90,7 +93,7 @@ def index(request):
         for sync in syncs_of_computer:
             used_disk += sync.amount_data_change
         disk_used_obs.append({'name': computer.name, 'used_disk': used_disk})
-        last_sync_obs.append({'name': computer.name, 'last_sync_time': last_sync.sync_time if last_sync.sync_time else None})
+        last_sync_obs.append({'name': computer.name, 'last_sync_time': last_sync.sync_time if last_sync else None})
     ###
     context['agents_count'] = len(context['agents'])
     context['disk_used'] = disk_used_obs
@@ -223,13 +226,13 @@ def agent(request):
     data_used = 0
     for agent in agents:
         agent_syncs = agent.sync_set.all()
-        if agent_syncs :
+        if agent_syncs:
             last_sync = agent_syncs[0]
         else:
             last_sync = None
         for sync in agent_syncs:
-            data_used+=sync.amount_data_change
-        agents_info.append({'agent':agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time if last_sync else None })
+            data_used += sync.amount_data_change
+        agents_info.append({'agent': agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time if last_sync else None})
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
@@ -241,8 +244,10 @@ def agent(request):
         cpu = request.POST.get('agent-cpu','')
         version = request.POST.get('agent-version','')
         capacity_used = 0
-        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os, cpu = cpu, capacity_used = capacity_used, agent_version = version )
+        agent = Computer(serial_number=serial, name=name, ip_address=ip, ram=ram, os=os, cpu=cpu,
+                         capacity_used=capacity_used, agent_version=version)
         agent.save()
+        return HttpResponseRedirect(reverse('agent'))
     return render(request, 'app/agent.html', {'agents': agents_info})
 
 
@@ -250,6 +255,7 @@ def delete_agent(request, agent_id):
     agent = Computer.objects.filter(id = agent_id)
     agent.delete()
     return HttpResponseRedirect('/agent')
+
 
 def restore(request):
     agents = Computer.objects.all()
@@ -261,7 +267,7 @@ def restore(request):
         ip = request.POST.get('agent-ip','')
         serial = request.POST.get('agent-serial','')
         ram = request.POST.get('agent-ram','')
-        agent = Computer(serial_number = serial, name = name, ip_address = ip, ram = ram, os = os)
+        agent = Computer(serial_number=serial, name=name, ip_address=ip, ram=ram, os=os)
         agent.save()
     return render(request, 'app/restore.html', {'agents': agents})
 

@@ -120,7 +120,7 @@
         <h4 class="modal-title">Add New Agent</h4>
       </div>
       <div class="modal-body">
-	  <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" action="{% url 'agent' %}" method="post">
+	    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" method="post">
 		{% csrf_token %}
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12"> Serial Number <span class="required">*</span>
@@ -159,7 +159,7 @@
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input  name="agent-cpu" class="form-control col-md-7 col-xs-12" type="text">
                   </div>
-                </div
+                </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Version</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
@@ -174,7 +174,7 @@
                     <button type="submit" class="btn btn-success">Submit</button>
                   </div>
                 </div>
-              </form>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
