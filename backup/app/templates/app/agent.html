@@ -45,11 +45,11 @@
         <tbody>
             {% for item in agents %}
               <tr>
-                <td>{{ item.agent.name }}</td>
+                <td>{{ item.agent.name }} {{ item.agent.id }}</td>
                 <td>
                     <div class="col-xs-12 agent-row">
                       <div class="control-link col-xs-3">
-                        <a href="">Manage Recovery Point</a>
+                        <a href="{% url 'agent-recover-point' item.agent.id %}">Manage Recovery Point</a>
                         <a href="{% url 'config-agent' %}">Configure Agent Settings</a>
                         <a onclick="return confirm('Are you sure you want to delete this item?');" href="{% url 'agent_delete' item.agent.id %}">Remove Agent</a>
                         <a href="">Show Backup Logs</a>

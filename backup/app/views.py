@@ -32,7 +32,26 @@ from django.views import generic
 from ipaddress import ip_address
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from pprint import pprint
+from django.forms.models import model_to_dict
 
+
+def get_agent_info(agent_id):
+    agent = Computer.objects.all().filter(id=agent_id)[0]
+    agent_info = Computer.objects.filter(id=agent_id).values()[0]
+    used_data = 0
+    syncs = agent.sync_set.all()
+
+    if len(syncs) >= 1:
+        last_sync = syncs[0]
+        for sync in syncs:
+            used_data += sync.amount_data_change
+        agent_info['used_data'] = used_data
+    else:
+        last_sync = None
+    if last_sync:
+        agent_info['last_sync'] = last_sync.sync_time
+    return agent_info
 
 def get_all_interface():
     interfaces = []
@@ -252,10 +271,15 @@ def agent(request):
 
 
 def delete_agent(request, agent_id):
-    agent = Computer.objects.filter(id = agent_id)
+    agent = Computer.objects.filter(id=agent_id)
     agent.delete()
     return HttpResponseRedirect('/agent')
 
+def recover_point(request, agent_id):
+    context = {}
+    agent = get_agent_info(agent_id)
+    context['agent'] = agent
+    return render(request, 'app/recovery_point.html', context)
 
 def restore(request):
     agents = Computer.objects.all()

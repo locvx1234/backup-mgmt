@@ -26,10 +26,10 @@
                       <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <div>Host: DEVSTACK</div>
+                        <div>Host: {{ agent.name }}</div>
                         <br>
-                        <div class="fa fa-cloud col-md-3 col-xs-3"> Cloud : 35 GB</div>
-                        <div class="fa fa-desktop col-md-3 col-xs-3"> Local : 550 GB</div>
+                        <div class="fa fa-cloud col-md-3 col-xs-3"> Cloud : {{ agent.used_data }} GB</div>
+                        <div class="fa fa-desktop col-md-3 col-xs-3"> Local : {{ agent.capacity_used }}GB</div>
                     </div>
                 </div>
                 <div class="x_panel">

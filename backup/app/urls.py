@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^restore/$', views.restore, name='restore'),
     url(r'^off-site/$', views.off_site_sync, name='off_site'),
     url(r'^delete-agent/(?P<agent_id>\d+)/$', views.delete_agent, name='agent_delete'),
+    url(r'^recover-point/(?P<agent_id>\d+)/$', views.recover_point, name='agent-recover-point'),
 ]
