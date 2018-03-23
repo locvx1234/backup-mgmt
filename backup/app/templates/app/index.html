@@ -99,28 +99,28 @@
               </div>
             <div class="x_content">
               <div class="col-md-5 col-sm-12 canvas-container">
-            <div class="x_content">
-              <canvas id="canvasDoughnut"></canvas>
-            </div>
-        </div>
+                <div class="x_content">
+                  <canvas id="mycanvas" width="400" height="400"></canvas>
+                </div>
+              </div>
               <div class="col-md-7 col-sm-12 col-xs-12 scrollable">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>HOST</th>
-                <th>USED</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for disk in disk_used %}
-              <tr>
-                <td>{{ disk.name }}</td>
-                <td>{{ disk.used_disk }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+                <table class="table" id="myTable">
+                  <thead>
+                    <tr>
+                      <th>HOST</th>
+                      <th>USED</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for disk in disk_used %}
+                    <tr>
+                      <td>{{ disk.name }}</td>
+                      <td>{{ disk.used_disk }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -253,6 +253,7 @@
 
 {% block javascripts %}
   {{ block.super}}
+
   <!-- Chart.js -->
   <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
   <!-- gauge.js -->
@@ -275,4 +276,6 @@
   <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
   <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
   <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+  <!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
+  <script src="/static/build/js/dashboard.js"></script>
 {% endblock javascripts %}
