@@ -119,8 +119,8 @@
                 <tfoot>
                     <tr>
                         <td>TOTAL</td>
-                        <td>80 GB</td>
-                        <td>180 GB</td>
+                        <td>{{ daily_total }} GB</td>
+                        <td>{{ weekly_total }} GB</td>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -131,16 +131,6 @@
                     <td>{{ item.weekly }} GB</td>
                   </tr>
                 {% endfor %}
-                  <tr>
-                    <td>Host 2</td>
-                    <td>5.2 GB</td>
-                    <td>10 GB</td>
-                  </tr>
-                  <tr>
-                    <td>Host 3</td>
-                    <td>1.2 GB</td>
-                    <td>10 GB</td>
-                  </tr>
                 </tbody>
               </table>
             </div>

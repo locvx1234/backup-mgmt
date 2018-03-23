@@ -350,13 +350,15 @@ def off_site_sync(request):
     all_computer = Computer.objects.all()
     ip_offsite = settings.OFFSITE_SERVER
     speed_limit = settings.OFFSITE_LIMIT_SPEED
-
+    daily_total = 0
+    weekly_total = 0
     for computer in all_computer:
         rate_change = {}
         rate_change['computer'] = computer.name
         syncs_of_computer = computer.sync_set.all()
         daily_change = 0
         weekly_change = 0
+
         for sync in syncs_of_computer:
             date_sync = sync.sync_time.date()
             week_sync = date_sync.isocalendar()[1]
@@ -365,6 +367,9 @@ def off_site_sync(request):
             if week_sync == week_now:
                 weekly_change += sync.amount_data_change
         print(daily_change)
+        daily_total += daily_change
+        weekly_total += weekly_change
+
         rate_change['daily'] = daily_change
         rate_change['weekly'] = weekly_change
         data_change.append(rate_change)
@@ -385,4 +390,5 @@ def off_site_sync(request):
                 sys.stdout.write(line)
 
     return render(request, 'app/offsite-sync.html',
-                  {'data_change': data_change, 'ip_offsite': ip_offsite, 'speed_limit': speed_limit})
+                  {'data_change': data_change, 'ip_offsite': ip_offsite, 'speed_limit': speed_limit,
+                   'daily_total': daily_total, 'weekly_total': weekly_total})
