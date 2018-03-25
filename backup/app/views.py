@@ -43,6 +43,7 @@ def get_agent_info(agent_id):
     syncs = agent.sync_set.all()
 
     if len(syncs) >= 1:
+        agent_info['all_sync'] = syncs
         last_sync = syncs[0]
         for sync in syncs:
             used_data += sync.amount_data_change
