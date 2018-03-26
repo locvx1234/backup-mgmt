@@ -276,6 +276,11 @@ def delete_agent(request, agent_id):
     agent.delete()
     return HttpResponseRedirect('/agent')
 
+def delete_sync(request, sync_id):
+    sync = Sync.objects.filter(id=sync_id)
+    sync.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 def recover_point(request, agent_id):
     context = {}
     agent = get_agent_info(agent_id)

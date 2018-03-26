@@ -83,7 +83,7 @@
                                   <td>{{ sync.sync_time }}</td>
                                   <td></td>
                                   <td>{{ sync.amount_data_change }} GB</td>
-                                  <td><button class="btn btn-primary" value="Delete">DELETE</button></td>
+                                  <td><a href="{% url 'sync_delete' sync.id %}" class="btn btn-primary" value="Delete">DELETE</a></td>
                             </tr>
                          {% endfor %}
                             <!--<tr>-->
