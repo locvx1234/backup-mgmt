@@ -1,0 +1,297 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} R {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+  <div class="">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>Network status</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <table class="table">
+                <thead>
+                  <tr>
+                      <th>Interface</th>
+                      <th>IP address</th>
+                      <th>State</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for interface in interfaces %}
+                  <tr>
+                    <td>{{ interface.iface }}</td>
+                    <td>{{ interface.ip }}</td>
+                    <td>
+                      {% if interface.state == 'DOWN' %}
+                      <div class="fa fa-circle-thin"></div>
+                      {% elif interface.state == 'UP' %}
+                      <div class="fa fa-check-circle"></div>
+                      {% endif %} {{ interface.state }}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>IP setting</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              {% for interface in interfaces %}
+                {% if interface.iface != 'lo' and interface.state == "UP"  %}
+                <div class="interface">
+                    <h4>{{ interface.iface }}</h4>
+                    <form class="form-horizontal form-label-left input_mask" method="post">
+                      <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-mode-eth0">IP mode
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" id="ip-mode-eth0" name="ip-mode">
+                              <option>DHCP</option>
+                              <option>Manual</option>
+                              <option>Static</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-address-eth0">IP address
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="ip-address-eth0" name="ip-address"
+                                   class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="net-mask-eth0">Subnet mask
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="net-mask-eth0" name="net-mask" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="gateway-eth0">Gateway
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="gateway-eth0" name="gateway" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="btn-group" data-toggle="buttons">
+                              <label class="btn btn-default" data-toggle-class="btn btn-primary" data-toggle-passive-class="btn btn-default">
+                                <input type="radio" name="status" value="enable"> Enable
+                              </label>
+                              <label class="btn btn-default" data-toggle-class="btn btn-default" data-toggle-passive-class="btn btn-default">
+                                <input type="radio" name="status" value="disable"> Disable
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                          <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button type="submit" class="btn btn-success">Apply</button>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="ln_solid"></div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>DNS Settings</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <br />
+              <form class="form-horizontal form-label-left input_mask" method="post">
+              {% csrf_token %}
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns1">DNS 1
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="dns1" name="dns1" class="form-control col-md-7 col-xs-12"
+                             data-inputmask="'mask': '9[99].9[99].9[99].9[99]'" value="{{ dns.resolver.0 }}">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns2">DNS 2
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="dns2" name="dns2" class="form-control col-md-7 col-xs-12"
+                             data-inputmask="'mask': '9[99].9[99].9[99].9[99]'" value="{{ dns.resolver.1 }}">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns3">DNS 3
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="dns3" name="dns3" class="form-control col-md-7 col-xs-12"
+                             data-inputmask="'mask': '9[99].9[99].9[99].9[99]'" value="{{ dns.resolver.2 }}">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns3">DNS search domain
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="dns-search" name="dns-search" class="form-control col-md-7 col-xs-12"
+                             value="{{ dns.search }}">
+                    </div>
+                  </div>
+                  <br>
+                  <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                      <button type="submit" class="btn btn-success">Apply</button>
+                    </div>
+                  </div>
+              </form>
+            </div>
+          </div>
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>IPMI Settings</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <br />
+              <form class="form-horizontal form-label-left input_mask">
+                  <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">IPMI enable </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="btn-group" data-toggle="buttons">
+                              <label class="btn btn-default" data-toggle-class="btn btn-primary" data-toggle-passive-class="btn btn-default">
+                                <input type="radio" name="status" value="enable"> Enable
+                              </label>
+                              <label class="btn btn-default" data-toggle-class="btn btn-default" data-toggle-passive-class="btn btn-default">
+                                <input type="radio" name="status" value="disable"> Disable
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ip-ipmi">IP address
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="ip-ipmi" name="ip-ipmi" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="netmask-ipmi">Netmask
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="netmask-ipmi" name="netmask-ipmi" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="gateway-ipmi">Gateway
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="gateway-ipmi" name="gateway-ipmi" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '9[99].9[99].9[99].9[99]'">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="dns3">IP mode
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <label for="ip-mode-ipmi-dhcp"><input type="radio" class="flat" name="ip-mode-ipmi" id="ip-mode-ipmi-dhcp" value="dhcp" checked="" required /> DHCP </label>
+                      <label for="ip-mode-ipmi-static"><input type="radio" class="flat" name="ip-mode-ipmi" id="ip-mode-ipmi-static" value="static" /> Static </label>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                      <button type="submit" class="btn btn-success">Apply</button>
+                    </div>
+                  </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- jquery.inputmask -->
+  <script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+{% endblock javascripts %}
+

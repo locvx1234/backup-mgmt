@@ -1,0 +1,45 @@
+.right_col {
+	font-family: 'Open Sans', sans-serif;
+	background-color: #fff !important;
+}
+.right_col li {
+	list-style: none;
+}
+.right_col {
+	padding-bottom: 500px;
+}
+.side3 {
+
+}
+.side3 ul li {
+	height: 30px;
+}
+.section {
+	padding-top: 30px;
+	min-height: 300px;
+}
+.section .pick {
+	width: 50%;
+	margin: auto;
+}
+.section .confirm-options {
+	width: 60%;
+	margin: auto;
+}
+.section .flat:checked {
+	background-color: blue;
+}
+.right_col {
+      position: relative;
+}
+#myScrollspy {
+	}
+ul.nav-pills {
+  top: 20px;
+  position: fixed;
+  overflow-y: scroll;
+	height: 90%;
+}
+.nav-pills li a.active {
+	background-color: none !important;
+}

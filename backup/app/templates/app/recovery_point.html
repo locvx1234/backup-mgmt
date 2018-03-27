@@ -1,0 +1,131 @@
+{% extends "app/base_site.html" %}
+
+{% block title %} R {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                      <h3>Summary</h3>
+                      <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                      </ul>
+                      <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div>Host: {{ agent.name }}</div>
+                        <br>
+                        <div class="fa fa-cloud col-md-3 col-xs-3"> Cloud : {{ agent.used_data }} GB</div>
+                        <div class="fa fa-desktop col-md-3 col-xs-3"> Local : {{ agent.capacity_used }}GB</div>
+                    </div>
+                </div>
+                <div class="x_panel">
+                    <div class="x_content">
+                        <div class="col-md-3 col-xs-3">
+                            <label for="">Show :</label>
+                            <div class="btn-group">
+                                <button class="btn btn-primary" type="button">All</button>
+                                <button class="btn btn-default" type="button">Local</button>
+                                <button class="btn btn-default" type="button">Cloud</button>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-xs-5"></div>
+                        <div class="col-md-3 col-xs-3">
+                            <div class="btn-group">
+                                <button class="btn btn-default" type="button">Delete all local</button>
+                                <button class="btn btn-default" type="button">Delete all cloud</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="x_panel">
+                    <!--<div class="x_title">-->
+                      <!--<h3>Friday January 26th</h3>-->
+                      <!--<ul class="nav navbar-right panel_toolbox">-->
+                        <!--<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>-->
+                        <!--</li>-->
+                        <!--<li class="dropdown">-->
+                          <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>-->
+                        <!--</li>-->
+                        <!--<li><a class="close-link"><i class="fa fa-close"></i></a>-->
+                        <!--</li>-->
+                      <!--</ul>-->
+                      <!--<div class="clearfix"></div>-->
+                    <!--</div>-->
+                    <div class="x_content">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                              <th>Time</th>
+                              <th>Status</th>
+                              <th>New data protected</th>
+                              <th>Option</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                         {% for sync in agent.all_sync %}
+                            <tr>
+                                  <td>{{ sync.sync_time }}</td>
+                                  <td></td>
+                                  <td>{{ sync.amount_data_change }} GB</td>
+                                  <td><button class="btn btn-primary" value="Delete">DELETE</button></td>
+                            </tr>
+                         {% endfor %}
+                            <!--<tr>-->
+                                  <!--<td>9:00 pm</td>-->
+                                  <!--<td></td>-->
+                                  <!--<td>0.4 GB</td>-->
+                                  <!--<td><button class="btn btn-primary" value="Delete">DELETE</button></td>-->
+                             <!--</tr>-->
+                        </tbody>
+                      </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+{% endblock javascripts %}
+
