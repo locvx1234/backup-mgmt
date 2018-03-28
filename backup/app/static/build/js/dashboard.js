@@ -38,3 +38,12 @@ $(document).ready(function(){
     });
 
 });
+
+clicked = true;
+$(document).ready(function(){
+    $("button").click(function(){
+        var color = clicked ? '#4682B4' : 'buttonface';
+        $(this).css('background-color', color);
+        clicked = !clicked;
+    });
+});
