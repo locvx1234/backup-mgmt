@@ -9,7 +9,7 @@
     cd backup-mgmt
     python manage.py runserver 
     
-##### Behold!uy
+##### Behold!
 Go to http://localhost:8000/
 
 ##### Tempale
