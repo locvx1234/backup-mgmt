@@ -292,11 +292,11 @@ def restore(request):
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
-        name = request.POST.get('agent-name','')
-        os = request.POST.get('agent-os','')
-        ip = request.POST.get('agent-ip','')
-        serial = request.POST.get('agent-serial','')
-        ram = request.POST.get('agent-ram','')
+        name = request.POST.get('agent-name', '')
+        os = request.POST.get('agent-os', '')
+        ip = request.POST.get('agent-ip', '')
+        serial = request.POST.get('agent-serial', '')
+        ram = request.POST.get('agent-ram', '')
         agent = Computer(serial_number=serial, name=name, ip_address=ip, ram=ram, os=os)
         agent.save()
     return render(request, 'app/restore.html', {'agents': agents})
