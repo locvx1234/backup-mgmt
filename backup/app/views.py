@@ -306,7 +306,8 @@ def restore(request):
 
 def config_agent(request):
     context = {}
-    return render(request, 'app/config_agent.html', context)
+    name22 = 'bo'
+    return render(request, 'app/config_agent.html', {'name': name22})
 
 
 class Agent(generic.ListView):

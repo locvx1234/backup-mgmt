@@ -39,8 +39,3 @@ $(document).ready(function(){
 
 });
 
-$(document).ready(function(){
-    $(".sync_button").on('click',function(){
-        $(this).toggleClass('sync_button_checked');
-    });
-});
