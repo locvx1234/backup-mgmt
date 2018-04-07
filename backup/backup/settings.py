@@ -112,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Ho_Chi_Minh'
+TIME_ZONE = 'Asia/Dubai'
 
 USE_I18N = True
 
@@ -129,6 +129,6 @@ LOGIN_REDIRECT_URL = 'index'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-OFFSITE_SERVER = '192.168.1.1'
+OFFSITE_SERVER = '192.168.1.2__'
 
 OFFSITE_LIMIT_SPEED = '1452'

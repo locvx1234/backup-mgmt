@@ -1,5 +1,5 @@
 $("ul.nav-pills li.active").toggleClass("active");
-/*alert(111);*/
+//alert(111);
 
 $(document).ready(function(){
     $(".sync_button").on('click',function(){
