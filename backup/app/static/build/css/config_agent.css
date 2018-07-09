@@ -43,3 +43,6 @@ ul.nav-pills {
 .nav-pills li a.active {
 	background-color: none !important;
 }
+.sync_button_checked {
+    background-color: #4682B4;
+}

@@ -37,6 +37,7 @@
     	font-size:80%;
     }
 }
+
 @media only screen and (max-width: 700px) {
     .info-row [class*="col-"] {
         width: 100%;
