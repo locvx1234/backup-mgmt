@@ -1,13 +1,14 @@
 {% extends "app/base_site.html" %}
 
-{% block title %} Dashboard {% endblock title %}
+{% block title %} Config Agent {% endblock title %}
 
 {% block stylesheets %}
   <link rel="stylesheet" type="text/css" href="/static/build/css/config_agent.css">
-  <meta http-equiv="cache-control" content="max-age=0" />
+  <!-- <link rel="stylesheet" href="/static/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"> -->
+  <!-- <meta http-equiv="cache-control" content="max-age=0" />
   <meta http-equiv="cache-control" content="no-cache" />
   <meta http-equiv="expires" content="0" />
-  <meta http-equiv="expires" content="Tue, 01 Jan 1990 12:00:00 GMT" />
+  <meta http-equiv="expires" content="Tue, 01 Jan 1990 12:00:00 GMT" /> -->
   {{ block.super }}
 {% endblock stylesheets %}
 
@@ -19,17 +20,14 @@
 
         <nav class="col-sm-3" id="myScrollspy">
           <ul class="nav nav-pills nav-stacked">
-            <li><a class="section-span">Basic</a></li>
+            <li><h4 class="section-span">Basic</h4></li>
             <li><a href="#pause-backup">Pause Backup</a></li>
             <li><a href="#pause-cloud-backup">Pause Cloud Backups </a></li>
+            <li><a href="#schedule-backup">Schedule Backup</a></li>
             <li><a href="#local-backup">Local Backup & Retention</a></li>
             <li><a href="#cloud-backup">Cloud Backup & Retention</a></li>
             <li><a href="">Backup Engine Options</a></li>
             <li><a href="">Volume Backup Level Control</a></li>
-
-            <li><h4 class="section-span">Verification</h4></li>
-            <li><a href="">Screenshot Verification</a></li>
-            <li><a href="">Backup Verification Scripts</a></li>
 
             <li><h4 class="section-span">Reporting & Alerting</h4></li>
             <li><a href="">Ransomeware Detection</a></li>
@@ -38,10 +36,6 @@
             <li><a href="">Pause Backup</a></li>
             <li><a href="">Pause Backup</a></li>
 
-            <li><h4 class="section-span">Advanced</h4></li> 
-            <li><a href="">Secure File Restore & Export</a></li>
-            <li><a href="">VSS Writer Exclusion</a></li>
-            <li><a href="">Share Compatibility Mode</a></li>
           </ul>
         </nav>
         <div class="col-sm-9">
@@ -69,7 +63,7 @@
 
           <div class="section" id="pause-cloud-backup">
             <h3 class="title">Pause Cloud Backups</h3>
-            <p class="description">Toggle local backups for this agent between enabled and paused . Preferences for backup interval and backup schedule will be preserved</p>
+            <p class="description">Toggle local backups for this agent between enabled and paused. Preferences for backup interval and backup schedule will be preserved</p>
             <div class="pick">
               <div class="checkbox">
                 <label>
@@ -87,7 +81,61 @@
               <button class="btn btn-primary btn-sm">Apply to all</button>
             </div>
           </div>
+          
+          <div class="section" id="schedule-backup">
+            <h3 class="title">Schedule Backup</h3>
+            <p class="description">Lorem</p>
+            <div class="col-xs-6">
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#backupPointModal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Backup point
+                </button>
+            </div>
+            <table id="dt1" class="table" style="width:90%">
+              <thead>
+                  <tr>
+                      <th>Backup point</th>
+                      <th>Next backup</th>
+                      <th>Server</th>
+                      <th>Type of backup</th>
+                      <th>Operator</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for schedule in schedules %}
+                <tr>
+                  <td>{{ schedule.path }}</td>
+                  <td>{{ schedule.time }}</td>
+                  <td>{{ schedule.ip_server }}</td>
+                  <td>{{ schedule.get_typeofbackup_display }}</td>
+                  <td>
+                      <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#edit{{schedule.id}}Modal"><i class="fa fa-pencil"></i> Edit </a>
 
+                      <a class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?');" 
+                      href="{% url 'schedule_delete' schedule.id %}">
+                              <i class="fa fa-trash-o"></i> Delete
+                      </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                  <tr>
+                      <td>/home/locvu/openvpn-ca/</td>
+                      <td>9:00</td>
+                      <td>127.0.0.1:8000</td>
+                      <td>Daily</td>
+                      <td>
+                              <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#edit{{schedule.id}}Modal"><i class="fa fa-pencil"></i> Edit </a>
+
+                              <a href="#" class="btn btn-danger btn-xs"
+                                      onclick="return confirm('Are you sure?');" >
+                                      <i class="fa fa-trash-o"></i> Delete
+                              </a>
+              
+                      </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+          
           <div class="section" id="local-backup">
             <h3 class="title">Local Backup and Retention Policy </h3>
             <p class="description"></p>
@@ -110,31 +158,119 @@
     </div>
   </body>
 </div>
+
+<div id="backupPointModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content - add host -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add New Backup Point</h4>
+      </div>
+      <div class="modal-body">
+        <form id="formschedule" data-parsley-validate class="form-horizontal form-label-left" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="path">Backup point
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <input type="text" id="path" name="path" class="form-control col-md-7 col-xs-12">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="time">Type of backup</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <select class="form-control" name="typeofbackup">
+                  <option value='0' selected="selected">Once</option>
+                  <option value='1'>Daily</option>
+                  <option value='2'>Weekly</option>
+                </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Time</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class='input-group date' id='datetimepicker1'>
+                  <input type='text' class="form-control"  id="datetime" name="datetime" />
+                  <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Day</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select class="form-control" multiple="multiple" name="dayofweek">
+                <option value="0">Monday</option>
+                <option value="1">Tuesday</option>
+                <option value="2">Wednesday</option>
+                <option value="3">Thursday</option>
+                <option value="4">Friday</option>
+                <option value="5">Saturday</option>
+                <option value="6">Sunday</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="time">Time</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class='input-group date' id='timepicker1'>
+                    <input type='text' id="time" name="time" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="time">Server backup</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <select class="form-control" name="server-backup">
+                  {% for svr in serverlist %}
+                  <option value={{ svr }}>{{ svr }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+          <div class="form-group">
+              <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                <button class="btn btn-primary" type="reset">Reset</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}
 
 {% block javascripts %}
   {{ block.super}}
-  <!-- Chart.js -->
-  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <script src="/static/build/js/config_agent.js"></script>
+
   <!-- gauge.js -->
   <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
   <!-- Skycons -->
   <script src="/static/vendors/skycons/skycons.js"></script>
-  <!-- Flot -->
-  <script src="/static/vendors/Flot/jquery.flot.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
-  <!-- Flot plugins -->
-  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  
   <!-- DateJS -->
-  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- <script src="/static/vendors/DateJS/build/date.js"></script> -->
   <!-- JQVMap -->
   <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
   <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
   <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
-  <script src="/static/build/js/config_agent.js"></script>
+ 
 {% endblock javascripts %}

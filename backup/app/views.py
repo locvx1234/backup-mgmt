@@ -26,14 +26,14 @@ import netifaces
 import pytz
 from bs4 import BeautifulSoup
 
-##########################
-from .models import Computer, Sync
+from .models import Computer, Sync, Schedule
 from django.views import generic
 from ipaddress import ip_address
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from pprint import pprint
 from django.forms.models import model_to_dict
+from app import cores
 
 
 def get_agent_info(agent_id):
@@ -53,6 +53,7 @@ def get_agent_info(agent_id):
     if last_sync:
         agent_info['last_sync'] = last_sync.sync_time
     return agent_info
+
 
 def get_all_interface():
     interfaces = []
@@ -97,6 +98,7 @@ def index(request):
     else:
         context['ip'] = public_ip
         context['ip_type'] = 'public'
+
     # get all computer and disk used with each computer
     all_computer = Computer.objects.all()
     context['agents'] = all_computer
@@ -126,7 +128,7 @@ def index(request):
     context['ip_offsite'] = settings.OFFSITE_SERVER
     context['speed_limit'] = settings.OFFSITE_LIMIT_SPEED
     return render(request, 'app/index.html', context)
-    
+
 
 def gentella_html(request):
     context = {}
@@ -144,6 +146,10 @@ def reboot():
 
 
 def device_setting(request):
+    # get servers list 
+    servers_list = settings.CORE_DOMAIN
+    servers_list = ', '.join(servers_list)
+    print(servers_list)
     # get timezone
     timezone = settings.TIME_ZONE
     list_timezone = pytz.all_timezones
@@ -155,6 +161,14 @@ def device_setting(request):
     time_refresh = str(meta_refresh[0]['content'])
 
     if request.method == 'POST':
+        # change CORE_DOMAIN in settings.py
+        if request.POST.get('add_server'):
+            servers = request.POST.get('add_server')
+            servers = str([x.strip() for x in servers.split(',')])
+            for line in fileinput.input(settings.BASE_DIR + '/backup/settings.py', inplace=True):
+                if line.strip().startswith('CORE_DOMAIN = '):
+                    line = 'CORE_DOMAIN = ' + servers + "\n"
+                sys.stdout.write(line)
 
         # change TIME_ZONE in settings.py
         if request.POST.get('timezone-select'):
@@ -170,7 +184,8 @@ def device_setting(request):
             with open("app/templates/app/base_site.html", "w") as outf:
                 outf.write(str(soup))
 
-    return render(request, 'app/device_setting.html', {'timezone': timezone, 'list_tz': list_timezone, 'time_refresh': time_refresh})
+    return render(request, 'app/device_setting.html', {'servers_list': servers_list, 'timezone': timezone,
+                                                       'list_tz': list_timezone, 'time_refresh': time_refresh})
 
 
 def networking(request):
@@ -244,6 +259,7 @@ def agent(request):
     agents_info = []
     agents = Computer.objects.all()
     data_used = 0
+
     for agent in agents:
         agent_syncs = agent.sync_set.all()
         if agent_syncs:
@@ -253,28 +269,41 @@ def agent(request):
         for sync in agent_syncs:
             data_used += sync.amount_data_change
         agents_info.append({'agent': agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time if last_sync else None})
-    if request.method == 'GET':
-        pass
-    elif request.method == 'POST':
+    if request.method == 'POST':
         name = request.POST.get('agent-name','')
         os = request.POST.get('agent-os','')
         ip = request.POST.get('agent-ip','')
-        serial = request.POST.get('agent-serial','')
+        username = request.POST.get('agent-username','')
         ram = request.POST.get('agent-ram','')
         cpu = request.POST.get('agent-cpu','')
-        version = request.POST.get('agent-version','')
-        capacity_used = 0
-        agent = Computer(serial_number=serial, name=name, ip_address=ip, ram=ram, os=os, cpu=cpu,
-                         capacity_used=capacity_used, agent_version=version)
-        agent.save()
+        version = request.POST.get('agent-version') or None 
+
+        # add user to core 
+        response = cores.add_agent(settings.CORE_DOMAIN[0], username)
+
+        if response.status_code == 200:
+            res_json = response.json()
+            token = res_json['token']
+            print(token)
+
+            # add agent to manager site
+            agent = Computer(username=username, name=name, ip_address=ip, ram=ram, os=os, cpu=cpu,
+                             agent_version=version)
+            agent.save()
         return HttpResponseRedirect(reverse('agent'))
     return render(request, 'app/agent.html', {'agents': agents_info})
 
 
 def delete_agent(request, agent_id):
-    agent = Computer.objects.filter(id=agent_id)
-    agent.delete()
-    return HttpResponseRedirect('/agent')
+    agent = Computer.objects.get(id=agent_id)
+
+    # delete user in core
+    response = cores.remove_agent(settings.CORE_DOMAIN[0], agent.username)
+
+    if response.status_code == 200:
+        # delete agent in manager site
+        agent.delete()
+        return HttpResponseRedirect('/agent')
 
 
 def delete_sync(request, sync_id):
@@ -288,6 +317,7 @@ def recover_point(request, agent_id):
     agent = get_agent_info(agent_id)
     context['agent'] = agent
     return render(request, 'app/recovery_point.html', context)
+
 
 def restore(request):
     agents = Computer.objects.all()
@@ -304,9 +334,72 @@ def restore(request):
     return render(request, 'app/restore.html', {'agents': agents})
 
 
-def config_agent(request):
+def next_day(dnow, d):
+    if d.time() > dnow.time():
+        return str(dnow.date()) + ' ' + str(d.time())
+    else:
+        dnext = dnow + datetime.timedelta(days=1)  # increase a day
+        return str(dnext.date()) + ' ' + str(d.time())
+
+
+def next_weekday(now, weekday, d):           
+    days_ahead = weekday - now.weekday()    
+    if days_ahead < 0 or ( days_ahead == 0 and d.time() < now.time() ):
+        days_ahead += 7                                                                        
+    return str((now + datetime.timedelta(days_ahead)).date()) + ' ' + str(d.time())
+
+
+def config_agent(request, computer_id):
     context = {}
+    computer = Computer.objects.get(id=computer_id)
+    schedules = Schedule.objects.filter(computer=computer)
+
+    if request.method == 'POST':
+        path = request.POST.get('path')
+        
+        typeofbackup = request.POST.get('typeofbackup')
+        ip_server = request.POST.get('server-backup')
+        print(typeofbackup)
+        
+        if typeofbackup == '0':  # once
+            time = request.POST.get('datetime')
+            print(time)
+            schedule = Schedule(time=time, typeofbackup=typeofbackup, 
+                                ip_server=ip_server, computer=computer, path=path)
+            schedule.save()
+
+        elif typeofbackup == '1':  # daily
+            daily_time = request.POST.get('time')
+            d = datetime.datetime.strptime(daily_time, '%H:%M')
+            dnow = datetime.datetime.now()
+            time = next_day(dnow, d)
+
+            schedule = Schedule(time=time, typeofbackup=typeofbackup, 
+                                ip_server=ip_server, computer=computer, path=path)
+            schedule.save()
+
+        elif typeofbackup == '2':  # weekly
+            days = request.POST.getlist('dayofweek')
+            dnow = datetime.datetime.now()
+            dtime = request.POST.get('time')
+            d = datetime.datetime.strptime(dtime, '%H:%M')
+            for weekday in days:
+                time = next_weekday(dnow, int(weekday), d)
+                schedule = Schedule(time=time, typeofbackup=typeofbackup, 
+                                ip_server=ip_server, computer=computer, path=path)
+                schedule.save()
+        
+        return HttpResponseRedirect(reverse('config-agent', kwargs={'computer_id': computer_id}))
+
+    context = {'schedules': schedules, 'serverlist': settings.CORE_DOMAIN}
     return render(request, 'app/config_agent.html', context)
+
+
+def delete_schedule(request, schedule_id):
+    print(schedule_id)
+    schedule = Schedule.objects.filter(id=schedule_id)
+    schedule.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 class Agent(generic.ListView):
@@ -315,7 +408,7 @@ class Agent(generic.ListView):
 
     def get_queryset(self):
         return Computer.objects.all()
-    
+
 
 def contact(request):
     print('RECEIVED REQUEST: ' + request.method)

@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from . import views
+from app import views
 from django.contrib.auth import views as auth_views
 from django.conf.urls import (
     handler400, handler403, handler404, handler500
@@ -18,11 +18,12 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name': 'app/login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page' : 'login'}, name='logout'),
     url(r'^reboot/$', views.reboot, name='reboot'),
-    url(r'^config-agent/$', views.config_agent, name='config-agent'),
+    url(r'^config-agent/(?P<computer_id>\d+)/$', views.config_agent, name='config-agent'),
     url(r'^agent/$', views.agent, name='agent'),
     url(r'^restore/$', views.restore, name='restore'),
     url(r'^off-site/$', views.off_site_sync, name='off_site'),
     url(r'^delete-agent/(?P<agent_id>\d+)/$', views.delete_agent, name='agent_delete'),
     url(r'^recover-point/(?P<agent_id>\d+)/$', views.recover_point, name='agent-recover-point'),
     url(r'^delete-sync/(?P<sync_id>\d+)/$', views.delete_sync, name='sync_delete'),
+    url(r'^delete-schedule/(?P<schedule_id>\d+)/$', views.delete_schedule, name='schedule_delete'),
 ]

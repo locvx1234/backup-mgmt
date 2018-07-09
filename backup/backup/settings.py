@@ -79,7 +79,7 @@ DATABASES = {
         'OPTIONS': {
 	    # 'read_default_file': '/etc/mysql/my.cnf',
         },
-	'NAME': 'backup_sys',
+	'NAME': 'backup_sys3',
 	'USER': 'root',
 	'PASSWORD': 'root',
 	'HOST': 'localhost',
@@ -132,3 +132,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 OFFSITE_SERVER = '192.168.1.1'
 
 OFFSITE_LIMIT_SPEED = '1452'
+
+CORE_DOMAIN = ['127.0.0.1:8000', '192.168.0.1:8080']

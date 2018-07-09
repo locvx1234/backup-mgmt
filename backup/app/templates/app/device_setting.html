@@ -1,6 +1,6 @@
 {% extends "app/base_site.html" %}
 
-{% block title %} R {% endblock title %}
+{% block title %} Device settings {% endblock title %}
 
 {% block stylesheets %}
   {{ block.super }}
@@ -15,6 +15,7 @@
                 <div class="x_content">
                   <br />
                     <ul class="device-setting">
+                        <li><a href="#server">Server</a></li>
                         <li><a href="#reboot">Reboot</a></li>
                         <li><a href="#schedule-reboot">Schedule Reboot</a></li>
                         <li><a href="#timezone">Timezone</a></li>
@@ -26,6 +27,30 @@
         </div>
 
         <div class="col-md-9 col-xs-12">
+          <div id="server" class="x_panel">
+            <div class="x_title">
+              <h2>Server</h2>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                
+                <form class="form-horizontal form-label-left" method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Servers</label>
+                    <div class="col-md-3 col-sm-3 col-xs-4">
+                      <input type="text" class="form-control" name="add_server" 
+                      value="{{ servers_list }}">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                      <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                  </div>
+                </form>
+            </div>
+          </div>
           <div id="reboot" class="x_panel">
             <div class="x_title">
               <h2>Reboot</h2>
@@ -58,6 +83,7 @@
                     molestias nemo quaerat quia rem sequi tenetur? Dolor fuga iure maiores pariatur qui?</p>
             </div>
           </div>
+
           <div id="schedule-reboot" class="x_panel">
             <div class="x_title">
               <h2>Schedule Reboot</h2>
@@ -245,23 +271,23 @@
   {{ block.super}}
   <script src="/static/build/js/device_setting.js"></script>
   <!-- Chart.js -->
-  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script> -->
   <!-- gauge.js -->
   <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
   <!-- Skycons -->
   <script src="/static/vendors/skycons/skycons.js"></script>
   <!-- Flot -->
-  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <!-- <script src="/static/vendors/Flot/jquery.flot.js"></script>
   <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
   <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
   <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script> -->
   <!-- Flot plugins -->
-  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <!-- <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
   <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script> -->
   <!-- DateJS -->
-  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- <script src="/static/vendors/DateJS/build/date.js"></script> -->
   <!-- JQVMap -->
   <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
   <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>

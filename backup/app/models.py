@@ -24,14 +24,14 @@ class Notification(models.Model):
 
 
 class Computer(models.Model):
-    serial_number = models.CharField(max_length=50)
+    username = models.CharField(max_length=50)
     name = models.CharField(max_length=45)
-    os = models.CharField(max_length=45)
+    os = models.CharField(max_length=45, null=True, blank=True)
     ip_address = models.GenericIPAddressField()
-    agent_version = VersionField(default='0.0')
-    ram = models.IntegerField(help_text="Unit MB")
-    cpu = models.IntegerField(help_text="The number of CPU cores")
-    capacity_used = models.FloatField()
+    agent_version = VersionField(default="1.0.0")
+    ram = models.IntegerField(help_text="Unit MB", null=True, blank=True)
+    cpu = models.IntegerField(help_text="The number of CPU cores", null=True, blank=True)
+    allowed_capacity = models.FloatField(default=50)
 
     def __str__(self):
         return self.name + " " + str(self.ip_address)
@@ -41,14 +41,23 @@ class Computer(models.Model):
 
 
 class Schedule(models.Model):
-    timestamp = models.DateTimeField()
+    ONCE = 0
+    DAILY = 1
+    WEEKLY = 2
+    FREQUENCY = (
+        (ONCE, 'Once'),
+        (DAILY, 'Daily'),
+        (WEEKLY, 'Weekly'),
+    ) 
+    time = models.DateTimeField()
+    typeofbackup = models.IntegerField(choices=FREQUENCY)
+    status = models.BooleanField(default=False)
+    ip_server = models.CharField(max_length=21)
     computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
+    path = models.CharField(max_length=1000)
 
     def __str__(self):
-        return str(self.timestamp) + " " + str(self.computer)
-
-    class Meta:
-        ordering = ('-timestamp',)
+        return str(self.path) + " " + str(self.computer)
 
 
 class Sync(models.Model):
@@ -61,4 +70,3 @@ class Sync(models.Model):
 
     class Meta:
         ordering = ('-sync_time',)
-

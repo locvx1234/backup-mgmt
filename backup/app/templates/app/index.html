@@ -182,7 +182,7 @@
           <div class="x_content">
             <table class="table">
           <thead>
-            <th>SERIAL</th>
+            <th>USERNAME</th>
             <th>HOSTNAME</th>
             <th>NETWORK ADDR</th>
             <th>OS</th>
@@ -193,7 +193,7 @@
           <tbody>
             {% for agent in agents %}
             <tr>
-              <td>{{ agent.serial_number }}</td>
+              <td>{{ agent.username }}</td>
               <td>{{ agent.name }}</td>
               <td>{{ agent.ip_address }}</td>
               <td>{{ agent.os }}</td>
