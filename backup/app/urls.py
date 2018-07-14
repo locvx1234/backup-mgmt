@@ -26,4 +26,6 @@ urlpatterns = [
     url(r'^recover-point/(?P<agent_id>\d+)/$', views.recover_point, name='agent-recover-point'),
     url(r'^delete-sync/(?P<sync_id>\d+)/$', views.delete_sync, name='sync_delete'),
     url(r'^delete-schedule/(?P<schedule_id>\d+)/$', views.delete_schedule, name='schedule_delete'),
+    url(r'^api/get-job/$', views.get_job, name='get-job'),
+    
 ]

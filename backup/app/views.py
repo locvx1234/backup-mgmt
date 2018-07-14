@@ -284,12 +284,14 @@ def agent(request):
         if response.status_code == 200:
             res_json = response.json()
             token = res_json['token']
-            print(token)
+            key = res_json['key']
 
             # add agent to manager site
-            agent = Computer(username=username, name=name, ip_address=ip, ram=ram, os=os, cpu=cpu,
-                             agent_version=version)
-            agent.save()
+            computer = Computer(username=username, name=name, ip_address=ip, ram=ram, os=os, cpu=cpu,
+                             agent_version=version, token=token, key=key)
+            computer.save()
+
+
         return HttpResponseRedirect(reverse('agent'))
     return render(request, 'app/agent.html', {'agents': agents_info})
 
@@ -353,7 +355,7 @@ def config_agent(request, computer_id):
     context = {}
     computer = Computer.objects.get(id=computer_id)
     schedules = Schedule.objects.filter(computer=computer)
-
+    
     if request.method == 'POST':
         path = request.POST.get('path')
         
@@ -391,7 +393,7 @@ def config_agent(request, computer_id):
         
         return HttpResponseRedirect(reverse('config-agent', kwargs={'computer_id': computer_id}))
 
-    context = {'schedules': schedules, 'serverlist': settings.CORE_DOMAIN}
+    context = {'schedules': schedules, 'serverlist': settings.CORE_DOMAIN, 'computer': computer}
     return render(request, 'app/config_agent.html', context)
 
 
@@ -493,3 +495,20 @@ def off_site_sync(request):
     return render(request, 'app/offsite-sync.html',
                   {'data_change': data_change, 'ip_offsite': ip_offsite, 'speed_limit': speed_limit,
                    'daily_total': daily_total, 'weekly_total': weekly_total})
+
+# API
+
+def get_job():
+    pass
+    # get job in the pass and status False
+
+    # return a json :
+    # {
+    #   "jobs": [
+    #       {"path" : "/home/locvu", "server": "127.0.0.1:8000"},
+    #       {"path" : "/home/locvu/foo", "server": "192.168.1.1:8000"}
+    #   ]
+    # }
+
+    # change status job to True
+    # set new job by typeofbackup 

@@ -40,6 +40,22 @@
         </nav>
         <div class="col-sm-9">
           <h3>CONFIG AGENT SETTING FOR</h3>
+          <div class="section" id="token">
+            <h3 class="title">Token</h3>
+            <p class="description">Token to authentication</p>
+            <div>
+              <code id="myToken">{{ computer.token }}</code>
+              <i class="fa fa-copy" onclick="myFunction('myToken')"></i>
+            </div>
+          </div>
+          <div class="section" id="key">
+            <h3 class="title">Key</h3>
+            <p class="description">Symmetric-key cryptography</p>
+            <div>
+              <code id="myKey">{{ computer.key }}</code>
+              <i class="fa fa-copy" onclick="myFunction('myKey')"></i>
+            </div>
+          </div>
           <div class="section" id="pause-backup">
             <h3 class="title">Pause Backups</h3>
             <p class="description">Toggle local backups for this agent between enabled and paused . Preferences for backup interval and backup schedule will be preserved</p>
@@ -176,7 +192,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="time">Type of backup</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                <select class="form-control" name="typeofbackup">
+                <select class="form-control" name="typeofbackup" id="typeofbackup">
                   <option value='0' selected="selected">Once</option>
                   <option value='1'>Daily</option>
                   <option value='2'>Weekly</option>
@@ -184,7 +200,7 @@
             </div>
           </div>
           
-          <div class="form-group">
+          <div class="form-group" id="datetime-div">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Time</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <div class='input-group date' id='datetimepicker1'>
@@ -196,7 +212,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="day-div">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Day</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select class="form-control" multiple="multiple" name="dayofweek">
@@ -211,7 +227,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="time-div">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="time">Time</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class='input-group date' id='timepicker1'>

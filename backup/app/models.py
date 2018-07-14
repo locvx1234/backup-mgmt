@@ -32,6 +32,8 @@ class Computer(models.Model):
     ram = models.IntegerField(help_text="Unit MB", null=True, blank=True)
     cpu = models.IntegerField(help_text="The number of CPU cores", null=True, blank=True)
     allowed_capacity = models.FloatField(default=50)
+    token = models.CharField(max_length=40)
+    key = models.CharField(max_length=44)
 
     def __str__(self):
         return self.name + " " + str(self.ip_address)

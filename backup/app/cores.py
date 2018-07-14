@@ -19,3 +19,10 @@ def remove_agent(domain, username):
     data = str(values).replace("'", '"')
     response = requests.post(url, data=data)
     return response
+
+
+def get_token(domain, username):
+    url = "http://{}/rest/api/get-token/{}".format(domain, username)
+    response = requests.get(url)
+    return response.json()['token']
+    
