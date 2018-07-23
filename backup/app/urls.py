@@ -27,5 +27,5 @@ urlpatterns = [
     url(r'^delete-sync/(?P<sync_id>\d+)/$', views.delete_sync, name='sync_delete'),
     url(r'^delete-schedule/(?P<schedule_id>\d+)/$', views.delete_schedule, name='schedule_delete'),
     url(r'^api/get-job/$', views.get_job, name='get-job'),
-    
+    url(r'^api/result-backup/$', views.extend_job, name='extend-job'),
 ]

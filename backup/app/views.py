@@ -1,7 +1,9 @@
 import sys
 import os
+import re
 import fileinput
 import datetime
+import json
 
 from django.shortcuts import render, render_to_response
 from django.template import loader, RequestContext
@@ -20,11 +22,14 @@ from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.views.generic.edit import DeleteView
 from django.urls import reverse
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 import yaml
 import netifaces
 import pytz
 from bs4 import BeautifulSoup
+from cryptography.fernet import Fernet
 
 from .models import Computer, Sync, Schedule
 from django.views import generic
@@ -496,19 +501,68 @@ def off_site_sync(request):
                   {'data_change': data_change, 'ip_offsite': ip_offsite, 'speed_limit': speed_limit,
                    'daily_total': daily_total, 'weekly_total': weekly_total})
 
+
 # API
+def get_header(request):
+    regex = re.compile('^HTTP_')
+    header = dict((regex.sub('', header), value) for (header, value)
+                   in request.META.items() if header.startswith('HTTP_'))
+    return header
 
-def get_job():
-    pass
-    # get job in the pass and status False
 
-    # return a json :
-    # {
-    #   "jobs": [
-    #       {"path" : "/home/locvu", "server": "127.0.0.1:8000"},
-    #       {"path" : "/home/locvu/foo", "server": "192.168.1.1:8000"}
-    #   ]
-    # }
+def get_computer_by_token(request):
+    header = get_header(request)
+    try:
+        token = header['AUTHORIZATION']
+        computer = Computer.objects.get(token=token)
+        return computer
+    # TODO handle return 
+    except Computer.DoesNotExist:
+        return HttpResponse('Token is not authorized', status=401)
+    except KeyError:
+        return HttpResponse('Unauthorized', status=401)
 
-    # change status job to True
-    # set new job by typeofbackup 
+
+def get_job(request):
+    computer = get_computer_by_token(request)
+    all_jobs = computer.schedule_set.values()
+    now = timezone.now()
+    list_jobs = []
+    for job in all_jobs:
+        if job['time'] < now and job['status'] == False:
+            list_jobs.append({"job_id": job['id'], "path": job['path'], "server": job['ip_server']})
+
+    data = {"jobs": list_jobs}
+
+    cipher_suite = Fernet(computer.key)
+    
+    cipher_text = cipher_suite.encrypt(json.dumps(data).encode())
+    return HttpResponse(cipher_text)
+
+
+@csrf_exempt
+def extend_job(request):
+    if request.method == 'POST':
+        computer = get_computer_by_token(request)
+        request_data = json.loads(request.body.decode())
+        print(request_data)
+        if request_data['status_code'] == 200:
+            # mark job complete
+            job = Schedule.objects.get(id=request_data['job_id'])
+            job.status = True
+            job.save()
+
+            # extend
+            print("===")
+            print(job.typeofbackup)
+            if job.typeofbackup != 0:
+                if job.typeofbackup == 1:
+                    increase_day = 1
+                elif job.typeofbackup == 2:
+                    increase_day = 7
+
+                time = job.time + datetime.timedelta(days=increase_day)
+                print(time)
+                schedule = Schedule(time=time, typeofbackup=job.typeofbackup, 
+                                    ip_server=job.ip_server, computer=computer, path=job.path)
+                schedule.save()
