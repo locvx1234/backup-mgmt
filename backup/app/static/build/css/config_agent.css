@@ -8,9 +8,7 @@
 .right_col {
 	padding-bottom: 500px;
 }
-.side3 {
 
-}
 .side3 ul li {
 	height: 30px;
 }
@@ -32,8 +30,7 @@
 .right_col {
       position: relative;
 }
-#myScrollspy {
-	}
+
 ul.nav-pills {
   top: 20px;
   position: fixed;

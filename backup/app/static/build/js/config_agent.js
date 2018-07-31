@@ -1,3 +1,4 @@
+// Copy 
 function myFunction(my_id) {
     // Create an auxiliary hidden input
     var aux = document.createElement("input");
@@ -29,25 +30,27 @@ $(function () {
     $('#typeofbackup').change(function () {
         if ($('#typeofbackup').val() == '0') {
             $('#datetime-div').show();
+            $('#datetime').prop('required',true);
             $('#day-div').hide();
+            $('#day_select').prop('required',false);
             $('#time-div').hide();
+            $('#time').prop('required',false);
         }
         else if ($('#typeofbackup').val() == '1') {
             $('#datetime-div').hide();
+            $('#datetime').prop('required',false);
             $('#time-div').show();
+            $('#time').prop('required',true);
             $('#day-div').hide();
+            $('#day_select').prop('required',false);
         }
         else {
             $('#datetime-div').hide();
+            $('#datetime').prop('required',false);
             $('#day-div').show();
+            $('#day_select').prop('required',true);
             $('#time-div').show();
+            $('#time').prop('required',true);
         }
     });
 });
-
-
-
-$(document).ready(function () {
-    $('#dt1').DataTable();
-});
-

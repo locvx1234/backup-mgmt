@@ -547,22 +547,35 @@ def extend_job(request):
         request_data = json.loads(request.body.decode())
         print(request_data)
         if request_data['status_code'] == 200:
-            # mark job complete
-            job = Schedule.objects.get(id=request_data['job_id'])
-            job.status = True
-            job.save()
+            # New Sync record
+            now = timezone.now()
+            Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024, sync_time=now )
+            
+            if request_data['job_id'] == None:  # client manual backup
+                pass
+            else:
+                # mark job complete
+                print("change status")
+                job = Schedule.objects.get(id=request_data['job_id'])
+                job.status = True
+                job.save()
+                print("ok")
 
-            # extend
-            print("===")
-            print(job.typeofbackup)
-            if job.typeofbackup != 0:
-                if job.typeofbackup == 1:
-                    increase_day = 1
-                elif job.typeofbackup == 2:
-                    increase_day = 7
+                # extend
+                print(job.typeofbackup)
+                if job.typeofbackup != 0:
+                    time = job.time
+                    print(str(time))
+                    now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
+                    print(str(now))
+                    while time < now:
+                        if job.typeofbackup == 1:
+                            increase_day = 1
+                        elif job.typeofbackup == 2:
+                            increase_day = 7
+                        time = job.time + datetime.timedelta(days=increase_day)
 
-                time = job.time + datetime.timedelta(days=increase_day)
-                print(time)
-                schedule = Schedule(time=time, typeofbackup=job.typeofbackup, 
-                                    ip_server=job.ip_server, computer=computer, path=job.path)
-                schedule.save()
+                    schedule = Schedule(time=time, typeofbackup=job.typeofbackup,
+                                        ip_server=job.ip_server, computer=computer, path=job.path)
+                    schedule.save()
+        return HttpResponse("OK")

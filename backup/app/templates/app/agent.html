@@ -5,7 +5,6 @@
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="/static/build/css/agent.css">
 <link rel="stylesheet" type="text/css" href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"> -->
   {{ block.super }}
 {% endblock stylesheets %}
 
@@ -47,16 +46,26 @@
                               <td>{{ item.last_sync_time }}</td>
                             </tr>
                             <tr>
-                              <td>CURRENT INTERVAL</td>
-                              <td>Every 60 minutes</td>
+                              <td>RAM</td>
+                              <td>
+                              {% if item.agent.ram %} 
+                                {{ item.agent.ram }} MB
+                              {% endif %}
+                            </td>
                             </tr>
                             <tr>
-                              <td>Screenshot</td>
-                              <td>No screenshot avalable</td>
+                              <td>Core CPU</td>
+                              <td>
+                              {% if item.agent.cpu %} 
+                                {{ item.agent.cpu }}
+                              {% endif %}
+                              </td>
                             </tr>
                             <tr>
                               <td>PROTECT STORAGE</td>
-                              <td>{{ item.data_used }}</td>
+                              <td>
+                                {{ item.data_used }} GB
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -66,7 +75,7 @@
                           <tbody>
                             <tr>
                               <td>PROTECT VOLUMNS</td>
-                              <td>D:\ E:\</td>
+                              <td></td>
                             </tr>
                             <tr>
                               <td>LOCAL USED</td>
@@ -173,34 +182,13 @@
   <script src="/static/build/js/agent.js"></script>
   <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
   <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-  <!-- <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script> -->
-  <!-- <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script> -->
   <script type="text/javascript">
     $(document).ready(function() {
     $('#example').DataTable();
   } );
   </script>
 
-  <!-- Chart.js -->
-  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
-  <!-- gauge.js -->
-  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
-  <!-- Skycons -->
-  <script src="/static/vendors/skycons/skycons.js"></script>
-  <!-- Flot -->
-  <script src="/static/vendors/Flot/jquery.flot.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
-  <!-- Flot plugins -->
-  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
   <!-- DateJS -->
   <script src="/static/vendors/DateJS/build/date.js"></script>
-  <!-- JQVMap -->
-  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
-  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+
 {% endblock javascripts %}
