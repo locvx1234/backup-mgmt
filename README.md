@@ -2,8 +2,15 @@
 
     git clone https://github.com/locvx1234/backup-mgmt
 
+##### Install Mysql 
+
+    sudo apt install mysql-server
+    sudo mysql_secure_installation
+    
 ##### Install requirements
-    pip install -r requirements.txt
+
+    sudo apt install libmysqlclient-dev
+    pip3 install -r requirements.txt
 
 ##### Run the code
     cd backup-mgmt
