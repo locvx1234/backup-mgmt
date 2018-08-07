@@ -69,14 +69,14 @@
                 <thead>
                   <tr>
                     <th>HOST</th>
-                    <th>USED</th>
+                    <th>USED (GB)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for disk in disk_used %}
                   <tr>
                     <td>{{ disk.name }}</td>
-                    <td>{{ disk.used_disk }}</td>
+                    <td>{{ disk.used_disk | floatformat }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

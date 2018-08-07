@@ -26,17 +26,15 @@ class Notification(models.Model):
 class Computer(models.Model):
     username = models.CharField(max_length=50)
     name = models.CharField(max_length=45)
-    os = models.CharField(max_length=45, null=True, blank=True)
-    ip_address = models.GenericIPAddressField()
-    agent_version = VersionField(default="1.0.0")
-    ram = models.IntegerField(help_text="Unit MB", null=True, blank=True)
+    platform = models.CharField(max_length=100, null=True, blank=True)
+    ram = models.FloatField(help_text="Unit GB", null=True, blank=True)
     cpu = models.IntegerField(help_text="The number of CPU cores", null=True, blank=True)
     allowed_capacity = models.FloatField(default=50)
     token = models.CharField(max_length=40)
     key = models.CharField(max_length=44)
 
     def __str__(self):
-        return self.name + " " + str(self.ip_address)
+        return self.name
 
     class Meta:
         ordering = ('name',)
@@ -50,12 +48,22 @@ class Schedule(models.Model):
         (ONCE, 'Once'),
         (DAILY, 'Daily'),
         (WEEKLY, 'Weekly'),
-    ) 
+    )
+
+    DONE = 0
+    PROGRESSING = 1
+    PENDING = 2 
+    STATUS_BACKUP = (
+        (DONE, 'Done'),
+        (PROGRESSING, 'Progressing...'),
+        (PENDING, 'Pending...'),
+    )
+
     time = models.DateTimeField()
     typeofbackup = models.IntegerField(choices=FREQUENCY)
-    status = models.BooleanField(default=False)
+    status = models.IntegerField(choices=STATUS_BACKUP, default=PENDING)
     ip_server = models.CharField(max_length=21)
-    computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
+    computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
     path = models.CharField(max_length=1000)
 
     def __str__(self):
@@ -65,7 +73,7 @@ class Schedule(models.Model):
 class Sync(models.Model):
     sync_time = models.DateTimeField()
     amount_data_change = models.FloatField()
-    computer = models.ForeignKey('Computer', on_delete=models.SET_NULL, null=True)
+    computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return str(self.sync_time) + " " + str(self.computer)

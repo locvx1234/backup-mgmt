@@ -4,6 +4,7 @@ import re
 import fileinput
 import datetime
 import json
+import logging
 
 from django.shortcuts import render, render_to_response
 from django.template import loader, RequestContext
@@ -39,6 +40,9 @@ from django.urls import reverse_lazy
 from pprint import pprint
 from django.forms.models import model_to_dict
 from app import cores
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_agent_info(agent_id):
@@ -121,7 +125,7 @@ def index(request):
             used_disk += sync.amount_data_change
         disk_used_obs.append({'name': computer.name, 'used_disk': used_disk})
         last_sync_obs.append({'name': computer.name, 'last_sync_time': last_sync.sync_time if last_sync else None})
-    ###
+
     context['agents_count'] = len(context['agents'])
     context['disk_used'] = disk_used_obs
     context['last_syncs'] = last_sync_obs
@@ -133,16 +137,6 @@ def index(request):
     context['ip_offsite'] = settings.OFFSITE_SERVER
     context['speed_limit'] = settings.OFFSITE_LIMIT_SPEED
     return render(request, 'app/index.html', context)
-
-
-def gentella_html(request):
-    context = {}
-    # The template to be loaded as per gentelella.
-    # All resource paths for gentelella end in .html.
-
-    # Pick out the html file name from the url. And load that template.
-    load_template = request.path.split('/')[-1]
-    return render(request, 'app/' + load_template, context)
 
 
 def reboot():
@@ -260,7 +254,7 @@ class UsersView(TemplateView):
         return context
 
 
-def agent(request):
+def agent(request, agent_id=None):
     agents_info = []
     agents = Computer.objects.all()
     data_used = 0
@@ -273,31 +267,47 @@ def agent(request):
             last_sync = None
         for sync in agent_syncs:
             data_used += sync.amount_data_change
-        agents_info.append({'agent': agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time if last_sync else None})
+
+        progressing_jobs = agent.schedule_set.filter(status=1)
+        if progressing_jobs:
+            progressing_points = progressing_jobs.values_list("path", flat=True)
+        else:
+            progressing_points = None
+
+        agents_info.append({'agent': agent, 'data_used': data_used, 'last_sync_time': last_sync.sync_time if last_sync else None,
+                            'progressing_points': progressing_points})
     if request.method == 'POST':
-        name = request.POST.get('agent-name','')
-        os = request.POST.get('agent-os','')
-        ip = request.POST.get('agent-ip','')
-        username = request.POST.get('agent-username','')
-        ram = request.POST.get('agent-ram','')
-        cpu = request.POST.get('agent-cpu','')
-        version = request.POST.get('agent-version') or None 
+        if agent_id:  # start backup button
+            computer = Computer.objects.get(id=agent_id)
+            schedules = Schedule.objects.filter(computer=computer, status=2)
+            for schedule in schedules:
+                new_job = Schedule(time=timezone.now(), typeofbackup=0,
+                                   ip_server=schedule.ip_server, computer=computer, path=schedule.path)
+                new_job.save()
+                logger.info("Force backup " + computer.name + " - " + schedule.path)
+        else:  # add new agent
+            username = request.POST.get('agent-username')
+            name = request.POST.get('agent-name') or username
 
-        # add user to core 
-        response = cores.add_agent(settings.CORE_DOMAIN[0], username)
+            # add user to core
+            response = cores.add_agent(settings.CORE_DOMAIN[0], username)
 
-        if response.status_code == 200:
-            res_json = response.json()
-            token = res_json['token']
-            key = res_json['key']
+            if response.status_code == 200:
+                res_json = response.json()
+                token = res_json['token']
+                key = res_json['key']
 
-            # add agent to manager site
-            computer = Computer(username=username, name=name, ip_address=ip, ram=ram, os=os, cpu=cpu,
-                             agent_version=version, token=token, key=key)
-            computer.save()
+                # add agent to manager site
+                computer = Computer(username=username, name=name, token=token, key=key)
+                computer.save()
+                logger.info("Agent " + name + " created")
+                return HttpResponseRedirect(reverse('agent'))
 
+            elif response.status_code == 409:  # user existed
+                msg = response.text
+                logger.error(msg)
+                return HttpResponseRedirect(reverse('agent'))
 
-        return HttpResponseRedirect(reverse('agent'))
     return render(request, 'app/agent.html', {'agents': agents_info})
 
 
@@ -310,12 +320,14 @@ def delete_agent(request, agent_id):
     if response.status_code == 200:
         # delete agent in manager site
         agent.delete()
+        logger.info("Agent " + agent.name + " deleted")
         return HttpResponseRedirect('/agent')
 
 
 def delete_sync(request, sync_id):
     sync = Sync.objects.filter(id=sync_id)
     sync.delete()
+    logger.info("Sync: " + sync.computer.name + " - " +  str(sync.sync_time) + " deleted")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
@@ -328,16 +340,7 @@ def recover_point(request, agent_id):
 
 def restore(request):
     agents = Computer.objects.all()
-    if request.method == 'GET':
-        pass
-    elif request.method == 'POST':
-        name = request.POST.get('agent-name', '')
-        os = request.POST.get('agent-os', '')
-        ip = request.POST.get('agent-ip', '')
-        serial = request.POST.get('agent-serial', '')
-        ram = request.POST.get('agent-ram', '')
-        agent = Computer(serial_number=serial, name=name, ip_address=ip, ram=ram, os=os)
-        agent.save()
+
     return render(request, 'app/restore.html', {'agents': agents})
 
 
@@ -360,14 +363,14 @@ def config_agent(request, computer_id):
     context = {}
     computer = Computer.objects.get(id=computer_id)
     schedules = Schedule.objects.filter(computer=computer)
-    
+
     if request.method == 'POST':
         path = request.POST.get('path')
-        
+
         typeofbackup = request.POST.get('typeofbackup')
         ip_server = request.POST.get('server-backup')
         print(typeofbackup)
-        
+
         if typeofbackup == '0':  # once
             time = request.POST.get('datetime')
             print(time)
@@ -381,7 +384,7 @@ def config_agent(request, computer_id):
             dnow = datetime.datetime.now()
             time = next_day(dnow, d)
 
-            schedule = Schedule(time=time, typeofbackup=typeofbackup, 
+            schedule = Schedule(time=time, typeofbackup=typeofbackup,
                                 ip_server=ip_server, computer=computer, path=path)
             schedule.save()
 
@@ -392,10 +395,10 @@ def config_agent(request, computer_id):
             d = datetime.datetime.strptime(dtime, '%H:%M')
             for weekday in days:
                 time = next_weekday(dnow, int(weekday), d)
-                schedule = Schedule(time=time, typeofbackup=typeofbackup, 
+                schedule = Schedule(time=time, typeofbackup=typeofbackup,
                                 ip_server=ip_server, computer=computer, path=path)
                 schedule.save()
-        
+
         return HttpResponseRedirect(reverse('config-agent', kwargs={'computer_id': computer_id}))
 
     context = {'schedules': schedules, 'serverlist': settings.CORE_DOMAIN, 'computer': computer}
@@ -515,67 +518,97 @@ def get_computer_by_token(request):
     try:
         token = header['AUTHORIZATION']
         computer = Computer.objects.get(token=token)
-        return computer
-    # TODO handle return 
-    except Computer.DoesNotExist:
-        return HttpResponse('Token is not authorized', status=401)
-    except KeyError:
-        return HttpResponse('Unauthorized', status=401)
+        return computer 
+    except (KeyError, Computer.DoesNotExist):
+        return None
 
 
 def get_job(request):
     computer = get_computer_by_token(request)
-    all_jobs = computer.schedule_set.values()
-    now = timezone.now()
-    list_jobs = []
-    for job in all_jobs:
-        if job['time'] < now and job['status'] == False:
-            list_jobs.append({"job_id": job['id'], "path": job['path'], "server": job['ip_server']})
+    if computer:
+        all_jobs = computer.schedule_set.values()
+        now = timezone.now()
+        list_jobs = []
+        for job in all_jobs:
+            if job['time'] < now and job['status'] == 2:
+                list_jobs.append({"job_id": job['id'], "path": job['path'], "server": job['ip_server']})
 
-    data = {"jobs": list_jobs}
+                # mark job processing
+                job = Schedule.objects.get(id=job['id'])
+                job.status = 1
+                job.save()
 
-    cipher_suite = Fernet(computer.key)
-    
-    cipher_text = cipher_suite.encrypt(json.dumps(data).encode())
-    return HttpResponse(cipher_text)
+        data = {"jobs": list_jobs}
+
+        cipher_suite = Fernet(computer.key)
+        cipher_text = cipher_suite.encrypt(json.dumps(data).encode())
+        return HttpResponse(cipher_text)
+    else:
+        return HttpResponse('Unauthorized', status=401)
 
 
 @csrf_exempt
-def extend_job(request):
+def handle_result(request):
     if request.method == 'POST':
         computer = get_computer_by_token(request)
-        request_data = json.loads(request.body.decode())
-        print(request_data)
-        if request_data['status_code'] == 200:
-            # New Sync record
-            now = timezone.now()
-            Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024, sync_time=now )
-            
-            if request_data['job_id'] == None:  # client manual backup
-                pass
-            else:
-                # mark job complete
-                print("change status")
+        if computer:
+            request_data = json.loads(request.body.decode())
+            print(request_data)
+            if request_data['status_code'] == 200:
+                # New Sync record
+                now = timezone.now()
+                Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024, sync_time=now )
+                
+                if request_data['job_id'] == None:  # client manual backup
+                    pass
+                else:
+                    # mark job complete
+                    print("change status")
+                    job = Schedule.objects.get(id=request_data['job_id'])
+                    job.status = 0
+                    job.save()
+                    print("ok")
+
+                    # extend job
+                    print(job.typeofbackup)
+                    if job.typeofbackup != 0:
+                        time = job.time
+                        print(str(time))
+                        now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
+                        print(str(now))
+                        while time < now:
+                            if job.typeofbackup == 1:
+                                increase_day = 1
+                            elif job.typeofbackup == 2:
+                                increase_day = 7
+                            time = job.time + datetime.timedelta(days=increase_day)
+
+                        schedule = Schedule(time=time, typeofbackup=job.typeofbackup,
+                                            ip_server=job.ip_server, computer=computer, path=job.path)
+                        schedule.save()
+            elif request_data['status_code'] == 404:
+                # remove job
                 job = Schedule.objects.get(id=request_data['job_id'])
-                job.status = True
-                job.save()
-                print("ok")
+                job.delete()
 
-                # extend
-                print(job.typeofbackup)
-                if job.typeofbackup != 0:
-                    time = job.time
-                    print(str(time))
-                    now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
-                    print(str(now))
-                    while time < now:
-                        if job.typeofbackup == 1:
-                            increase_day = 1
-                        elif job.typeofbackup == 2:
-                            increase_day = 7
-                        time = job.time + datetime.timedelta(days=increase_day)
+                # logging
+            return HttpResponse("OK")
+        else:
+            return HttpResponse('Unauthorized', status=401)
 
-                    schedule = Schedule(time=time, typeofbackup=job.typeofbackup,
-                                        ip_server=job.ip_server, computer=computer, path=job.path)
-                    schedule.save()
-        return HttpResponse("OK")
+
+@csrf_exempt
+def update_info_agent(request):
+    if request.method == 'POST':
+        computer = get_computer_by_token(request)
+        if computer:
+            request_data = json.loads(request.body.decode())
+            print(request_data)
+            computer.ram = request_data['mem_total']
+            computer.cpu = request_data['cpus']
+            computer.platform = request_data['platform']
+            computer.save()
+
+            return HttpResponse("OK")
+        else:
+            return HttpResponse('Unauthorized', status=401) 

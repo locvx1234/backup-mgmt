@@ -4,12 +4,9 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls import (
     handler400, handler403, handler404, handler500
 )
-urlpatterns = [
-    # Matches any html file - to be used for gentella
-    # Avoid using your .html in your resources.
-    # Or create a separate django app.
-    url(r'^.*\.html', views.gentella_html, name='gentella'),
 
+
+urlpatterns = [
     # The home page
     url(r'^$', views.index, name='index'),
     url(r'^contact/$', views.contact, name='contact'),
@@ -20,6 +17,7 @@ urlpatterns = [
     url(r'^reboot/$', views.reboot, name='reboot'),
     url(r'^config-agent/(?P<computer_id>\d+)/$', views.config_agent, name='config-agent'),
     url(r'^agent/$', views.agent, name='agent'),
+    url(r'^agent/(?P<agent_id>\d+)/$', views.agent, name='start_backup'),
     url(r'^restore/$', views.restore, name='restore'),
     url(r'^off-site/$', views.off_site_sync, name='off_site'),
     url(r'^delete-agent/(?P<agent_id>\d+)/$', views.delete_agent, name='agent_delete'),
@@ -27,5 +25,6 @@ urlpatterns = [
     url(r'^delete-sync/(?P<sync_id>\d+)/$', views.delete_sync, name='sync_delete'),
     url(r'^delete-schedule/(?P<schedule_id>\d+)/$', views.delete_schedule, name='schedule_delete'),
     url(r'^api/get-job/$', views.get_job, name='get-job'),
-    url(r'^api/result-backup/$', views.extend_job, name='extend-job'),
+    url(r'^api/result-backup/$', views.handle_result, name='handle-result'),
+    url(r'^api/info-agent/$', views.update_info_agent, name='update-info-agent'),
 ]

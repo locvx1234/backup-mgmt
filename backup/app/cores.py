@@ -25,4 +25,3 @@ def get_token(domain, username):
     url = "http://{}/rest/api/get-token/{}".format(domain, username)
     response = requests.get(url)
     return response.json()['token']
-    

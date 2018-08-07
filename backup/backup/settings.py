@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import logging.config
+from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -79,11 +81,10 @@ DATABASES = {
         'OPTIONS': {
 	    # 'read_default_file': '/etc/mysql/my.cnf',
         },
-	'NAME': 'backup_sys3',
-	'USER': 'root',
-	'PASSWORD': 'root',
-	'HOST': 'localhost',
-	'PORT': ''
+        'NAME': 'backup_ctl',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
     }
 }
 
@@ -129,8 +130,58 @@ LOGIN_REDIRECT_URL = 'index'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-OFFSITE_SERVER = '192.168.1.2__'
+OFFSITE_SERVER = '192.168.1.2'
 
 OFFSITE_LIMIT_SPEED = '1452'
 
 CORE_DOMAIN = ['127.0.0.1:8000', '192.168.0.1:8080']
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'app/static/log/backup_controller.log'),
+            'maxBytes': 1024*1024*5, # 5MB
+            'backupCount': 0,
+            'formatter': 'verbose',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s - %(message)s'
+        },
+    },
+    'loggers': {
+        'app.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'app.views': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'app.models': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}

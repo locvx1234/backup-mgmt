@@ -100,7 +100,7 @@
                   </thead>
                   <tbody>
                     {% for schedule in schedules %}
-                      {% if not schedule.status %}
+                      {% if schedule.status == 2 %}
                       <tr>
                         <td>{{ schedule.path }}</td>
                         <td>{{ schedule.time }}</td>
