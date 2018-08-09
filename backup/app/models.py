@@ -32,7 +32,7 @@ class Computer(models.Model):
     allowed_capacity = models.FloatField(default=50)
     token = models.CharField(max_length=40)
     key = models.CharField(max_length=44)
-
+    status = models.BooleanField(default=True, help_text="set True to enable backup and vice versa")
     def __str__(self):
         return self.name
 
@@ -53,10 +53,12 @@ class Schedule(models.Model):
     DONE = 0
     PROGRESSING = 1
     PENDING = 2 
+    STOP = 3
     STATUS_BACKUP = (
         (DONE, 'Done'),
         (PROGRESSING, 'Progressing...'),
         (PENDING, 'Pending...'),
+        (STOP, 'Stop'),
     )
 
     time = models.DateTimeField()
@@ -74,6 +76,9 @@ class Sync(models.Model):
     sync_time = models.DateTimeField()
     amount_data_change = models.FloatField()
     computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
+    path = models.CharField(max_length=1000)
+    ip_server = models.CharField(max_length=21)
+    status = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.sync_time) + " " + str(self.computer)

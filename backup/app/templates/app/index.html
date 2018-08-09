@@ -24,7 +24,7 @@
                   <span>{{ ip }} ({{ ip_type }})</span>
                 </div>
                 <div class="col-md-4 col-sm-6 col-xs-12">
-                  <label>LAST CHECKIN[Click to Force ]</label>
+                  <label>LAST CHECKIN</label>
                   <span> 7 Minutes Ago</span>
                 </div>
                 <div class="col-md-4 col-sm-6 col-xs-12">
@@ -36,7 +36,7 @@
             <div class="irow">
               <div class="col-md-4 col-sm-6 col-xs-12">
                 <label>TOTAL PROTECT DATA </label>
-                <span>{{ total_protect_data }} GB</span>
+                <span>{{ total_protect_data | floatformat }} GB</span>
               </div>
               <div class="col-md-4 col-sm-6 col-xs-12">
                 <label>OFFSITE SERVER </label>
@@ -139,7 +139,7 @@
             <th>USERNAME</th>
             <th>HOSTNAME</th>
             <th>NETWORK ADDR</th>
-            <th>OS</th>
+            <th>PLATFORM</th>
             <th>CPUS</th>
             <th>RAM</th>
             <th>AGENT VERSION</th>
@@ -150,7 +150,7 @@
               <td>{{ agent.username }}</td>
               <td>{{ agent.name }}</td>
               <td>{{ agent.ip_address }}</td>
-              <td>{{ agent.os }}</td>
+              <td>{{ agent.platform }}</td>
               <td>{{ agent.cpu }}</td>
               <td>{{ agent.ram }} MB</td>
               <td>{{ agent.agent_version }}</td>
@@ -213,8 +213,7 @@
   <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
 
   <!-- DateJS -->
-  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- <script src="/static/vendors/DateJS/build/date.js"></script> -->
 
   <script src="/static/build/js/dashboard.js"></script>
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script> -->
 {% endblock javascripts %}

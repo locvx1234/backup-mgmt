@@ -19,8 +19,7 @@
                     <ul class="nav nav-pills nav-stacked">
                       <li><a href="#token">Token</a></li>
                       <li><a href="#key">Key</a></li>
-                      <li><a href="#pause-backup">Pause Backup</a></li>
-                      <li><a href="#pause-cloud-backup">Pause Cloud Backups </a></li>
+                      <li><a href="#pause-backup">Backup</a></li>
                       <li><a href="#schedule-backup">Schedule Backup</a></li>
                     </ul>
                 </div>
@@ -54,28 +53,27 @@
               <div class="ln_solid"></div>
               
               <div class="section" id="pause-backup">
-                <h3 class="title">Pause Backups</h3>
-                <p class="description">Toggle local backups for this agent between enabled and paused . Preferences for backup interval and backup schedule will be preserved</p>
-                <div class="form-group">
-                  
-                    <div class="radio">
-                      <label>
-                        <input type="radio" class="flat" checked="" name="localBackup"> Enable
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" class="flat" name="localBackup"> Pause
-                      </label>
-                    </div>
-                
-                </div>
-
-                
-                <div class="form-group">
-                    <button class="btn btn-primary btn-sm">Apply</button>
-                    <button class="btn btn-primary btn-sm">Apply to all</button>
-                </div>
+                <h3 class="title">Backups</h3>
+                <p class="description">Toggle local backups for this agent between enabled and disabled . Preferences for backup interval and backup schedule will be preserved</p>
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                      <div class="radio">
+                        <label>
+                          <input type="radio" class="backupstatus flat" value="True" name="localBackup"> Enable
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" class="backupstatus flat" value="False" name="localBackup"> Disable
+                        </label>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      
+                    <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+                  </div>
+                </form>
               </div>
               <br>
               <div class="ln_solid"></div>
@@ -95,17 +93,19 @@
                           <th>Next backup</th>
                           <th>Server</th>
                           <th>Type of backup</th>
+                          <th>Status</th>
                           <th>Operator</th>
                       </tr>
                   </thead>
                   <tbody>
                     {% for schedule in schedules %}
-                      {% if schedule.status == 2 %}
+                      {% if schedule.status != 0 %}
                       <tr>
                         <td>{{ schedule.path }}</td>
                         <td>{{ schedule.time }}</td>
                         <td>{{ schedule.ip_server }}</td>
                         <td>{{ schedule.get_typeofbackup_display }}</td>
+                        <td>{{ schedule.get_status_display }}</td>
                         <td>
                             <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#edit{{schedule.id}}Modal"><i class="fa fa-pencil"></i> Edit </a>
 
@@ -228,6 +228,14 @@
 
 {% block javascripts %}
   {{ block.super}}
+  <script>
+      var status = "{{ computer.status }}";
+      $(".backupstatus").each(function() {
+        if ($(this).val() == status){
+          $(this).prop('checked', true);
+        }
+      });
+  </script>
   <script src="/static/build/js/config_agent.js"></script>
   
   <!-- DateJS -->

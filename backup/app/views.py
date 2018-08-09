@@ -45,25 +45,6 @@ from app import cores
 logger = logging.getLogger(__name__)
 
 
-def get_agent_info(agent_id):
-    agent = Computer.objects.all().filter(id=agent_id)[0]
-    agent_info = Computer.objects.filter(id=agent_id).values()[0]
-    used_data = 0
-    syncs = agent.sync_set.all()
-
-    if len(syncs) >= 1:
-        agent_info['all_sync'] = syncs
-        last_sync = syncs[0]
-        for sync in syncs:
-            used_data += sync.amount_data_change
-        agent_info['used_data'] = used_data
-    else:
-        last_sync = None
-    if last_sync:
-        agent_info['last_sync'] = last_sync.sync_time
-    return agent_info
-
-
 def get_all_interface():
     interfaces = []
     list_interface = netifaces.interfaces()
@@ -257,9 +238,9 @@ class UsersView(TemplateView):
 def agent(request, agent_id=None):
     agents_info = []
     agents = Computer.objects.all()
-    data_used = 0
 
     for agent in agents:
+        data_used = 0
         agent_syncs = agent.sync_set.all()
         if agent_syncs:
             last_sync = agent_syncs[0]
@@ -325,16 +306,33 @@ def delete_agent(request, agent_id):
 
 
 def delete_sync(request, sync_id):
+    # TODO : delete data node CORE
     sync = Sync.objects.filter(id=sync_id)
-    sync.delete()
     logger.info("Sync: " + sync.computer.name + " - " +  str(sync.sync_time) + " deleted")
+    
+    sync.delete()
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def recover_point(request, agent_id):
-    context = {}
-    agent = get_agent_info(agent_id)
-    context['agent'] = agent
+    agent = Computer.objects.get(id=agent_id)
+    syncs = Sync.objects.filter(computer=agent)
+
+    servers = []
+    data_use_total = 0
+    for domain in settings.CORE_DOMAIN:
+        servers.append({"domain": domain, "data_used": 0})
+
+
+    for i, server in enumerate(servers):
+        for sync in syncs:
+            if sync.ip_server == server["domain"]:
+                server["data_used"] += sync.amount_data_change
+                data_use_total += sync.amount_data_change
+
+    print(servers)
+    context = {"agent": agent, "syncs": syncs, "servers": servers, "total_data": data_use_total}
     return render(request, 'app/recovery_point.html', context)
 
 
@@ -365,42 +363,59 @@ def config_agent(request, computer_id):
     schedules = Schedule.objects.filter(computer=computer)
 
     if request.method == 'POST':
-        path = request.POST.get('path')
+        if request.POST.get('path'):  # add new job
+            path = request.POST.get('path')
 
-        typeofbackup = request.POST.get('typeofbackup')
-        ip_server = request.POST.get('server-backup')
-        print(typeofbackup)
+            typeofbackup = request.POST.get('typeofbackup')
+            ip_server = request.POST.get('server-backup')
+            print(typeofbackup)
 
-        if typeofbackup == '0':  # once
-            time = request.POST.get('datetime')
-            print(time)
-            schedule = Schedule(time=time, typeofbackup=typeofbackup, 
-                                ip_server=ip_server, computer=computer, path=path)
-            schedule.save()
-
-        elif typeofbackup == '1':  # daily
-            daily_time = request.POST.get('time')
-            d = datetime.datetime.strptime(daily_time, '%H:%M')
-            dnow = datetime.datetime.now()
-            time = next_day(dnow, d)
-
-            schedule = Schedule(time=time, typeofbackup=typeofbackup,
-                                ip_server=ip_server, computer=computer, path=path)
-            schedule.save()
-
-        elif typeofbackup == '2':  # weekly
-            days = request.POST.getlist('dayofweek')
-            dnow = datetime.datetime.now()
-            dtime = request.POST.get('time')
-            d = datetime.datetime.strptime(dtime, '%H:%M')
-            for weekday in days:
-                time = next_weekday(dnow, int(weekday), d)
-                schedule = Schedule(time=time, typeofbackup=typeofbackup,
-                                ip_server=ip_server, computer=computer, path=path)
+            if typeofbackup == '0':  # once
+                time = request.POST.get('datetime')
+                print(time)
+                schedule = Schedule(time=time, typeofbackup=typeofbackup, 
+                                    ip_server=ip_server, computer=computer, path=path)
                 schedule.save()
 
-        return HttpResponseRedirect(reverse('config-agent', kwargs={'computer_id': computer_id}))
+            elif typeofbackup == '1':  # daily
+                daily_time = request.POST.get('time')
+                d = datetime.datetime.strptime(daily_time, '%H:%M')
+                dnow = datetime.datetime.now()
+                time = next_day(dnow, d)
 
+                schedule = Schedule(time=time, typeofbackup=typeofbackup,
+                                    ip_server=ip_server, computer=computer, path=path)
+                schedule.save()
+
+            elif typeofbackup == '2':  # weekly
+                days = request.POST.getlist('dayofweek')
+                dnow = datetime.datetime.now()
+                dtime = request.POST.get('time')
+                d = datetime.datetime.strptime(dtime, '%H:%M')
+                for weekday in days:
+                    time = next_weekday(dnow, int(weekday), d)
+                    schedule = Schedule(time=time, typeofbackup=typeofbackup,
+                                    ip_server=ip_server, computer=computer, path=path)
+                    schedule.save()
+            
+        elif request.POST.get('localBackup'):  # enable or disable backup
+            status = request.POST.get('localBackup')
+            print(status)
+            computer.status = status
+            computer.save()
+            
+            if status == 'True':
+                jobs = Schedule.objects.filter(computer=computer, status=3)
+                for job in jobs:
+                    job.status = 2
+                    job.save()
+            else:
+                jobs = Schedule.objects.filter(computer=computer, status=2)
+                for job in jobs:
+                    job.status = 3
+                    job.save()
+
+        return HttpResponseRedirect(reverse('config-agent', kwargs={'computer_id': computer_id}))
     context = {'schedules': schedules, 'serverlist': settings.CORE_DOMAIN, 'computer': computer}
     return render(request, 'app/config_agent.html', context)
 
@@ -526,23 +541,27 @@ def get_computer_by_token(request):
 def get_job(request):
     computer = get_computer_by_token(request)
     if computer:
-        all_jobs = computer.schedule_set.values()
-        now = timezone.now()
         list_jobs = []
-        for job in all_jobs:
-            if job['time'] < now and job['status'] == 2:
-                list_jobs.append({"job_id": job['id'], "path": job['path'], "server": job['ip_server']})
+        if computer.status:  # enable
+            all_jobs = computer.schedule_set.values()
+            now = timezone.now()
 
-                # mark job processing
-                job = Schedule.objects.get(id=job['id'])
-                job.status = 1
-                job.save()
+            for job in all_jobs:
+                if job['time'] < now and job['status'] == 2:
+                    list_jobs.append({"job_id": job['id'], "path": job['path'], "server": job['ip_server']})
 
+                    # mark job processing
+                    job = Schedule.objects.get(id=job['id'])
+                    job.status = 1
+                    job.save()
+        else:  # disable
+            pass
         data = {"jobs": list_jobs}
 
         cipher_suite = Fernet(computer.key)
         cipher_text = cipher_suite.encrypt(json.dumps(data).encode())
         return HttpResponse(cipher_text)
+
     else:
         return HttpResponse('Unauthorized', status=401)
 
@@ -557,7 +576,9 @@ def handle_result(request):
             if request_data['status_code'] == 200:
                 # New Sync record
                 now = timezone.now()
-                Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024, sync_time=now )
+                Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024,
+                                    sync_time=now, status=request_data['msg'], ip_server=request_data['server'],
+                                    path=request_data['path'])
                 
                 if request_data['job_id'] == None:  # client manual backup
                     pass
