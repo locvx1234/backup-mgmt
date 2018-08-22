@@ -25,10 +25,10 @@
                         <ul>
                             {% for server in servers %}
                             <li>
-                                Server : {{ server.domain }} protect <label>{{ server.data_used | floatformat }} GB </label>
+                                Server : {{ server.domain }} protect <label>{{ server.data_used | floatformat }} MB </label>
                             </li>
                             {% endfor %}
-                            <li>Total : <label>{{ total_data | floatformat}} GB</label></li>
+                            <li>Total : <label>{{ total_data | floatformat}} MB</label></li>
                         </ul>
                         
                     </div>
@@ -74,7 +74,7 @@
                                 <td>{{ sync.path }}</td>
                                 <td>{{ sync.ip_server }}</td>
                                 <td>{{ sync.status }}</td>
-                                <td>{{ sync.amount_data_change }} GB</td>
+                                <td>{{ sync.amount_data_change | floatformat:3 }} MB</td>
                                 <td><a href="{% url 'sync_delete' sync.id %}" class="btn btn-warning" value="Delete">DELETE</a></td>
                             </tr>
                          {% endfor %}

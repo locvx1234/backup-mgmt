@@ -306,10 +306,12 @@ def delete_agent(request, agent_id):
 
 
 def delete_sync(request, sync_id):
+    sync = Sync.objects.get(id=sync_id)
     # TODO : delete data node CORE
-    sync = Sync.objects.filter(id=sync_id)
+    # response = cores.remove_sync(settings.CORE_DOMAIN[0], sync_id)
+
     logger.info("Sync: " + sync.computer.name + " - " +  str(sync.sync_time) + " deleted")
-    
+
     sync.delete()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
@@ -542,13 +544,16 @@ def get_job(request):
     computer = get_computer_by_token(request)
     if computer:
         list_jobs = []
-        if computer.status:  # enable
-            all_jobs = computer.schedule_set.values()
-            now = timezone.now()
+        now = timezone.now()
 
-            for job in all_jobs:
+        # get job backup
+        if computer.status:  # enable
+            backup_jobs = computer.schedule_set.values()
+
+            for job in backup_jobs:
                 if job['time'] < now and job['status'] == 2:
-                    list_jobs.append({"job_id": job['id'], "path": job['path'], "server": job['ip_server']})
+                    list_jobs.append({"job_type": "backup", "job_id": job['id'],
+                                      "path": job['path'], "server": job['ip_server']})
 
                     # mark job processing
                     job = Schedule.objects.get(id=job['id'])
@@ -556,8 +561,21 @@ def get_job(request):
                     job.save()
         else:  # disable
             pass
-        data = {"jobs": list_jobs}
 
+        # get job restore
+        restore_jobs = computer.restorejob_set.values()
+        for job in restore_jobs:
+                if job['time'] < now and job['status'] == 2:
+                    list_jobs.append({"job_type": "restore", "job_id": job['id'],
+                                      "job_pk": job['pk'], "path": job['path']})
+
+                    # mark job processing
+                    job = RestoreJob.objects.get(pk=job['pk'])
+                    job.status = 1
+                    job.save()
+
+        data = {"jobs": list_jobs}
+        print(data)
         cipher_suite = Fernet(computer.key)
         cipher_text = cipher_suite.encrypt(json.dumps(data).encode())
         return HttpResponse(cipher_text)

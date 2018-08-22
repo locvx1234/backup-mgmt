@@ -52,7 +52,7 @@ class Schedule(models.Model):
 
     DONE = 0
     PROGRESSING = 1
-    PENDING = 2 
+    PENDING = 2
     STOP = 3
     STATUS_BACKUP = (
         (DONE, 'Done'),
@@ -72,9 +72,30 @@ class Schedule(models.Model):
         return str(self.path) + " " + str(self.computer)
 
 
+class RestoreJob(models.Model):
+    DONE = 0
+    PROGRESSING = 1
+    PENDING = 2
+    CANCEL = 3
+    STATUS_RESTORE = (
+        (DONE, 'Done'),
+        (PROGRESSING, 'Progressing...'),
+        (PENDING, 'Pending...'),
+        (CANCEL, 'Cancel'),
+    )
+
+    computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
+    path = models.CharField(max_length=1000)
+    time = models.DateTimeField()
+    status = models.IntegerField(choices=STATUS_RESTORE, default=PENDING)
+
+    def __str__(self):
+        return str(self.path) + " " + str(self.computer)
+
+
 class Sync(models.Model):
     sync_time = models.DateTimeField()
-    amount_data_change = models.FloatField()
+    amount_data_change = models.FloatField(help_text="Unit MB")
     computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
     path = models.CharField(max_length=1000)
     ip_server = models.CharField(max_length=21)

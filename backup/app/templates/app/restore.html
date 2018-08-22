@@ -104,13 +104,27 @@
                   <form class="form-horizontal form-label-center form-group">
                     <div class="col-md-9"></div>
                     <div class="col-md-3">
-                      <select>
-                        <option>14:00 14/01/2018</option>
-                        <option>14:00 15/01/2018</option>
-                        <option>19:00 16/01/2018</option>
-                      </select>
-
+                      <p>
+                          Date
+                          <input list="dates">
+                          <datalist id="dates">
+                            <option>14:00 14/01/2018</option>
+                            <option>14:00 15/01/2018</option>
+                            <option>19:00 16/01/2018</option>
+                          </datalist>
+                      </p>
+                      
+                      <p>
+                          Path
+                          <input list="targets">
+                          <datalist id="targets">
+                            <option>/home</option>
+                            <option>/etc</option>
+                            <option>/</option>
+                          </datalist>
+                      </p>
                     </div>
+                    
                   </form>
                 </div>
 
@@ -128,26 +142,5 @@
 {% block javascripts %}
   {{ block.super}}
   <script src="/static/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
-  <!-- Chart.js -->
-  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
-  <!-- gauge.js -->
-  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
-  <!-- Skycons -->
-  <script src="/static/vendors/skycons/skycons.js"></script>
-  <!-- Flot -->
-  <script src="/static/vendors/Flot/jquery.flot.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
-  <!-- Flot plugins -->
-  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
-  <!-- DateJS -->
-  <script src="/static/vendors/DateJS/build/date.js"></script>
-  <!-- JQVMap -->
-  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
-  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+
 {% endblock javascripts %}
