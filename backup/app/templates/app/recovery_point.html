@@ -95,7 +95,9 @@
   <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-    $('#recover_point').DataTable();
+    $('#recover_point').DataTable({
+        "order": [[ 0, "desc" ]]
+    });
   } );
   </script>
   <!-- DateJS -->

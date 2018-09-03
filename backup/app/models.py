@@ -54,11 +54,13 @@ class Schedule(models.Model):
     PROGRESSING = 1
     PENDING = 2
     STOP = 3
+    ERROR = 4
     STATUS_BACKUP = (
         (DONE, 'Done'),
         (PROGRESSING, 'Progressing...'),
         (PENDING, 'Pending...'),
         (STOP, 'Stop'),
+        (ERROR, 'Error')
     )
 
     time = models.DateTimeField()
@@ -77,15 +79,18 @@ class RestoreJob(models.Model):
     PROGRESSING = 1
     PENDING = 2
     CANCEL = 3
+    ERROR = 4
     STATUS_RESTORE = (
         (DONE, 'Done'),
         (PROGRESSING, 'Progressing...'),
         (PENDING, 'Pending...'),
-        (CANCEL, 'Cancel'),
+        (CANCEL, 'Canceled'),
+        (ERROR, 'Error')
     )
 
     computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
     path = models.CharField(max_length=1000)
+    backup_id = models.IntegerField()
     time = models.DateTimeField()
     status = models.IntegerField(choices=STATUS_RESTORE, default=PENDING)
 
