@@ -5,6 +5,7 @@ import fileinput
 import datetime
 import json
 import logging
+import requests
 
 from django.shortcuts import render, render_to_response
 from django.template import loader, RequestContext
@@ -32,7 +33,7 @@ import pytz
 from bs4 import BeautifulSoup
 from cryptography.fernet import Fernet
 
-from .models import Computer, Sync, Schedule
+from .models import Computer, Sync, Schedule, RestoreJob
 from django.views import generic
 from ipaddress import ip_address
 from django.shortcuts import redirect
@@ -338,12 +339,6 @@ def recover_point(request, agent_id):
     return render(request, 'app/recovery_point.html', context)
 
 
-def restore(request):
-    agents = Computer.objects.all()
-
-    return render(request, 'app/restore.html', {'agents': agents})
-
-
 def next_day(dnow, d):
     if d.time() > dnow.time():
         return str(dnow.date()) + ' ' + str(d.time())
@@ -359,9 +354,9 @@ def next_weekday(now, weekday, d):
     return str((now + datetime.timedelta(days_ahead)).date()) + ' ' + str(d.time())
 
 
-def config_agent(request, computer_id):
+def config_agent(request, agent_id):
     context = {}
-    computer = Computer.objects.get(id=computer_id)
+    computer = Computer.objects.get(id=agent_id)
     schedules = Schedule.objects.filter(computer=computer)
 
     if request.method == 'POST':
@@ -375,7 +370,7 @@ def config_agent(request, computer_id):
             if typeofbackup == '0':  # once
                 time = request.POST.get('datetime')
                 print(time)
-                schedule = Schedule(time=time, typeofbackup=typeofbackup, 
+                schedule = Schedule(time=time, typeofbackup=typeofbackup,
                                     ip_server=ip_server, computer=computer, path=path)
                 schedule.save()
 
@@ -399,13 +394,13 @@ def config_agent(request, computer_id):
                     schedule = Schedule(time=time, typeofbackup=typeofbackup,
                                     ip_server=ip_server, computer=computer, path=path)
                     schedule.save()
-            
+
         elif request.POST.get('localBackup'):  # enable or disable backup
             status = request.POST.get('localBackup')
             print(status)
             computer.status = status
             computer.save()
-            
+
             if status == 'True':
                 jobs = Schedule.objects.filter(computer=computer, status=3)
                 for job in jobs:
@@ -417,7 +412,7 @@ def config_agent(request, computer_id):
                     job.status = 3
                     job.save()
 
-        return HttpResponseRedirect(reverse('config-agent', kwargs={'computer_id': computer_id}))
+        return HttpResponseRedirect(reverse('config-agent', kwargs={'agent_id': agent_id}))
     context = {'schedules': schedules, 'serverlist': settings.CORE_DOMAIN, 'computer': computer}
     return render(request, 'app/config_agent.html', context)
 
@@ -522,6 +517,70 @@ def off_site_sync(request):
                    'daily_total': daily_total, 'weekly_total': weekly_total})
 
 
+@csrf_exempt
+def restore_agent(request, agent_id):
+    if request.user.is_authenticated:
+        pass
+    else:
+        return HttpResponseRedirect('/login')
+    
+    context = {}
+    computer = Computer.objects.get(id=agent_id)
+    restorations = RestoreJob.objects.filter(computer=computer)
+    # TODO
+    # get date, pk and targets
+    headers = {'Content-Type': 'application/json;', 'Authorization': computer.token}
+    url = "http://{}/rest/api/list/".format(settings.CORE_DOMAIN[0])
+
+    backup_select = []
+    path_select = []
+    response = requests.request("GET", url, headers=headers)
+    if response.status_code == 200:
+        # print(json.dumps(response.json(), indent=4, sort_keys=True))
+        for item in response.json().values():
+            backup_select.append({"bid": item['pk'], "date": item['date']})
+            if item['path'] not in path_select:
+                path_select.append(item['path'])
+        print(backup_select)
+    else:
+        
+        logger.error(response.text)
+    #
+
+    if request.method == 'POST':
+        if request.POST.get('bid_select'):  # file restore
+            backup_id = request.POST.get('bid_select')
+            target = request.POST.get('target_select')
+            print(backup_id)
+            print(target)
+            # add new job for restore
+            restore_job = RestoreJob(computer=computer, path=target, time=timezone.now(), backup_id=backup_id)
+            restore_job.save()
+
+        elif request.POST.get('dates_container'):  # container restore
+            date = request.POST.getlist('dates_container')
+            print(date)
+            # TODO
+
+        return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
+    context = {'computer': computer, 'restorations':restorations, 'backup_select': backup_select,
+               'core_domain': settings.CORE_DOMAIN[0], 'token': computer.token, 'path_select': path_select}
+    return render(request, 'app/restore.html', context)
+
+
+
+@csrf_exempt
+def restore_cancel(request, agent_id, restore_id):
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            job = RestoreJob.objects.get(id=restore_id)
+            job.status = 3
+            job.save()
+        return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
+    else:
+        return HttpResponseRedirect('/login')
+
+
 # API
 def get_header(request):
     regex = re.compile('^HTTP_')
@@ -567,10 +626,10 @@ def get_job(request):
         for job in restore_jobs:
                 if job['time'] < now and job['status'] == 2:
                     list_jobs.append({"job_type": "restore", "job_id": job['id'],
-                                      "job_pk": job['pk'], "path": job['path']})
+                                      "backup_id": job['backup_id'], "path": job['path']})
 
                     # mark job processing
-                    job = RestoreJob.objects.get(pk=job['pk'])
+                    job = RestoreJob.objects.get(pk=job['id'])
                     job.status = 1
                     job.save()
 
@@ -585,7 +644,7 @@ def get_job(request):
 
 
 @csrf_exempt
-def handle_result(request):
+def handle_result_backup(request):
     if request.method == 'POST':
         computer = get_computer_by_token(request)
         print(computer)
@@ -638,6 +697,41 @@ def handle_result(request):
             return HttpResponse('Unauthorized', status=401)
 
 
+
+@csrf_exempt
+def handle_result_restore(request):
+    if request.method == 'POST':
+        computer = get_computer_by_token(request)
+        if computer:
+            request_data = json.loads(request.body.decode())
+            print(request_data)
+            if request_data['status_code'] == 200:
+                # Update status Done
+                
+                if request_data['job_id'] == None:  # client manual restore
+                    # Create new RestoreJob record , status: Done
+                    job = RestoreJob(computer=computer, path=request_data['path'],
+                                     backup_id=request_data['backup_id'], time=timezone.now, status=0)
+                    job.save()
+                else:
+                    print("change status")
+                    job = RestoreJob.objects.get(id=request_data['job_id'])
+                    job.status = 0
+                    job.save()
+                    print("ok")
+
+            elif request_data['status_code'] == 404:
+                job = RestoreJob.objects.get(id=request_data['job_id'])
+                job.status = 4
+                job.save()
+                # logging
+            return HttpResponse("OK")
+        else:
+            logger.error("Unauthorized")
+            
+            return HttpResponse('Unauthorized', status=401)
+
+
 @csrf_exempt
 def update_info_agent(request):
     if request.method == 'POST':
@@ -652,4 +746,8 @@ def update_info_agent(request):
 
             return HttpResponse("OK")
         else:
+<<<<<<< HEAD
             return HttpResponse('Unauthorized', status=401) 
+=======
+            return HttpResponse('Unauthorized', status=401)
+>>>>>>> 5d416e70c8ae144c1c1245acdecf7e9396fdfc3f
