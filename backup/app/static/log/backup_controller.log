@@ -2,3 +2,51 @@
 2018-08-12 09:46:41,825 - app.views - INFO - Sync: pecado - 2018-08-09 14:49:17.316354+00:00 deleted
 2018-08-17 10:39:08,121 - app.views - INFO - Agent Pecado created
 2018-08-21 21:23:26,294 - app.views - INFO - Agent bootcamp created
+2018-08-22 15:31:40,174 - app.views - INFO - Agent windows created
+2018-08-22 15:34:29,733 - app.views - ERROR - Create agent fail: User trangnth existed
+2018-08-24 09:37:42,171 - app.views - INFO - Agent windows 10 Ginkgo created
+2018-08-24 09:45:26,626 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:04:04,547 - app.views - INFO - Sync: windows 10 Ginkgo - 2018-08-24 02:59:00.553062+00:00 deleted
+2018-08-24 10:43:36,802 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:43:36,903 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:44:25,414 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:44:25,514 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:44:25,564 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:44:25,614 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:47:26,506 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:47:26,548 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:47:26,589 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:47:26,632 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:47:26,680 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:47:26,764 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:47:26,823 - app.views - INFO - Force backup windows 10 Ginkgo - bbb
+2018-08-24 10:49:59,049 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,099 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,199 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,276 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,325 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,406 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,458 - app.views - INFO - Force backup windows 10 Ginkgo - bbb
+2018-08-24 10:49:59,524 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,594 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,667 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,724 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,774 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,824 - app.views - INFO - Force backup windows 10 Ginkgo - aaa
+2018-08-24 10:49:59,874 - app.views - INFO - Force backup windows 10 Ginkgo - bbb
+2018-08-24 16:45:42,581 - app.views - INFO - Force backup windows 10 Ginkgo - G:\haha.txt
+2018-08-24 16:49:00,447 - app.views - INFO - Force backup windows 10 Ginkgo - G:\haha.txt
+2018-08-24 16:50:13,338 - app.views - INFO - Force backup windows 10 Ginkgo - G:\haha.txt
+2018-08-24 16:50:51,567 - app.views - INFO - Force backup windows 10 Ginkgo - G:\haha.txt
+2018-08-24 16:52:21,150 - app.views - INFO - Force backup windows 10 Ginkgo - G:\haha.txt
+2018-08-24 17:16:34,668 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt
+2018-08-27 14:54:33,345 - app.views - INFO - Agent windows 10 Ginkgo created
+2018-08-27 17:12:31,386 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt
+2018-08-27 17:12:44,791 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt
+2018-08-27 17:12:44,891 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt
+2018-09-06 14:50:34,793 - app.views - ERROR - Create agent fail: User trangnth existed
+2018-09-06 14:56:53,565 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt G:\haha.txt
+2018-09-06 14:56:53,623 - app.views - INFO - Force backup windows 10 Ginkgo - G:\test.txt
+2018-09-06 15:18:03,369 - app.views - INFO - Agent bootcamp created
+2018-09-06 15:18:58,903 - app.views - INFO - Agent Bo NGu created
+2018-09-06 15:25:13,850 - app.views - INFO - Force backup windows 10 Ginkgo - G:\test.txt

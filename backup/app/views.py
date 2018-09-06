@@ -588,12 +588,14 @@ def get_job(request):
 def handle_result(request):
     if request.method == 'POST':
         computer = get_computer_by_token(request)
+        print(computer)
         if computer:
             request_data = json.loads(request.body.decode())
             print(request_data)
             if request_data['status_code'] == 200:
                 # New Sync record
                 now = timezone.now()
+                print("ip server: ", request_data)
                 Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024,
                                     sync_time=now, status=request_data['msg'], ip_server=request_data['server'],
                                     path=request_data['path'])
