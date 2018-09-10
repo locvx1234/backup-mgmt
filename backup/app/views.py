@@ -746,8 +746,4 @@ def update_info_agent(request):
 
             return HttpResponse("OK")
         else:
-<<<<<<< HEAD
             return HttpResponse('Unauthorized', status=401) 
-=======
-            return HttpResponse('Unauthorized', status=401)
->>>>>>> 5d416e70c8ae144c1c1245acdecf7e9396fdfc3f
