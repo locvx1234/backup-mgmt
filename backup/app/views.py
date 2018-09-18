@@ -601,13 +601,16 @@ def get_computer_by_token(request):
 
 def get_job(request):
     computer = get_computer_by_token(request)
+    print(computer)
     if computer:
         list_jobs = []
         now = timezone.now()
 
         # get job backup
+        print("computer.status: ", computer.status)
         if computer.status:  # enable
             backup_jobs = computer.schedule_set.values()
+            print(backup_jobs)
 
             for job in backup_jobs:
                 if job['time'] < now and job['status'] == 2:
@@ -622,7 +625,9 @@ def get_job(request):
             pass
 
         # get job restore
+        print(computer.restorejob_set.values())
         restore_jobs = computer.restorejob_set.values()
+        print(restore_jobs)
         for job in restore_jobs:
                 if job['time'] < now and job['status'] == 2:
                     list_jobs.append({"job_type": "restore", "job_id": job['id'],
@@ -650,11 +655,11 @@ def handle_result_backup(request):
         print(computer)
         if computer:
             request_data = json.loads(request.body.decode())
-            print(request_data)
+#            print(request_data)
             if request_data['status_code'] == 200:
                 # New Sync record
                 now = timezone.now()
-                print("ip server: ", request_data)
+#                print("ip server: ", request_data)
                 Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024,
                                     sync_time=now, status=request_data['msg'], ip_server=request_data['server'],
                                     path=request_data['path'])
@@ -663,7 +668,7 @@ def handle_result_backup(request):
                     pass
                 else:
                     # mark job complete
-                    print("change status")
+                    print("Change status")
                     job = Schedule.objects.get(id=request_data['job_id'])
                     job.status = 0
                     job.save()
@@ -702,19 +707,23 @@ def handle_result_backup(request):
 def handle_result_restore(request):
     if request.method == 'POST':
         computer = get_computer_by_token(request)
+        print(computer)
         if computer:
             request_data = json.loads(request.body.decode())
             print(request_data)
             if request_data['status_code'] == 200:
                 # Update status Done
-                
+                print("status = 200")
                 if request_data['job_id'] == None:  # client manual restore
                     # Create new RestoreJob record , status: Done
+                    logger.debug("nnn")
+                    logger.debug(timezone.now)
                     job = RestoreJob(computer=computer, path=request_data['path'],
-                                     backup_id=request_data['backup_id'], time=timezone.now, status=0)
+                                     backup_id=request_data['backup_id'], time=timezone.now(), status=0)
                     job.save()
+                    logger.debug("job save")
                 else:
-                    print("change status")
+                    print("Change status")
                     job = RestoreJob.objects.get(id=request_data['job_id'])
                     job.status = 0
                     job.save()
