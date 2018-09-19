@@ -1,7 +1,7 @@
 {% extends "app/base_site.html" %}
 
 {% block title %} Device settings {% endblock title %}
-
+{% load staticfiles%}
 {% block stylesheets %}
   {{ block.super }}
 {% endblock stylesheets %}
@@ -268,5 +268,5 @@
 
 {% block javascripts %}
   {{ block.super}}
-  <script src="/static/build/js/device_setting.js"></script>
+  <script src="{% static '/build/js/device_setting.js' %}"></script>
 {% endblock javascripts %}

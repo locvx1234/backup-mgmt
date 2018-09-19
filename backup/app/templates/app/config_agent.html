@@ -1,10 +1,8 @@
 {% extends "app/base_site.html" %}
 
 {% block title %} Config Agent {% endblock title %}
-
+{% load staticfiles%}
 {% block stylesheets %}
-  <!-- <link rel="stylesheet" type="text/css" href="/static/build/css/config_agent.css"> -->
-  <!-- <link rel="stylesheet" href="/static/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"> -->
   {{ block.super }}
 {% endblock stylesheets %}
 
@@ -236,9 +234,5 @@
         }
       });
   </script>
-  <script src="/static/build/js/config_agent.js"></script>
-  
-  <!-- DateJS -->
-  <!-- <script src="/static/vendors/DateJS/build/date.js"></script> -->
-
+  <script src="{% static '/build/js/config_agent.js' %}"></script>
 {% endblock javascripts %}

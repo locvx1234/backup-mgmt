@@ -1,10 +1,10 @@
 {% extends "app/base_site.html" %}
 
 {% block title %}  {% endblock title %}
-
+{% load staticfiles%}
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="/static/build/css/agent.css">
-<link rel="stylesheet" type="text/css" href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static '/build/css/agent.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
   {{ block.super }}
 {% endblock stylesheets %}
 
@@ -154,9 +154,9 @@
 
 {% block javascripts %}
   {{ block.super}}
-  <script src="/static/build/js/agent.js"></script>
-  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="{% static '/build/js/agent.js' %}"></script>
+  <script src="{% static '/vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static '/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
   <script type="text/javascript">
     $(document).ready(function() {
     $('#example').DataTable();
@@ -164,6 +164,6 @@
   </script>
 
   <!-- DateJS -->
-  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <script src="{% static '/vendors/DateJS/build/date.js' %}"></script>
 
 {% endblock javascripts %}

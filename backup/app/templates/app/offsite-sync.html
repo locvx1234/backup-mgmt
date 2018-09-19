@@ -1,7 +1,7 @@
 {% extends "app/base_site.html" %}
 
-{% block title %} R {% endblock title %}
-
+{% block title %} Offsite {% endblock title %}
+{% load staticfiles%}
 {% block stylesheets %}
   {{ block.super }}
 {% endblock stylesheets %}
@@ -144,5 +144,5 @@
 {% block javascripts %}
   {{ block.super}}
   <!-- jquery.inputmask -->
-  <script src="/static/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+  <script src="{% static '/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js' %}"></script>
 {% endblock javascripts %}

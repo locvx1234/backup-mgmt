@@ -1,12 +1,11 @@
 {% extends "app/base_site.html" %}
 
 {% block title %} Dashboard {% endblock title %}
-
+{% load staticfiles%}
 {% block stylesheets %}
-  <link rel="stylesheet" type="text/css" href="/static/build/css/dashboard.css">
+  <link rel="stylesheet" type="text/css" href="{% static '/build/css/dashboard.css' %}">
   {{ block.super }}
 {% endblock stylesheets %}
-
 {% block content %}
 <div class="right_col" role="main">
   <div class="">
@@ -210,10 +209,6 @@
   {{ block.super}}
 
   <!-- Chart.js -->
-  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
-
-  <!-- DateJS -->
-  <!-- <script src="/static/vendors/DateJS/build/date.js"></script> -->
-
-  <script src="/static/build/js/dashboard.js"></script>
+  <script src="{% static '/vendors/Chart.js/dist/Chart.min.js' %}"></script>
+  <script src="{% static '/build/js/dashboard.js' %}"></script>
 {% endblock javascripts %}

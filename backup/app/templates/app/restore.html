@@ -1,7 +1,7 @@
 {% extends "app/base_site.html" %}
 
-{% block title %} R {% endblock title %}
-
+{% block title %} Restore {% endblock title %}
+{% load staticfiles%}
 {% block stylesheets %}
   {{ block.super }}
 {% endblock stylesheets %}
@@ -120,8 +120,8 @@
 
 {% block javascripts %}
   {{ block.super}}
-  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="{% static '/vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static '/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       $('#restore_status').DataTable({
@@ -133,5 +133,5 @@
     var core_domain = "{{ core_domain }}";
     var token = "{{ token }}"
   </script>
-  <script src="/static/build/js/restore.js"></script>
+  <script src="{% static '/build/js/restore.js' %}"></script>
 {% endblock javascripts %}
