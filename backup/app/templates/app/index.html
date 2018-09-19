@@ -1,7 +1,7 @@
 {% extends "app/base_site.html" %}
 
 {% block title %} Dashboard {% endblock title %}
-{% load staticfiles%}
+{% load static %}
 {% block stylesheets %}
   <link rel="stylesheet" type="text/css" href="{% static '/build/css/dashboard.css' %}">
   {{ block.super }}
