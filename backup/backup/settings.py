@@ -27,7 +27,7 @@ SECRET_KEY = '8*md2t)o**67@*yhc(d=f@j95kl(dnf^rmm4s00$-mh_vurb2b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS = ['127.0.0.1', '192.168.158.238']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -81,10 +81,10 @@ DATABASES = {
         'OPTIONS': {
 	    # 'read_default_file': '/etc/mysql/my.cnf',
         },
-        'NAME': 'backup_ctl',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'NAME': 'backup_controller',
+        'USER': 'thuoclao',
+        'PASSWORD': 'thuoclao',
+        'HOST': '192.168.30.61',
     }
 }
 
@@ -139,7 +139,7 @@ OFFSITE_SERVER = '192.168.1.2'
 
 OFFSITE_LIMIT_SPEED = '1452'
 
-CORE_DOMAIN = ['127.0.0.1:8000', '192.168.0.1:8080']
+CORE_DOMAIN = ['192.168.20.51', '127.0.0.1:8080']
 
 
 LOGGING = {
