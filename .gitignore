@@ -3,4 +3,4 @@ __pycache__/
 .idea/*
 .DS_Store
 /backup/app/__pycache__
-backup/app/static/log/backup_controller.log
+/backup/app/static/log/backup_controller.log
