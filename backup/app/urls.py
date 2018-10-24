@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^config-agent/(?P<agent_id>\d+)/$', views.config_agent, name='config-agent'),
     url(r'^restore-agent/(?P<agent_id>\d+)/$', views.restore_agent, name='restore-agent'),
     url(r'^restore-agent/(?P<agent_id>\d+)/cancel/(?P<restore_id>\d+)/$', views.restore_cancel, name='restore-cancel'),
+    url(r'^restore-agent/(?P<agent_id>\d+)/clear/(?P<restore_id>\d+)/$', views.restore_clear, name='restore-clear'),
     url(r'^agent/$', views.agent, name='agent'),
     url(r'^agent/(?P<agent_id>\d+)/$', views.agent, name='start_backup'),
     url(r'^off-site/$', views.off_site_sync, name='off_site'),

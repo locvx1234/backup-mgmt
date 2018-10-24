@@ -568,7 +568,6 @@ def restore_agent(request, agent_id):
     return render(request, 'app/restore.html', context)
 
 
-
 @csrf_exempt
 def restore_cancel(request, agent_id, restore_id):
     if request.user.is_authenticated:
@@ -576,6 +575,17 @@ def restore_cancel(request, agent_id, restore_id):
             job = RestoreJob.objects.get(id=restore_id)
             job.status = 3
             job.save()
+        return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
+    else:
+        return HttpResponseRedirect('/login')
+
+
+@csrf_exempt
+def restore_clear(request, agent_id, restore_id):
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            job = RestoreJob.objects.get(id=restore_id)
+            job.delete()
         return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
     else:
         return HttpResponseRedirect('/login')
@@ -652,18 +662,17 @@ def get_job(request):
 def handle_result_backup(request):
     if request.method == 'POST':
         computer = get_computer_by_token(request)
-        print(computer)
+        # print(computer)
         if computer:
             request_data = json.loads(request.body.decode())
-#            print(request_data)
+            # print(request_data)
+            now = timezone.now()
             if request_data['status_code'] == 200:
                 # New Sync record
-                now = timezone.now()
-#                print("ip server: ", request_data)
                 Sync.objects.create(computer=computer, amount_data_change=float(request_data["data_change"])/1024/1024,
                                     sync_time=now, status=request_data['msg'], ip_server=request_data['server'],
                                     path=request_data['path'])
-                
+
                 if request_data['job_id'] == None:  # client manual backup
                     pass
                 else:
@@ -675,12 +684,9 @@ def handle_result_backup(request):
                     print("ok")
 
                     # extend job
-                    print(job.typeofbackup)
                     if job.typeofbackup != 0:
                         time = job.time
-                        print(str(time))
                         now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
-                        print(str(now))
                         while time < now:
                             if job.typeofbackup == 1:
                                 increase_day = 1
@@ -691,7 +697,10 @@ def handle_result_backup(request):
                         schedule = Schedule(time=time, typeofbackup=job.typeofbackup,
                                             ip_server=job.ip_server, computer=computer, path=job.path)
                         schedule.save()
-            elif request_data['status_code'] == 404:
+            else:
+                Sync.objects.create(computer=computer, amount_data_change=0, sync_time=now, 
+                                    status=request_data['msg'], ip_server=request_data['server'],
+                                    path=request_data['path'])
                 # remove job
                 job = Schedule.objects.get(id=request_data['job_id'])
                 job.delete()
@@ -702,21 +711,17 @@ def handle_result_backup(request):
             return HttpResponse('Unauthorized', status=401)
 
 
-
 @csrf_exempt
 def handle_result_restore(request):
     if request.method == 'POST':
         computer = get_computer_by_token(request)
-        print(computer)
         if computer:
             request_data = json.loads(request.body.decode())
             print(request_data)
             if request_data['status_code'] == 200:
                 # Update status Done
-                print("status = 200")
                 if request_data['job_id'] == None:  # client manual restore
                     # Create new RestoreJob record , status: Done
-                    logger.debug("nnn")
                     logger.debug(timezone.now)
                     job = RestoreJob(computer=computer, path=request_data['path'],
                                      backup_id=request_data['backup_id'], time=timezone.now(), status=0)
@@ -729,9 +734,13 @@ def handle_result_restore(request):
                     job.save()
                     print("ok")
 
-            elif request_data['status_code'] == 404:
-                job = RestoreJob.objects.get(id=request_data['job_id'])
-                job.status = 4
+            else:
+                if request_data['job_id'] == None:  # client manual restore
+                    job = RestoreJob(computer=computer, path=request_data['path'],
+                                     backup_id=request_data['backup_id'], time=timezone.now(), status=4)
+                else:
+                    job = RestoreJob.objects.get(id=request_data['job_id'])
+                    job.status = 4
                 job.save()
                 # logging
             return HttpResponse("OK")
