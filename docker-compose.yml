@@ -3,6 +3,8 @@ services:
     nginx:
         restart: always
         build: ./nginx
+        volumes:
+            - .:/code
         depends_on:
             - controller
         ports:
@@ -10,16 +12,9 @@ services:
 
     controller:
         build: .
+        command: "/usr/local/bin/gunicorn -c /code/gunicorn_conf.py --chdir /code/backup backup.wsgi:application --reload"
 #        command: "gunicorn -b 0.0.0.0:8000 --chdir /code/backup/ backup.wsgi:application --reload"
-        #volumes:
-        #    - .:/code
+        volumes:
+            - .:/code
         expose:
             - "8000"
-
-#    nginx:
-#        restart: always
-#        build: ./nginx
-#        depends_on:
-#            - controller
-#        ports:
-#            - "80:80"
