@@ -119,16 +119,16 @@
                 <tfoot>
                     <tr>
                         <td>TOTAL</td>
-                        <td>{{ daily_total }} GB</td>
-                        <td>{{ weekly_total }} GB</td>
+                        <td>{{ daily_total | floatformat:3 }} MB</td>
+                        <td>{{ weekly_total | floatformat:3 }} MB</td>
                     </tr>
                 </tfoot>
                 <tbody>
                 {% for item in data_change %}
                   <tr>
                     <td>{{ item.computer }}</td>
-                    <td>{{ item.daily }} GB</td>
-                    <td>{{ item.weekly }} GB</td>
+                    <td>{{ item.daily | floatformat:3 }} MB</td>
+                    <td>{{ item.weekly | floatformat:3 }} MB</td>
                   </tr>
                 {% endfor %}
                 </tbody>

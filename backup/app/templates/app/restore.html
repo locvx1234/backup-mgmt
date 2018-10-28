@@ -61,6 +61,7 @@
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="button" class="btn btn-primary" onClick="window.location.reload()">Refresh</button>
                       </div>
                     </div>
                   </form>
@@ -103,6 +104,7 @@
                   <td>{{ restoration.path }}</td>
                   <td>{{ restoration.get_status_display }}</td>
                   <td>
+                    <a href="{% url 'restore-clear' computer.id restoration.id %}" class="btn btn-info btn-xs" value="Clear"><i class="fa fa-trash"></i> Clear</a>
                     {% if restoration.status == 1 or restoration.status == 2 %}
                     <a href="{% url 'restore-cancel' computer.id restoration.id %}" class="btn btn-warning btn-xs"><i class="fa fa-remove"></i> Cancel </a>
                     {% endif %}
