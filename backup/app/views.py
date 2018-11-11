@@ -33,7 +33,7 @@ import pytz
 from bs4 import BeautifulSoup
 from cryptography.fernet import Fernet
 
-from .models import Computer, Sync, Schedule, RestoreJob
+from .models import Computer, Sync, Schedule, RestoreJob, DockerRestore
 from django.views import generic
 from ipaddress import ip_address
 from django.shortcuts import redirect
@@ -527,6 +527,8 @@ def restore_agent(request, agent_id):
     context = {}
     computer = Computer.objects.get(id=agent_id)
     restorations = RestoreJob.objects.filter(computer=computer)
+    username = computer.username
+    container = DockerRestore.objects.filter(computer=computer)
     # TODO
     # get date, pk and targets
     headers = {'Content-Type': 'application/json;', 'Authorization': computer.token}
@@ -559,13 +561,55 @@ def restore_agent(request, agent_id):
 
         elif request.POST.get('dates_container'):  # container restore
             date = request.POST.getlist('dates_container')
-            print(date)
+            print("aaa", date)
+            backup_id = request.POST.get('dates_container')
+            target = request.POST.get('target_select')
+            #print(backup_id)
+            #print(target)
+            # add new job for restore
+#            restore_job = RestoreJob(computer=computer, path=target, time=timezone.now(), backup_id=backup_id)
+#            restore_job.save()
+
+            name = "docker_" + username
+            if DockerRestore.objects.filter(name=name).count() == 0:
+                print ("Create container")
+                container_restore(name, computer)
+            elif DockerRestore.objects.filter(name=name).count() == 1:
+                if DockerRestore.objects.get(name=name).status == "exited":
+                    client.containers.get(name).start()
+                elif DockerRestore.objects.get(name=name).status == "running":
+                    pass
+            else:
+                print("Error: Has more one container", name)
+
+                
+
+#            docker_restore = DockerRestore(name = name, status = status, computer = computer) 
+#            docker_restore.save()
             # TODO
+            restore_job = RestoreJob(computer=computer, path=target, time=timezone.now(), backup_id=backup_id)
+            restore_job.save()
 
         return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
     context = {'computer': computer, 'restorations':restorations, 'backup_select': backup_select,
-               'core_domain': settings.CORE_DOMAIN[0], 'token': computer.token, 'path_select': path_select}
+            'core_domain': settings.CORE_DOMAIN[0], 'token': computer.token, 'path_select': path_select, 'username': username}
     return render(request, 'app/restore.html', context)
+
+
+def container_restore(container_name, computer):
+    print("bbb")
+    DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+
+    client = docker.DockerClient(base_url=DOCKER_BASE_URL)
+
+    if client.ping() == 'True':
+        client.containers.run(image='locvx1234/client_backup:2.0', command='python3 background_task.py',
+                            name=container_name, working_dir='/root/client/linux/', network='bridge',
+                            volumes={'/config/docker_demo': {'bind': '/root/client/linux/conf.d', 'mode': 'rw'}},
+                            detach=True)
+        container_status = client.containers.get(container_name).status
+        
+        docker_restore = DockerRestore(name = name, status = container_status, computer = computer)       
 
 
 @csrf_exempt
