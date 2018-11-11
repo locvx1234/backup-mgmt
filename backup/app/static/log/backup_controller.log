@@ -4223,3 +4223,6 @@
 </body>
 </html>
 
+2018-11-12 01:07:44,658 - app.views - ERROR - Create agent fail: User ginkgo existed
+2018-11-12 01:08:12,413 - app.views - ERROR - Create agent fail: User ginkgo existed
+2018-11-12 01:10:17,078 - app.views - INFO - Agent windows 10 Ginkgo created

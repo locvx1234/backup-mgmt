@@ -102,6 +102,7 @@ class DockerRestore(models.Model):
     status=models.CharField(max_length=30)
     computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
 
+
 class Sync(models.Model):
     sync_time = models.DateTimeField()
     amount_data_change = models.FloatField(help_text="Unit MB")

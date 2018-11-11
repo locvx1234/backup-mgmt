@@ -6,6 +6,8 @@ import datetime
 import json
 import logging
 import requests
+import configparser
+import docker
 
 from django.shortcuts import render, render_to_response
 from django.template import loader, RequestContext
@@ -571,11 +573,14 @@ def restore_agent(request, agent_id):
 #            restore_job.save()
 
             name = "docker_" + username
+            container_status = ''
+            DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+            DOCKER_VOLUME = "/config/" + name
             if DockerRestore.objects.filter(name=name).count() == 0:
                 print ("Create container")
 #                container_restore(name, computer)
-                DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
-                DOCKER_VOLUME = "/config/" + name
+#                DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+#                DOCKER_VOLUME = "/config/" + name
 
                 client = docker.DockerClient(base_url=DOCKER_BASE_URL)
 
@@ -584,13 +589,20 @@ def restore_agent(request, agent_id):
                                         name=container_name, working_dir='/root/client/linux/', network='bridge',
                                         volumes={DOCKER_VOLUME: {'bind': '/root/client/linux/conf.d', 'mode': 'rw'}},
                                         detach=True)
-                    container_status = client.containers.get(container_name).status                
-                elif DockerRestore.objects.filter(name=name).count() == 1:
-                    if DockerRestore.objects.get(name=name).status == "exited":
-                        client.containers.get(name).start()
-                        container_status = client.containers.get(name).status
-                    elif DockerRestore.objects.get(name=name).status == "running":
-                        pass
+                    container_status = client.containers.get(container_name).status  
+                    docker_restore = DockerRestore(name = name, status = container_status, computer = computer) 
+                    docker_restore.save()              
+            elif DockerRestore.objects.filter(name=name).count() == 1:
+                docker_restore = DockerRestore.objects.get(name = name)
+                if docker_restore.status == "exited":
+                    client.containers.get(name).start()
+                    #container_status = client.containers.get(name).status
+                    #docker_restore = DockerRestore.objects.get(name = name)
+                    docker_restore.status = client.containers.get(name).status
+                    docker_restore.save()
+                elif DockerRestore.objects.get(name=name).status == "running":
+                    print("status restore")
+                    pass
             else:
                 print("Error: Has more one container", name)
 
@@ -602,17 +614,17 @@ def restore_agent(request, agent_id):
                 os.mknod(DOCKER_VOLUME)
 
                 docker_config = configparser.ConfigParser()
-                docker_config['AUTH']['server_address'] = '192.168.20.51:8000'
-                docker_config['AUTH']['token']  = computer.token
-                docker_config['FILE']['block_size'] = 1048576
-                docker_config['CONTROLLER']['address'] = 192.168.20.51:80
+                docker_config['AUTH'] = {'server_address': '192.168.20.51:8000'}
+                docker_config['AUTH'] = {'token' : computer.token}
+                docker_config['FILE'] = {'block_size' : '1048576'}
+                docker_config['CONTROLLER']['address'] = '192.168.20.51:80'
                 docker_config['CRYPTO']['key'] = computer.key
 
                 with open('DOCKER_VOLUME', 'w') as configfile:    # save
                     docker_config.write(configfile)
 
-            docker_restore = DockerRestore(name = name, status = container_status, computer = computer) 
-            docker_restore.save()
+            docker_restore_job = DockerRestore(name = name, status = container_status, computer = computer) 
+            docker_restore_job.save()
 
             restore_job = RestoreJob(computer=computer, path=target, time=timezone.now(), backup_id=backup_id)
             restore_job.save()
