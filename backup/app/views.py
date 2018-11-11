@@ -573,22 +573,50 @@ def restore_agent(request, agent_id):
             name = "docker_" + username
             if DockerRestore.objects.filter(name=name).count() == 0:
                 print ("Create container")
-                container_restore(name, computer)
-            elif DockerRestore.objects.filter(name=name).count() == 1:
-                if DockerRestore.objects.get(name=name).status == "exited":
-                    client.containers.get(name).start()
-                elif DockerRestore.objects.get(name=name).status == "running":
-                    pass
+#                container_restore(name, computer)
+                DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+                DOCKER_VOLUME = "/config/" + name
+
+                client = docker.DockerClient(base_url=DOCKER_BASE_URL)
+
+                if client.ping() == 'True':
+                    client.containers.run(image='locvx1234/client_backup:2.0', command='python3 background_task.py',
+                                        name=container_name, working_dir='/root/client/linux/', network='bridge',
+                                        volumes={DOCKER_VOLUME: {'bind': '/root/client/linux/conf.d', 'mode': 'rw'}},
+                                        detach=True)
+                    container_status = client.containers.get(container_name).status                
+                elif DockerRestore.objects.filter(name=name).count() == 1:
+                    if DockerRestore.objects.get(name=name).status == "exited":
+                        client.containers.get(name).start()
+                        container_status = client.containers.get(name).status
+                    elif DockerRestore.objects.get(name=name).status == "running":
+                        pass
             else:
                 print("Error: Has more one container", name)
 
-                
+            # Create file config
+            basedir_conf = os.path.dirname(DOCKER_VOLUME)
+            if not os.path.exists(basedir_conf):
+                os.makedirs(basedir_conf)
+            if not os.path.exists(DOCKER_VOLUME):
+                os.mknod(DOCKER_VOLUME)
 
-#            docker_restore = DockerRestore(name = name, status = status, computer = computer) 
-#            docker_restore.save()
-            # TODO
+                docker_config = configparser.ConfigParser()
+                docker_config['AUTH']['server_address'] = '192.168.20.51:8000'
+                docker_config['AUTH']['token']  = computer.token
+                docker_config['FILE']['block_size'] = 1048576
+                docker_config['CONTROLLER']['address'] = 192.168.20.51:80
+                docker_config['CRYPTO']['key'] = computer.key
+
+                with open('DOCKER_VOLUME', 'w') as configfile:    # save
+                    docker_config.write(configfile)
+
+            docker_restore = DockerRestore(name = name, status = container_status, computer = computer) 
+            docker_restore.save()
+
             restore_job = RestoreJob(computer=computer, path=target, time=timezone.now(), backup_id=backup_id)
             restore_job.save()
+            # TODO
 
         return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
     context = {'computer': computer, 'restorations':restorations, 'backup_select': backup_select,
@@ -596,20 +624,20 @@ def restore_agent(request, agent_id):
     return render(request, 'app/restore.html', context)
 
 
-def container_restore(container_name, computer):
-    print("bbb")
-    DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
-
-    client = docker.DockerClient(base_url=DOCKER_BASE_URL)
-
-    if client.ping() == 'True':
-        client.containers.run(image='locvx1234/client_backup:2.0', command='python3 background_task.py',
-                            name=container_name, working_dir='/root/client/linux/', network='bridge',
-                            volumes={'/config/docker_demo': {'bind': '/root/client/linux/conf.d', 'mode': 'rw'}},
-                            detach=True)
-        container_status = client.containers.get(container_name).status
-        
-        docker_restore = DockerRestore(name = name, status = container_status, computer = computer)       
+#def container_restore(container_name, computer):
+#    print("bbb")
+#    DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+#
+#    client = docker.DockerClient(base_url=DOCKER_BASE_URL)
+#
+#    if client.ping() == 'True':
+#        client.containers.run(image='locvx1234/client_backup:2.0', command='python3 background_task.py',
+#                            name=container_name, working_dir='/root/client/linux/', network='bridge',
+#                            volumes={'/config/docker_demo': {'bind': '/root/client/linux/conf.d', 'mode': 'rw'}},
+#                            detach=True)
+#        container_status = client.containers.get(container_name).status
+#        
+#        docker_restore = DockerRestore(name = name, status = container_status, computer = computer)       
 
 
 @csrf_exempt

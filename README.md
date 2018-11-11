@@ -14,11 +14,19 @@
 
 ##### Run the code
     cd backup-mgmt
-    python manage.py runserver 
+    python manage.py runserver 0.0.0.0:80
     
 ##### Behold!
-Go to http://localhost:8000/
+Go to http://localhost:80/
 
 ##### Tempale
 
 [Gentelella](https://github.com/puikinsh/gentelella)
+
+#### Build with Docker
+
+	git clone https://github.com/locvx1234/backup-mgmt
+	docker build .
+	docker-compose up
+
+
