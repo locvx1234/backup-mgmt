@@ -6,6 +6,8 @@ import datetime
 import json
 import logging
 import requests
+import configparser
+import docker
 
 from django.shortcuts import render, render_to_response
 from django.template import loader, RequestContext
@@ -33,7 +35,7 @@ import pytz
 from bs4 import BeautifulSoup
 from cryptography.fernet import Fernet
 
-from .models import Computer, Sync, Schedule, RestoreJob
+from .models import Computer, Sync, Schedule, RestoreJob, DockerRestore
 from django.views import generic
 from ipaddress import ip_address
 from django.shortcuts import redirect
@@ -527,6 +529,8 @@ def restore_agent(request, agent_id):
     context = {}
     computer = Computer.objects.get(id=agent_id)
     restorations = RestoreJob.objects.filter(computer=computer)
+    username = computer.username
+    container = DockerRestore.objects.filter(computer=computer)
     # TODO
     # get date, pk and targets
     headers = {'Content-Type': 'application/json;', 'Authorization': computer.token}
@@ -542,30 +546,134 @@ def restore_agent(request, agent_id):
             if item['path'] not in path_select:
                 path_select.append(item['path'])
         print(backup_select)
-    else:
-        
+    else:      
         logger.error(response.text)
-    #
 
     if request.method == 'POST':
         if request.POST.get('bid_select'):  # file restore
             backup_id = request.POST.get('bid_select')
             target = request.POST.get('target_select')
-            print(backup_id)
-            print(target)
             # add new job for restore
             restore_job = RestoreJob(computer=computer, path=target, time=timezone.now(), backup_id=backup_id)
             restore_job.save()
 
-        elif request.POST.get('dates_container'):  # container restore
-            date = request.POST.getlist('dates_container')
-            print(date)
-            # TODO
+        elif request.POST.get('dates-sl-ctn'):  # container restore
+            backup_id = request.POST.get('dates-sl-ctn')
+            target = request.POST.get('target-sl-ctn')
+            print(backup_id)
+            print(target)
+            print("---------------------")
+
+            container_name = "docker_" + username
+            container_status = ''
+
+            docker_volume = "/config/" + container_name
+            client = docker.DockerClient(base_url=settings.DOCKER_BASE_URL)
+
+            try:
+                computer_ctn = Computer.objects.get(username=container_name)
+                if client.ping() == 'True':
+                    container_status = client.containers.get(container_name).status
+                    if container_status == "not running"
+                        # start container
+                        if start successfull :
+                            pass
+                        else:
+                            logger.error("Cannot start container")
+                    # restore on $container_name
+                    restore_job = RestoreJob(computer=computer_ctn, path=target, time=timezone.now(), backup_id=backup_id)
+                    restore_job.save()
+                else:
+                    logger.error("Cannot connect to Docker server")
+            except Computer.DoesNotExist:
+                # ON web server
+                # create file : client.conf
+
+                # ON docker server
+                # create dir : /config/$container_name
+                # move file client.conf into /config/$container_name
+
+                # create new container
+                if client.ping() == 'True':
+                    client.containers.run(image='locvx1234/client_backup:2.0', command='python3 background_task.py',
+                                        name=container_name, working_dir='/root/client/linux/', network=settings.DOCKER_NETWORK,
+                                        volumes={docker_volume: {'bind': '/root/client/linux/conf.d', 'mode': 'rw'}},
+                                        detach=True)
+                    container_status = client.containers.get(container_name).status
+                    docker_restore = DockerRestore(name = container_name, status = container_status, computer = computer)
+                    docker_restore.save()
+
+                    # restore on $container_name
+                    restore_job = RestoreJob(computer=computer_ctn, path=target, time=timezone.now(), backup_id=backup_id)
+                    restore_job.save()
+                else:
+                    logger.error("Cannot connect to Docker server")
+
+
+
+            if DockerRestore.objects.filter(name=container_name).count() == 0:
+                logger.info("Starting to create container")
+#                container_restore(name, computer)
+
+            elif DockerRestore.objects.filter(name=name).count() == 1:
+                docker_restore = DockerRestore.objects.get(name = container_name)
+                if docker_restore.status == "exited":
+                    client.containers.get(container_name).start()
+                    #container_status = client.containers.get(name).status
+                    #docker_restore = DockerRestore.objects.get(name = name)
+                    docker_restore.status = client.containers.get(name).status
+                    docker_restore.save()
+                elif DockerRestore.objects.get(name=container_name).status == "running":
+                    print("status restore")
+                    pass
+            else:
+                print("Error: Has more one container", container_name)
+
+            # Create file config
+            # docker_volume : /config/docker_sanhok
+            # file config : /config/docker_sanhok/client.conf
+            basedir_conf = os.path.dirname(docker_volume)
+            if not os.path.exists(basedir_conf):
+                os.makedirs(basedir_conf)
+            if not os.path.exists(docker_volume):
+                os.mknod(docker_volume)
+
+                docker_config = configparser.ConfigParser()
+                docker_config['AUTH'] = {'server_address': '192.168.20.51:8000'}
+                docker_config['AUTH'] = {'token' : computer.token}
+                docker_config['FILE'] = {'block_size' : '1048576'}
+                docker_config['CONTROLLER']['address'] = '192.168.20.51:80'
+                docker_config['CRYPTO']['key'] = computer.key
+
+                with open('DOCKER_VOLUME', 'w') as configfile:    # save
+                    docker_config.write(configfile)
+
+            docker_restore_job = DockerRestore(name = name, status = container_status, computer = computer) 
+            docker_restore_job.save()
+
+            restore_job = RestoreJob(computer=computer, path=target, time=timezone.now(), backup_id=backup_id)
+            restore_job.save()
 
         return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
     context = {'computer': computer, 'restorations':restorations, 'backup_select': backup_select,
-               'core_domain': settings.CORE_DOMAIN[0], 'token': computer.token, 'path_select': path_select}
+            'core_domain': settings.CORE_DOMAIN[0], 'token': computer.token, 'path_select': path_select, 'username': username}
     return render(request, 'app/restore.html', context)
+
+
+#def container_restore(container_name, computer):
+#    print("bbb")
+#    DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+#
+#    client = docker.DockerClient(base_url=DOCKER_BASE_URL)
+#
+#    if client.ping() == 'True':
+#        client.containers.run(image='locvx1234/client_backup:2.0', command='python3 background_task.py',
+#                            name=container_name, working_dir='/root/client/linux/', network='bridge',
+#                            volumes={'/config/docker_demo': {'bind': '/root/client/linux/conf.d', 'mode': 'rw'}},
+#                            detach=True)
+#        container_status = client.containers.get(container_name).status
+#        
+#        docker_restore = DockerRestore(name = name, status = container_status, computer = computer)       
 
 
 @csrf_exempt

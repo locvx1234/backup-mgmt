@@ -97,6 +97,11 @@ class RestoreJob(models.Model):
     def __str__(self):
         return str(self.path) + " " + str(self.computer)
 
+class DockerRestore(models.Model):
+    name=models.CharField(max_length=100)
+    status=models.CharField(max_length=30)
+    computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
+
 
 class Sync(models.Model):
     sync_time = models.DateTimeField()

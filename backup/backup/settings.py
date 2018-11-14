@@ -85,6 +85,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'password',
         'HOST': 'localhost',
+
     }
 }
 
@@ -186,3 +187,9 @@ LOGGING = {
         },
     }
 }
+
+# URLs con
+DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+
+# Network name used to create container 
+DOCKER_NETWORK = 'bridge' # network name, driver : macvlan   
