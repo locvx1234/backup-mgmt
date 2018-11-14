@@ -81,10 +81,10 @@ DATABASES = {
         'OPTIONS': {
 	    # 'read_default_file': '/etc/mysql/my.cnf',
         },
-        'NAME': 'backup_controller',
-        'USER': 'thuoclao',
-        'PASSWORD': 'thuoclao',
-        'HOST': '192.168.30.61',
+        'NAME': 'backup_ctl2',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
     }
 }
 
@@ -135,7 +135,7 @@ OFFSITE_SERVER = '192.168.1.2'
 
 OFFSITE_LIMIT_SPEED = '1452'
 
-CORE_DOMAIN = ['192.168.20.51', '127.0.0.1:8080']
+CORE_DOMAIN = ['192.168.101.6:8000', '192.168.20.51']
 
 
 LOGGING = {
