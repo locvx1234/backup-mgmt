@@ -1,8 +1,6 @@
 *.pyc
-__pycache__/
 .idea/*
 .DS_Store
-/backup/app/__pycache__
 *.log
 
 *~
