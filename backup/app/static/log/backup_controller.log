@@ -4226,3 +4226,47 @@
 2018-11-12 01:07:44,658 - app.views - ERROR - Create agent fail: User ginkgo existed
 2018-11-12 01:08:12,413 - app.views - ERROR - Create agent fail: User ginkgo existed
 2018-11-12 01:10:17,078 - app.views - INFO - Agent windows 10 Ginkgo created
+2018-11-19 01:05:04,510 - app.views - DEBUG - <function now at 0x7fb0b3801f28>
+2018-11-19 01:05:04,560 - app.views - DEBUG - job save
+2018-11-19 02:18:19,468 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 02:27:26,735 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:18:19,987 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:34:25,956 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:34:47,139 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:38:30,485 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:48:27,368 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:49:38,128 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:49:45,458 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:51:52,935 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 08:51:53,444 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 09:13:18,902 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 09:14:32,445 - app.views - INFO - Agent docker_trangnth created
+2018-11-19 09:20:37,026 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 09:21:06,115 - app.views - ERROR - Cannot connect to Docker server
+2018-11-19 09:31:57,291 - app.views - INFO - Agent ubuntu-20-51 created
+2018-11-19 15:13:41,884 - app.views - INFO - Agent docker_trangnth deleted
+2018-11-19 17:01:01,771 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 17:12:39,375 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 17:14:36,539 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 17:28:30,881 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 17:28:51,079 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 17:30:40,736 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 17:34:21,219 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 17:39:34,590 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 17:39:48,160 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 17:50:34,342 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 17:50:43,922 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 17:52:30,303 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 17:52:46,153 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 19:03:17,333 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 19:03:35,570 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 19:08:18,655 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 19:11:16,744 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 19:15:11,812 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 19:16:16,189 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 19:29:58,037 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 19:30:14,431 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 19:34:36,628 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 19:35:00,555 - app.views - INFO - Agent docker_trang_linux created
+2018-11-19 19:35:12,546 - app.views - INFO - Agent docker_trang_linux deleted
+2018-11-19 19:36:19,639 - app.views - INFO - Agent docker_trang_linux created

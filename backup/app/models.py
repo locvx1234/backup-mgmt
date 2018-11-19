@@ -33,6 +33,12 @@ class Computer(models.Model):
     token = models.CharField(max_length=40)
     key = models.CharField(max_length=44)
     status = models.BooleanField(default=True, help_text="set True to enable backup and vice versa")
+
+    # Docker 
+    container_computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True, blank=True)
+    container_status = models.CharField(max_length=30, null=True, blank=True)
+    #container_name=models.CharField(max_length=100, null=True, blank=True)
+
     def __str__(self):
         return self.name
 
@@ -96,11 +102,6 @@ class RestoreJob(models.Model):
 
     def __str__(self):
         return str(self.path) + " " + str(self.computer)
-
-class DockerRestore(models.Model):
-    name=models.CharField(max_length=100)
-    status=models.CharField(max_length=30)
-    computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True)
 
 
 class Sync(models.Model):

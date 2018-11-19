@@ -12,8 +12,5 @@ cryptography==2.2.2
 psycopg2==2.7.5
 gunicorn==19.9.0
 docker==2.7.0
-docker-compose==1.23.1
 docker-py==1.10.6
-docker-pycreds==0.3.0
-dockerpty==0.4.1
-
+paramiko==2.4.2

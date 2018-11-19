@@ -81,10 +81,10 @@ DATABASES = {
         'OPTIONS': {
 	    # 'read_default_file': '/etc/mysql/my.cnf',
         },
-        'NAME': 'backup_ctl2',
+        'NAME': 'backup_ctl',
         'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'PASSWORD': 'Huyentrang1@',
+        'HOST': '192.168.20.52',
 
     }
 }
@@ -136,7 +136,7 @@ OFFSITE_SERVER = '192.168.1.2'
 
 OFFSITE_LIMIT_SPEED = '1452'
 
-CORE_DOMAIN = ['192.168.101.6:8000', '192.168.20.51']
+CORE_DOMAIN = ['192.168.20.51:8000', '192.168.20.51']
 
 
 LOGGING = {
@@ -192,4 +192,7 @@ LOGGING = {
 DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
 
 # Network name used to create container 
-DOCKER_NETWORK = 'bridge' # network name, driver : macvlan   
+DOCKER_NETWORK = 'bridge' # network name, driver : macvlan  
+
+# Block size
+BLOCK_SIZE = '1048576'
