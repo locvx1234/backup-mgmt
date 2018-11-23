@@ -136,7 +136,7 @@ OFFSITE_SERVER = '192.168.1.2'
 
 OFFSITE_LIMIT_SPEED = '1452'
 
-CORE_DOMAIN = ['192.168.20.51:8000', '192.168.20.51']
+CORE_DOMAIN = ['192.168.20.51:8080', '192.168.20.51']
 
 
 LOGGING = {
@@ -189,8 +189,8 @@ LOGGING = {
 }
 
 # URLs con
-DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
-
+# DOCKER_BASE_URL = 'tcp://192.168.20.51:2376'
+DOCKER_BASE_URL = 'tcp://54.218.202.137:2376'
 # Network name used to create container 
 DOCKER_NETWORK = 'bridge' # network name, driver : macvlan  
 

@@ -33,11 +33,8 @@ class Computer(models.Model):
     token = models.CharField(max_length=40)
     key = models.CharField(max_length=44)
     status = models.BooleanField(default=True, help_text="set True to enable backup and vice versa")
-
-    # Docker 
-    container_computer = models.ForeignKey('Computer', on_delete=models.CASCADE, null=True, blank=True)
-    container_status = models.CharField(max_length=30, null=True, blank=True)
-    #container_name=models.CharField(max_length=100, null=True, blank=True)
+    # ipAddress = models.CharField(max_length=15, null=True, blank=True)
+    # status = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self):
         return self.name
