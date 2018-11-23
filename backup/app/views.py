@@ -565,7 +565,7 @@ def restore_agent(request, agent_id):
 
             # context = {'computer': computer, 'restorations':restorations, 'backup_select': backup_select,
             #     'core_domain': settings.CORE_DOMAIN[0], 'token': computer.token, 'path_select': path_select, 'username': username}
-""" TODO : trangnth 
+
         elif request.POST.get('dates-sl-ctn'):  # container restore
             backup_id = request.POST.get('dates-sl-ctn')
             target = request.POST.get('target-sl-ctn')
@@ -652,12 +652,14 @@ def restore_agent(request, agent_id):
                     logger.error("Cannot connect to Docker server")
             # context = {'computer': computer_ctn, 'restorations':restorations, 'backup_select': backup_select,
             # 'core_domain': settings.CORE_DOMAIN[0], 'token': computer_ctn.token, 'path_select': path_select, 'username': container_name}
-"""
+
         return HttpResponseRedirect(reverse('restore-agent', kwargs={'agent_id': agent_id}))
-    context = {'computer': computer, 'restorations':restorations, 'backup_select': backup_select,
-            'core_domain': settings.CORE_DOMAIN[0], 'token': computer.token, 'path_select': path_select, 'username': username}
+    context = {'computer': computer, 'restorations':restorations,
+               'backup_select': backup_select, 'core_domain': settings.CORE_DOMAIN[0],
+               'token': computer.token, 'path_select': path_select, 'username': username}
     return render(request, 'app/restore.html', context)
-     
+
+
 # make dir -p
 def mkdir_p(sftp, remote_directory):
     try:
@@ -668,6 +670,7 @@ def mkdir_p(sftp, remote_directory):
             sftp.mkdir(remote_directory)
         except:
             mkdir_p(sftp, os.path.dirname(remote_directory))
+
 
 # Create file config
 @csrf_exempt
