@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.24, for Linux (x86_64)
 --
--- Host: localhost    Database: backup_sys
+-- Host: localhost    Database: backup_ctl
 -- ------------------------------------------------------
--- Server version	5.7.21-0ubuntu0.16.04.1
+-- Server version	5.7.24
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,16 +24,17 @@ DROP TABLE IF EXISTS `app_computer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `app_computer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `serial_number` varchar(50) NOT NULL,
+  `username` varchar(50) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `os` varchar(45) NOT NULL,
-  `ip_address` char(39) NOT NULL,
-  `agent_version` bigint(20) NOT NULL,
-  `ram` int(11) NOT NULL,
-  `cpu` int(11) NOT NULL,
-  `capacity_used` double DEFAULT NULL,
+  `platform` varchar(100) DEFAULT NULL,
+  `ram` double DEFAULT NULL,
+  `cpu` int(11) DEFAULT NULL,
+  `allowed_capacity` double NOT NULL,
+  `token` varchar(40) NOT NULL,
+  `key` varchar(44) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +43,6 @@ CREATE TABLE `app_computer` (
 
 LOCK TABLES `app_computer` WRITE;
 /*!40000 ALTER TABLE `app_computer` DISABLE KEYS */;
-INSERT INTO `app_computer` VALUES (1,'DSDNJEHRW234324','Devstack','ubuntu','192.168.100.114',33751040,1023,1,30),(3,'qeqwdsd131','locvu-cent','CentOS','192.168.100.116',0,2015,1,100),(11,'4353rttre','Nagios','Ubuntu','192.167.2.23',16777216,2323,2,0),(21,'1235fdsfdvcdfg42','Openstack','Ubuntu','192.167.2.23',33816576,4096,4,0);
 /*!40000 ALTER TABLE `app_computer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +58,7 @@ CREATE TABLE `app_notification` (
   `email` varchar(100) NOT NULL,
   `issue` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,8 +67,36 @@ CREATE TABLE `app_notification` (
 
 LOCK TABLES `app_notification` WRITE;
 /*!40000 ALTER TABLE `app_notification` DISABLE KEYS */;
-INSERT INTO `app_notification` VALUES (1,'locvx1234@gmail.com',1);
 /*!40000 ALTER TABLE `app_notification` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `app_restorejob`
+--
+
+DROP TABLE IF EXISTS `app_restorejob`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `app_restorejob` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `path` varchar(1000) NOT NULL,
+  `backup_id` int(11) NOT NULL,
+  `time` datetime(6) NOT NULL,
+  `status` int(11) NOT NULL,
+  `computer_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `app_restorejob_computer_id_79529acb_fk_app_computer_id` (`computer_id`),
+  CONSTRAINT `app_restorejob_computer_id_79529acb_fk_app_computer_id` FOREIGN KEY (`computer_id`) REFERENCES `app_computer` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `app_restorejob`
+--
+
+LOCK TABLES `app_restorejob` WRITE;
+/*!40000 ALTER TABLE `app_restorejob` DISABLE KEYS */;
+/*!40000 ALTER TABLE `app_restorejob` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -80,12 +108,16 @@ DROP TABLE IF EXISTS `app_schedule`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `app_schedule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `timestamp` datetime(6) NOT NULL,
+  `time` datetime(6) NOT NULL,
+  `typeofbackup` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `ip_server` varchar(21) NOT NULL,
+  `path` varchar(1000) NOT NULL,
   `computer_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `app_schedule_computer_id_ed974492_fk_app_computer_id` (`computer_id`),
   CONSTRAINT `app_schedule_computer_id_ed974492_fk_app_computer_id` FOREIGN KEY (`computer_id`) REFERENCES `app_computer` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +126,6 @@ CREATE TABLE `app_schedule` (
 
 LOCK TABLES `app_schedule` WRITE;
 /*!40000 ALTER TABLE `app_schedule` DISABLE KEYS */;
-INSERT INTO `app_schedule` VALUES (1,'2018-03-18 14:38:13.000000',NULL);
 /*!40000 ALTER TABLE `app_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -109,11 +140,14 @@ CREATE TABLE `app_sync` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sync_time` datetime(6) NOT NULL,
   `amount_data_change` double NOT NULL,
+  `path` varchar(1000) NOT NULL,
+  `ip_server` varchar(21) NOT NULL,
+  `status` varchar(100) NOT NULL,
   `computer_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `app_sync_computer_id_890efe61_fk_app_computer_id` (`computer_id`),
   CONSTRAINT `app_sync_computer_id_890efe61_fk_app_computer_id` FOREIGN KEY (`computer_id`) REFERENCES `app_computer` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +156,6 @@ CREATE TABLE `app_sync` (
 
 LOCK TABLES `app_sync` WRITE;
 /*!40000 ALTER TABLE `app_sync` DISABLE KEYS */;
-INSERT INTO `app_sync` VALUES (2,'2018-03-18 14:36:00.000000',1.2,NULL),(3,'2018-03-17 14:37:14.000000',22.6,1),(4,'2018-03-17 05:00:00.000000',1.67,NULL),(5,'2018-03-17 23:00:00.000000',4.4,1),(6,'2018-03-18 15:04:59.000000',2.3,NULL),(7,'2018-03-18 15:36:04.000000',2.3,1),(8,'2018-03-19 15:52:40.000000',1,3),(9,'2018-03-18 16:05:16.000000',4,3);
 /*!40000 ALTER TABLE `app_sync` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,7 +226,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +235,7 @@ CREATE TABLE `auth_permission` (
 
 LOCK TABLES `auth_permission` WRITE;
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
-INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can add group',2,'add_group'),(5,'Can change group',2,'change_group'),(6,'Can delete group',2,'delete_group'),(7,'Can add permission',3,'add_permission'),(8,'Can change permission',3,'change_permission'),(9,'Can delete permission',3,'delete_permission'),(10,'Can add user',4,'add_user'),(11,'Can change user',4,'change_user'),(12,'Can delete user',4,'delete_user'),(13,'Can add content type',5,'add_contenttype'),(14,'Can change content type',5,'change_contenttype'),(15,'Can delete content type',5,'delete_contenttype'),(16,'Can add session',6,'add_session'),(17,'Can change session',6,'change_session'),(18,'Can delete session',6,'delete_session'),(19,'Can add notification',7,'add_notification'),(20,'Can change notification',7,'change_notification'),(21,'Can delete notification',7,'delete_notification'),(22,'Can add computer',8,'add_computer'),(23,'Can change computer',8,'change_computer'),(24,'Can delete computer',8,'delete_computer'),(25,'Can add schedule',9,'add_schedule'),(26,'Can change schedule',9,'change_schedule'),(27,'Can delete schedule',9,'delete_schedule'),(28,'Can add sync',10,'add_sync'),(29,'Can change sync',10,'change_sync'),(30,'Can delete sync',10,'delete_sync');
+INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can add permission',2,'add_permission'),(5,'Can change permission',2,'change_permission'),(6,'Can delete permission',2,'delete_permission'),(7,'Can add group',3,'add_group'),(8,'Can change group',3,'change_group'),(9,'Can delete group',3,'delete_group'),(10,'Can add user',4,'add_user'),(11,'Can change user',4,'change_user'),(12,'Can delete user',4,'delete_user'),(13,'Can add content type',5,'add_contenttype'),(14,'Can change content type',5,'change_contenttype'),(15,'Can delete content type',5,'delete_contenttype'),(16,'Can add session',6,'add_session'),(17,'Can change session',6,'change_session'),(18,'Can delete session',6,'delete_session'),(19,'Can add computer',7,'add_computer'),(20,'Can change computer',7,'change_computer'),(21,'Can delete computer',7,'delete_computer'),(22,'Can add notification',8,'add_notification'),(23,'Can change notification',8,'change_notification'),(24,'Can delete notification',8,'delete_notification'),(25,'Can add restore job',9,'add_restorejob'),(26,'Can change restore job',9,'change_restorejob'),(27,'Can delete restore job',9,'delete_restorejob'),(28,'Can add schedule',10,'add_schedule'),(29,'Can change schedule',10,'change_schedule'),(30,'Can delete schedule',10,'delete_schedule'),(31,'Can add sync',11,'add_sync'),(32,'Can change sync',11,'change_sync'),(33,'Can delete sync',11,'delete_sync');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +269,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$100000$7KyOhvkGArZM$lcnpjuQHPHf9mFQ9WoAMofDWjPFCOMSm32KV6+FKtZc=','2018-03-18 14:10:19.537221',1,'locvu','','','',1,1,'2018-03-18 14:09:58.161064');
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$100000$NzSWX9leByXH$8zusQ2KmvoAHX4ZcYxBdl/gptIis1bk3gZMdTiY3tnk=','2018-11-24 04:04:16.195592',1,'admin','','','',1,1,'2018-08-24 04:04:02.920269');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,7 +350,7 @@ CREATE TABLE `django_admin_log` (
   KEY `django_admin_log_user_id_c564eba6_fk` (`user_id`),
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,7 +359,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
-INSERT INTO `django_admin_log` VALUES (1,'2018-03-18 14:31:42.897894','1','Devstack 192.168.100.114',1,'[{\"added\": {}}]',8,1),(2,'2018-03-18 14:32:07.048398','2','cirros 192.16.161.1',1,'[{\"added\": {}}]',8,1),(3,'2018-03-18 14:36:05.613918','2','2018-03-18 21:36:00+07:00 cirros 192.16.161.1',1,'[{\"added\": {}}]',10,1),(4,'2018-03-18 14:37:21.318730','3','2018-03-17 21:37:14+07:00 Devstack 192.168.100.114',1,'[{\"added\": {}}]',10,1),(5,'2018-03-18 14:37:37.085672','4','2018-03-17 12:00:00+07:00 cirros 192.16.161.1',1,'[{\"added\": {}}]',10,1),(6,'2018-03-18 14:37:53.256601','5','2018-03-18 06:00:00+07:00 Devstack 192.168.100.114',1,'[{\"added\": {}}]',10,1),(7,'2018-03-18 14:38:20.706624','1','2018-03-18 21:38:13+07:00 cirros 192.16.161.1',1,'[{\"added\": {}}]',9,1),(8,'2018-03-18 14:39:58.902420','1','locvx1234@gmail.com [Warning]',1,'[{\"added\": {}}]',7,1),(9,'2018-03-18 14:45:46.143685','3','locvu-cent 192.168.100.116',1,'[{\"added\": {}}]',8,1),(10,'2018-03-18 15:05:02.328089','6','2018-03-18 22:04:59+07:00 cirros 192.16.161.1',1,'[{\"added\": {}}]',10,1),(11,'2018-03-18 15:36:12.711747','7','2018-03-18 22:36:04+07:00 Devstack 192.168.100.114',1,'[{\"added\": {}}]',10,1),(12,'2018-03-18 15:52:48.194684','8','2018-03-19 22:52:40+07:00 locvu-cent 192.168.100.116',1,'[{\"added\": {}}]',10,1),(13,'2018-03-18 16:05:20.522891','9','2018-03-18 23:05:16+07:00 locvu-cent 192.168.100.116',1,'[{\"added\": {}}]',10,1),(14,'2018-03-20 15:34:11.076033','1','Devstack 192.168.100.114',2,'[{\"changed\": {\"fields\": [\"agent_version\"]}}]',8,1),(15,'2018-03-21 13:52:31.593429','4','Openstack 192.167.2.23',2,'[{\"changed\": {\"fields\": [\"agent_version\", \"capacity_used\"]}}]',8,1),(16,'2018-03-21 13:52:55.019738','4','Openstack 192.167.2.23',3,'',8,1),(17,'2018-03-22 13:19:11.114010','6','Openstack 192.167.2.23',3,'',8,1),(18,'2018-03-22 13:19:15.732640','5','Openstack 192.167.2.23',3,'',8,1),(19,'2018-03-22 13:19:19.696470','9','osticket 8.8.8.7',3,'',8,1),(20,'2018-03-22 13:19:23.024741','7','osticket 8.8.8.7',3,'',8,1),(21,'2018-03-22 13:19:26.064494','8','osticket 8.8.8.7',3,'',8,1),(22,'2018-03-22 13:19:30.958109','10','osticket 8.8.8.7',3,'',8,1);
+INSERT INTO `django_admin_log` VALUES (1,'2018-09-03 17:16:39.048750','9','/home/locvu/Downloads/example seveny',3,'',9,1),(2,'2018-09-03 17:16:39.055307','8','/home/locvu/Dropbox/loccode.py seveny',3,'',9,1),(3,'2018-09-03 17:16:39.057684','7','/home/locvu/Dropbox/loccode.py seveny',3,'',9,1),(4,'2018-09-03 17:16:39.061074','6','/home/locvu/Dropbox/loccode.py seveny',3,'',9,1),(5,'2018-09-03 17:16:39.063478','5','/home/locvu/Downloads/example seveny',3,'',9,1),(6,'2018-09-03 17:16:39.065095','4','/home/locvu/Dropbox/loccode.py seveny',3,'',9,1),(7,'2018-11-24 04:04:39.963170','1','seveny',3,'',7,1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -343,7 +376,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,7 +385,7 @@ CREATE TABLE `django_content_type` (
 
 LOCK TABLES `django_content_type` WRITE;
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
-INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(8,'app','computer'),(7,'app','notification'),(9,'app','schedule'),(10,'app','sync'),(2,'auth','group'),(3,'auth','permission'),(4,'auth','user'),(5,'contenttypes','contenttype'),(6,'sessions','session');
+INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(7,'app','computer'),(8,'app','notification'),(9,'app','restorejob'),(10,'app','schedule'),(11,'app','sync'),(3,'auth','group'),(2,'auth','permission'),(4,'auth','user'),(5,'contenttypes','contenttype'),(6,'sessions','session');
 /*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -369,7 +402,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,7 +411,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-03-18 14:06:39.014772'),(2,'auth','0001_initial','2018-03-18 14:06:39.696493'),(3,'admin','0001_initial','2018-03-18 14:06:39.848253'),(4,'admin','0002_logentry_remove_auto_add','2018-03-18 14:06:39.857966'),(5,'app','0001_initial','2018-03-18 14:06:40.093426'),(6,'contenttypes','0002_remove_content_type_name','2018-03-18 14:06:40.176011'),(7,'auth','0002_alter_permission_name_max_length','2018-03-18 14:06:40.186714'),(8,'auth','0003_alter_user_email_max_length','2018-03-18 14:06:40.211001'),(9,'auth','0004_alter_user_username_opts','2018-03-18 14:06:40.225228'),(10,'auth','0005_alter_user_last_login_null','2018-03-18 14:06:40.307638'),(11,'auth','0006_require_contenttypes_0002','2018-03-18 14:06:40.314084'),(12,'auth','0007_alter_validators_add_error_messages','2018-03-18 14:06:40.328723'),(13,'auth','0008_alter_user_username_max_length','2018-03-18 14:06:40.416844'),(14,'auth','0009_alter_user_last_name_max_length','2018-03-18 14:06:40.443253'),(15,'sessions','0001_initial','2018-03-18 14:06:40.509730'),(16,'app','0002_auto_20180321_1952','2018-03-21 12:52:31.465352');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2018-08-24 04:03:35.062421'),(2,'auth','0001_initial','2018-08-24 04:03:35.778405'),(3,'admin','0001_initial','2018-08-24 04:03:35.939856'),(4,'admin','0002_logentry_remove_auto_add','2018-08-24 04:03:35.955643'),(5,'app','0001_initial','2018-08-24 04:03:36.273723'),(6,'contenttypes','0002_remove_content_type_name','2018-08-24 04:03:36.415625'),(7,'auth','0002_alter_permission_name_max_length','2018-08-24 04:03:36.426237'),(8,'auth','0003_alter_user_email_max_length','2018-08-24 04:03:36.444054'),(9,'auth','0004_alter_user_username_opts','2018-08-24 04:03:36.456094'),(10,'auth','0005_alter_user_last_login_null','2018-08-24 04:03:36.509877'),(11,'auth','0006_require_contenttypes_0002','2018-08-24 04:03:36.516365'),(12,'auth','0007_alter_validators_add_error_messages','2018-08-24 04:03:36.530505'),(13,'auth','0008_alter_user_username_max_length','2018-08-24 04:03:36.620368'),(14,'auth','0009_alter_user_last_name_max_length','2018-08-24 04:03:36.638282'),(15,'sessions','0001_initial','2018-08-24 04:03:36.686127'),(16,'app','0002_restorejob_status_text','2018-08-24 04:11:55.966209'),(17,'app','0003_auto_20180824_1118','2018-08-24 04:19:00.314001'),(18,'app','0004_auto_20180824_1120','2018-08-24 04:20:44.481284'),(19,'app','0005_auto_20180904_0017','2018-09-03 17:17:17.443713');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,7 +437,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('z0xro78j05ep93hnl5jgiwfljlqys5j3','NzhlNWJmY2JkZTBjNjM2ZjUzY2EwOGFiYWZlZmMyZThmOGRlOGM1Zjp7Il9hdXRoX3VzZXJfaGFzaCI6IjZhNjAzYjdlZTU2YzZhZmFiOWMzMWU3Mzc5ZTEwMzViOWUxMTc0YjEiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2018-04-01 14:10:19.547260');
+INSERT INTO `django_session` VALUES ('1gvmgddvband91p9f93fru72xoa64jey','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-09-11 16:53:48.920000'),('8q2dc04lle03f5ujpv6w6bp7gmh7tpw1','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-11-07 03:52:11.586078'),('9c530lyhij7pfgj93c2x84cj6n9u5n7i','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-10-19 16:45:33.787763'),('c3kur6rpu0bs1r1xv6ndz5e1j7f6yjv9','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-10-02 10:56:35.113035'),('cb734sl85n4546xvavc1bi9u9nl0as6r','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-12-08 04:04:16.206417'),('f3zfw8jrfcghxkdjyafs80elmgi3xmj6','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-09-07 04:04:32.464592'),('fc8ni4uykqhc1mgtrj8lnztbpliw8vrn','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-09-14 12:12:47.847159'),('gfs8kp274j3wd1nj9exdepsgetoo5qou','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-11-01 08:08:39.130044'),('hn2cl489uzhb3udl6rbux9ksczrdzx4e','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-09-10 16:57:39.772705'),('jv7fzt9vat6jd5fwb0wlii09mjkb31et','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-11-06 15:54:16.087787'),('k3pq2m48hsmpkydr1fj2m0yu3p6di4ez','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-09-17 09:29:05.199649'),('pmp7g1lb2ht9asqr8wodcncbz3dle1g5','YTJhZDg3NDAwNTVmMjE4M2Y3MmI4MmJhMjExMWNjMDgyY2JhYTgwNjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJlODFlMTMwNGNkMWMxZjFmMjYyOWNiNjI4OTMyMGJkNmQ2ZmNhNjA4In0=','2018-11-02 16:15:24.688641');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -417,4 +450,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-23 15:20:17
+-- Dump completed on 2018-11-24 11:13:43
