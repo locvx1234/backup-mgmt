@@ -4270,3 +4270,77 @@
 2018-11-19 19:35:00,555 - app.views - INFO - Agent docker_trang_linux created
 2018-11-19 19:35:12,546 - app.views - INFO - Agent docker_trang_linux deleted
 2018-11-19 19:36:19,639 - app.views - INFO - Agent docker_trang_linux created
+2018-12-01 13:14:39,477 - app.views - INFO - Agent windows 10 Ginkgo created
+2018-12-01 13:47:23,450 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt
+2018-12-01 13:59:05,306 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt
+2018-12-01 13:59:05,313 - app.views - INFO - Force backup windows 10 Ginkgo - G:\a.txt
+2018-12-01 14:04:34,664 - app.views - DEBUG - <function now at 0x7f4441eaed08>
+2018-12-01 14:04:34,669 - app.views - DEBUG - job save
+2018-12-01 14:15:57,053 - app.views - DEBUG - <function now at 0x7f4441eaed08>
+2018-12-01 14:15:57,058 - app.views - DEBUG - job save
+2018-12-01 15:38:50,216 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:38:50,225 - app.views - DEBUG - job save
+2018-12-01 15:51:52,663 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:51:52,668 - app.views - DEBUG - job save
+2018-12-01 15:52:30,200 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:52:30,206 - app.views - DEBUG - job save
+2018-12-01 15:54:04,258 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:54:04,263 - app.views - DEBUG - job save
+2018-12-01 15:54:22,727 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:54:22,732 - app.views - DEBUG - job save
+2018-12-01 15:54:38,628 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:54:38,633 - app.views - DEBUG - job save
+2018-12-01 15:57:49,217 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:57:49,222 - app.views - DEBUG - job save
+2018-12-01 15:59:02,116 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 15:59:02,123 - app.views - DEBUG - job save
+2018-12-01 16:10:06,505 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 16:10:06,510 - app.views - DEBUG - job save
+2018-12-01 16:16:37,840 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 16:16:37,845 - app.views - DEBUG - job save
+2018-12-01 16:21:48,364 - app.views - INFO - Sync: windows 10 Ginkgo - 2018-12-01 08:57:21.952166+00:00 deleted
+2018-12-01 16:29:21,959 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 16:29:21,966 - app.views - DEBUG - job save
+2018-12-01 16:32:41,786 - app.views - INFO - Sync: windows 10 Ginkgo - 2018-12-01 09:18:16.895864+00:00 deleted
+2018-12-01 16:33:38,514 - app.views - DEBUG - <function now at 0x7f59334568c8>
+2018-12-01 16:33:38,521 - app.views - DEBUG - job save
+2018-12-01 17:25:46,766 - app.views - INFO - Agent windows 10 Ginkgo deleted
+2018-12-01 17:26:04,398 - app.views - INFO - Agent windows 10 Ginkgo created
+2018-12-01 17:27:45,729 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:27:45,734 - app.views - DEBUG - job save
+2018-12-01 17:31:52,890 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:31:52,896 - app.views - DEBUG - job save
+2018-12-01 17:32:21,357 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:32:21,362 - app.views - DEBUG - job save
+2018-12-01 17:34:14,203 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:34:14,210 - app.views - DEBUG - job save
+2018-12-01 17:34:30,050 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:34:30,055 - app.views - DEBUG - job save
+2018-12-01 17:36:26,295 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:36:26,300 - app.views - DEBUG - job save
+2018-12-01 17:36:46,208 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:36:46,214 - app.views - DEBUG - job save
+2018-12-01 17:39:01,108 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:39:01,115 - app.views - DEBUG - job save
+2018-12-01 17:39:15,409 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:39:15,414 - app.views - DEBUG - job save
+2018-12-01 17:45:13,072 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:45:13,079 - app.views - DEBUG - job save
+2018-12-01 17:46:04,945 - app.views - DEBUG - <function now at 0x7f6e3d72c8c8>
+2018-12-01 17:46:04,950 - app.views - DEBUG - job save
+2018-12-01 17:50:51,198 - app.views - DEBUG - <function now at 0x7feec6836048>
+2018-12-01 17:50:51,202 - app.views - DEBUG - job save
+2018-12-01 18:02:59,140 - app.views - DEBUG - <function now at 0x7fbcb8233d08>
+2018-12-01 18:02:59,148 - app.views - DEBUG - job save
+2018-12-01 18:05:33,781 - app.views - DEBUG - <function now at 0x7fbcb8233d08>
+2018-12-01 18:05:33,786 - app.views - DEBUG - job save
+2018-12-01 18:06:01,884 - app.views - DEBUG - <function now at 0x7fbcb8233d08>
+2018-12-01 18:06:01,889 - app.views - DEBUG - job save
+2018-12-01 18:08:01,547 - app.views - DEBUG - <function now at 0x7fbcb8233d08>
+2018-12-01 18:08:01,556 - app.views - DEBUG - job save
+2018-12-01 22:41:36,471 - app.views - DEBUG - <function now at 0x7f0cfa1ab8c8>
+2018-12-01 22:41:36,478 - app.views - DEBUG - job save
+2018-12-01 22:45:49,136 - app.views - DEBUG - <function now at 0x7f0cfa1ab8c8>
+2018-12-01 22:45:49,141 - app.views - DEBUG - job save
+2018-12-01 22:48:42,534 - app.views - DEBUG - <function now at 0x7f0cfa1ab8c8>
+2018-12-01 22:48:42,539 - app.views - DEBUG - job save
